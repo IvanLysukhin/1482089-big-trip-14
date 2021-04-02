@@ -10,6 +10,7 @@ import {createEditTripPoint} from './view/edit-trip-point.js';
 import {creatTripPoint} from './view/trip-point.js';
 import {creatItem} from './view/event-type.js';
 import {creatOfferSelector} from './view/offer-selector.js';
+import './mock/mocks.js';
 
 const renderElement = (parentClass, position, text) => {
   const parent = document.querySelector(parentClass);
