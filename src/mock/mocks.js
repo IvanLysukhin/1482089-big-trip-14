@@ -6,10 +6,6 @@ const generateRandomDate = () => {
   return dayjs().add(generateRandomNumber(-10, 10), 'day');
 };
 
-const generateRandomTime = () => {
-  return dayjs().add(generateRandomNumber(0, 12), 'hour').add(generateRandomNumber(0, 60), 'minute');
-};
-
 const getRandomArrayElement = (array) => {
   return array[generateRandomNumber(0, array.length - 1)].toLowerCase();
 };
@@ -30,12 +26,13 @@ const generateTripPoint = () => {
 
   const randomDate = generateRandomDate();
   const randomWords = DATA.RANDOM_TEXT.split('. ');
-  const randomTime = generateRandomTime();
+  const randomTime = randomDate.add(generateRandomNumber(0, 12), 'hour').add(generateRandomNumber(0, 60), 'minute');
+  const randomUntilTime = randomTime.add(generateRandomNumber(0, 2), 'hour').add(generateRandomNumber(0, 30), 'minute');
 
   return {
     price: generateRandomNumber(0, 200),
     date: {
-      datetimeAtr: randomDate,
+      datetimeAtr: randomDate.format('YYYY-MM-DD'),
       eventDate:randomDate.format('MMM DD'),
     },
     pointType: getRandomArrayElement(DATA.TRANSPORT_TYPES),
@@ -47,12 +44,16 @@ const generateTripPoint = () => {
         photos:getRandomPhotosArray(),
       },
     isFavorite: Boolean(generateRandomNumber()),
-    timeFrom: randomTime.format('HH-00'),
-    timeUntil: randomTime.add(generateRandomNumber(0, 2), 'hour').add(generateRandomNumber(0, 30), 'minute').format('HH-mm'),
+    timeFrom: {
+      timeAtr: randomTime.format('YYYY-MM-DDTHH:mm:ss'),
+      timeText: randomTime.format('HH-mm'),
+    },
+    timeUntil: {
+      timeAtr: randomUntilTime.format('YYYY-MM-DDTHH:mm:ss'),
+      timeText: randomUntilTime.format('HH-mm'),
+    },
     //duration:,
   };
 };
 
-const tripPointsArray = new Array(40).fill('').map(generateTripPoint);
-
-export {tripPointsArray};
+export {generateTripPoint};

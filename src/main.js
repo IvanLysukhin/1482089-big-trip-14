@@ -10,7 +10,9 @@ import {createEditTripPoint} from './view/edit-trip-point.js';
 import {creatTripPoint} from './view/trip-point.js';
 import {creatItem} from './view/event-type.js';
 import {creatOfferSelector} from './view/offer-selector.js';
-import './mock/mocks.js';
+import {generateTripPoint} from './mock/mocks.js';
+
+const tripPointsArray = new Array(20).fill('').map(generateTripPoint);
 
 const renderElement = (parentClass, position, text) => {
   const parent = document.querySelector(parentClass);
@@ -33,8 +35,8 @@ for (const filter of DATA.FILTER_TYPES) {
 }
 
 // Точки путешествия
-for (let i = 0; i < DATA.COUNT_TRIP_POINTS; i++) {
-  renderElement('.trip-events__list', 'beforeend', creatTripPoint());
+for (const point of tripPointsArray) {
+  renderElement('.trip-events__list', 'beforeend', creatTripPoint(point));
 }
 
 // Функция создания формы создания или редактирования точки путешествия
