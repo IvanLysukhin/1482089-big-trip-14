@@ -9,10 +9,9 @@ import {createNewTripPoint} from './view/new-trip-point.js';
 import {createEditTripPoint} from './view/edit-trip-point.js';
 import {creatTripPoint} from './view/trip-point.js';
 import {creatItem} from './view/event-type.js';
-import {creatOfferSelector} from './view/offer-selector.js';
 import {generateTripPoint} from './mock/mocks.js';
 
-const tripPointsArray = new Array(20).fill('').map(generateTripPoint);
+const tripPointsArray = new Array(DATA.COUNT_TRIP_POINTS).fill('').map(generateTripPoint);
 
 const renderElement = (parentClass, position, text) => {
   const parent = document.querySelector(parentClass);
@@ -41,22 +40,16 @@ for (const point of tripPointsArray) {
 
 // Функция создания формы создания или редактирования точки путешествия
 const renderTripPointForm = (formType) => {
-  let renderFunction = createNewTripPoint();
+  let renderFunction = createNewTripPoint(tripPointsArray[0]);
   if (formType === 'edit') {
     renderFunction = createEditTripPoint();
   }
-  renderElement('.trip-events__list', 'beforeend', renderFunction);
+  renderElement('.trip-events__list', 'afterbegin', renderFunction);
   for (const type of DATA.TRANSPORT_TYPES) {
     renderElement('.event__type-group', 'beforeend', creatItem(type));
   }
 };
 
 renderTripPointForm();
-renderTripPointForm('edit');
+//renderTripPointForm('edit');
 
-
-// Выбор опций путешествия
-for (const offer of DATA.SELECTOR_SETTINGS) {
-  renderElement('.event__available-offers', 'beforeend',
-    creatOfferSelector(offer.type, offer.text, offer.price));
-}

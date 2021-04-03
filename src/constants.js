@@ -1,5 +1,5 @@
 export const DATA = {
-  COUNT_TRIP_POINTS: 3,
+  COUNT_TRIP_POINTS: 20,
   TRANSPORT_TYPES: ['Taxi', 'Bus', 'Train', 'Ship', 'Transport', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'],
   SELECTOR_SETTINGS:[
     {

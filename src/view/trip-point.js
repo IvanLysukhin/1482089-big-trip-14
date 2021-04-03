@@ -14,7 +14,7 @@ const createOfferItem = (array) => {
 };
 
 const creatTripPoint = (obj) => {
-  const {date, destination, pointType, price, timeFrom, timeUntil, isFavorite, options} = obj;
+  const {date, destination, pointType, price, isFavorite, options} = obj;
 
   const offerItems = createOfferItem(options);
 
@@ -26,16 +26,16 @@ const creatTripPoint = (obj) => {
 
   return `<li class="trip-events__item">
               <div class="event">
-                <time class="event__date" datetime="${date.datetimeAtr}">${date.eventDate}</time>
+                <time class="event__date" datetime="${date.dateStart.format('YYYY-MM-DD')}">${date.dateStart.format('MMM DD')}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
                 </div>
-                <h3 class="event__title">${pointType} ${destination}</h3>
+                <h3 class="event__title">${pointType} ${destination.city}</h3>
                 <div class="event__schedule">
                   <p class="event__time">
-                    <time class="event__start-time" datetime="${timeFrom.timeAtr}">${timeFrom.timeText}</time>
+                    <time class="event__start-time" datetime="${date.timeStart.format('YYYY-MM-DDTHH:mm:ss')}">${date.timeStart.format('HH-mm')}</time>
                     &mdash;
-                    <time class="event__end-time" datetime="${timeUntil.timeAtr}">${timeUntil.timeText}</time>
+                    <time class="event__end-time" datetime="${date.timeEnd.format('YYYY-MM-DDTHH:mm:ss')}">${date.timeEnd.format('HH-mm')}</time>
                   </p>
                   <p class="event__duration">30M</p>
                 </div>
