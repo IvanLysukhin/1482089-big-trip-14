@@ -1,24 +1,5 @@
 import {creatOfferSelector} from './offer-selector.js';
-
-const createDestinationsList = (array) => {
-  let list = '';
-
-  for (const city of array) {
-    list += `<option value="${city}"></option>`;
-  }
-
-  return list ;
-};
-
-const creatPhotosList = (array) => {
-  let photosList = '';
-
-  for (const photoURL of array) {
-    photosList += `<img class="event__photo" src="${photoURL}" alt="Event photo">`;
-  }
-
-  return photosList;
-};
+import {createDestinationsList, creatPhotosList} from '../utils.js';
 
 const createNewTripPoint = (obj) => {
   const {date, destination, pointType, price, options, destinationInfo} = obj;

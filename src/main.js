@@ -42,7 +42,7 @@ for (const point of tripPointsArray) {
 const renderTripPointForm = (formType) => {
   let renderFunction = createNewTripPoint(tripPointsArray[0]);
   if (formType === 'edit') {
-    renderFunction = createEditTripPoint();
+    renderFunction = createEditTripPoint(tripPointsArray[0]);
   }
   renderElement('.trip-events__list', 'afterbegin', renderFunction);
   for (const type of DATA.TRANSPORT_TYPES) {
@@ -51,5 +51,5 @@ const renderTripPointForm = (formType) => {
 };
 
 renderTripPointForm();
-//renderTripPointForm('edit');
+renderTripPointForm('edit');
 
