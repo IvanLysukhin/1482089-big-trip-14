@@ -1,4 +1,4 @@
-import {createDestinationsList, creatPhotosList} from '../utils.js';
+import {createDestinationsList} from '../utils.js';
 import {creatOfferSelector} from './offer-selector';
 
 const createEditTripPoint = (obj) => {
@@ -34,7 +34,7 @@ const createEditTripPoint = (obj) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${pointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.city}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${citiesList}
                     </datalist>
