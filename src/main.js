@@ -21,7 +21,7 @@ const renderElement = (parentClass, position, text) => {
 // Крупные элементы
 renderElement('.trip-controls__navigation', 'beforeend', creatMenu());
 renderElement('.trip-main', 'afterbegin', creatTripInfo(tripPointsArray));
-renderElement('.trip-info', 'beforeend', creatTripPrice());
+renderElement('.trip-info', 'beforeend', creatTripPrice(tripPointsArray));
 renderElement('.trip-events', 'beforeend', createSort());
 renderElement('.trip-events', 'beforeend', creatContentList());
 
