@@ -1,16 +1,12 @@
 const createOfferItem = (array) => {
-  let item = '';
-
-  for (const obj of array) {
-    const {text, price} = obj;
-    item += `<li class="event__offer">
+  return array.map((_, i) => {
+    const {text, price} = array[i];
+    return `<li class="event__offer">
             <span class="event__offer-title">${text}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>`;
-  }
-
-  return item ;
+  }).join('');
 };
 
 const creatTripPoint = (obj) => {

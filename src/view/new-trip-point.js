@@ -6,13 +6,13 @@ const createNewTripPoint = (obj) => {
 
   const citiesList = createDestinationsList(destination.cities);
   let hidden = '';
-  if (options.length === 0) {
+  if (!options.length) {
     hidden = 'visually-hidden';
   }
   const offerList = creatOfferSelector(options);
 
   let photosListHidden = '';
-  if (destinationInfo.photos.length === 0) {
+  if (!destinationInfo.photos.length) {
     photosListHidden = 'visually-hidden';
   }
   const photosList = creatPhotosList(destinationInfo.photos);

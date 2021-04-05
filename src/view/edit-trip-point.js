@@ -7,7 +7,7 @@ const createEditTripPoint = (obj) => {
   const citiesList = createDestinationsList(destination.cities);
 
   let hidden = '';
-  if (options.length === 0) {
+  if (!options.length) {
     hidden = 'visually-hidden';
   }
   const offerList = creatOfferSelector(options);

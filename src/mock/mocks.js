@@ -11,9 +11,9 @@ const getRandomArrayElement = (array) => {
 };
 
 const getRandomArray = (array) => {
-  return new Array(generateRandomNumber(0, array.length)).fill('').map((_,index) => {
-    return array[index];
-  });
+  const firstElement = generateRandomNumber(0, array.length);
+  const lastElement = generateRandomNumber(0, array.length);
+  return array.slice(firstElement, lastElement);
 };
 
 const getRandomPhotosArray = () => {
@@ -49,7 +49,7 @@ const generateTripPoint = () => {
         infoText: getRandomArray(randomWords).join('. '),
         photos:getRandomPhotosArray(),
       },
-    isFavorite: Boolean(generateRandomNumber()),
+    isFavorite: !!generateRandomNumber(),
     //duration:,
   };
 };
