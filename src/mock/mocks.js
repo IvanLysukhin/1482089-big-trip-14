@@ -1,9 +1,15 @@
-import dayjs from 'dayjs';
 import {generateRandomNumber} from '../utils.js';
 import {DATA} from '../constants.js';
 
 const generateRandomDate = () => {
-  return dayjs().add(generateRandomNumber(-10, 10), 'day');
+  const months =['APR', 'MAR'];
+
+  return {
+    date: generateRandomNumber(5, 30),
+    month: months[generateRandomNumber()],
+    timeHour: generateRandomNumber(10, 12),
+    timeMinute: generateRandomNumber(10, 30),
+  };
 };
 
 const getRandomArrayElement = (array) => {
@@ -11,9 +17,7 @@ const getRandomArrayElement = (array) => {
 };
 
 const getRandomArray = (array) => {
-  const firstElement = generateRandomNumber(0, array.length);
-  const lastElement = generateRandomNumber(0, array.length);
-  return array.slice(firstElement, lastElement);
+  return array.slice(generateRandomNumber(0, array.length), generateRandomNumber(0, array.length));
 };
 
 const getRandomPhotosArray = () => {
@@ -23,20 +27,51 @@ const getRandomPhotosArray = () => {
 };
 
 const generateTripPoint = () => {
+  const date = generateRandomDate().date;
+  const month = generateRandomDate().month;
+  const nextDay = date + generateRandomNumber(0, 5);
+  const startHour = generateRandomDate().timeHour;
+  const startMinute = generateRandomDate().timeMinute;
+  const endHour = startHour + generateRandomNumber(0, 5);
+  const endMinute = startMinute + generateRandomNumber(0, 5);
 
-  const randomDate = generateRandomDate();
-  const randomDateEnd = randomDate.add(generateRandomNumber(0, 2), 'day');
+  const dateStart = `${month} ${date}`;
+  const dateEnd = `${month} ${nextDay}`;
+  const timeStart = `${startHour}:${startMinute}`;
+  const timeEnd = `${endHour}:${endMinute}`;
+
+  const findDurationHour = (...times) => {
+    const array = times.sort();
+    return array[1] - array[0];
+  };
+
+  const findDurationMinute = (...times) => {
+    const array = times.sort();
+    return array[1] - array[0];
+  };
+
+  const findDuration = () => {
+    const hour = findDurationHour(startHour, endHour);
+    const minute = findDurationMinute(startMinute, endMinute);
+    if (!hour) {
+      return `${minute}M`;
+    }
+    if (!minute) {
+      return `${hour}H`;
+    }
+    return `${hour}H ${minute}M`;
+  };
+
   const randomWords = DATA.RANDOM_TEXT.split('. ');
-  const randomTime = randomDate.add(generateRandomNumber(0, 12), 'hour').add(generateRandomNumber(0, 60), 'minute');
-  const randomUntilTime = randomTime.add(generateRandomNumber(0, 2), 'hour').add(generateRandomNumber(0, 30), 'minute');
+
 
   return {
     price: generateRandomNumber(0, 200),
     date: {
-      dateStart: randomDate,
-      timeStart: randomTime,
-      dateEnd: randomDateEnd,
-      timeEnd: randomUntilTime,
+      dateStart,
+      timeStart,
+      dateEnd,
+      timeEnd,
     },
     pointType: getRandomArrayElement(DATA.TRANSPORT_TYPES),
     destination: {
@@ -50,7 +85,7 @@ const generateTripPoint = () => {
         photos:getRandomPhotosArray(),
       },
     isFavorite: !!generateRandomNumber(),
-    //duration:,
+    duration: findDuration(),
   };
 };
 
