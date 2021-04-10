@@ -1,7 +1,9 @@
-import {createDestinationsList, creatElementDOM} from '../utils.js';
+import {createDestinationsList, creatElementDOM, creatCheckboxTypeList} from '../utils.js';
 import {creatOfferSelector} from './offer-selector.js';
+import {DATA} from '../constants.js';
 
 const createEditTripPoint = (obj) => {
+  const checkboxTypes = creatCheckboxTypeList(DATA.TRANSPORT_TYPES);
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
   const citiesList = createDestinationsList(destination.cities);
@@ -12,8 +14,7 @@ const createEditTripPoint = (obj) => {
   }
   const offerList = creatOfferSelector(options);
 
-  return `<li class="trip-events__item">
-              <form class="event event--edit" action="#" method="post">
+  return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -24,6 +25,7 @@ const createEditTripPoint = (obj) => {
 
                     <div class="event__type-list">
                       <!--Чекбоксы выбора транспорта-->
+                      ${checkboxTypes}
                     </div>
                   </div>
 
@@ -74,8 +76,7 @@ const createEditTripPoint = (obj) => {
                     <p class="event__destination-description">${destinationInfo.infoText}</p>
                   </section>
                 </section>
-              </form>
-            </li>`;
+              </form>`;
 };
 
 export default class EditTripPoint {

@@ -1,7 +1,9 @@
 import {creatOfferSelector} from './offer-selector.js';
-import {createDestinationsList, creatElementDOM, creatPhotosList} from '../utils.js';
+import {createDestinationsList, creatElementDOM, creatPhotosList, creatCheckboxTypeList} from '../utils.js';
+import {DATA} from '../constants';
 
 const createNewTripPoint = (obj) => {
+  const checkboxTypes = creatCheckboxTypeList(DATA.TRANSPORT_TYPES);
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
   const citiesList = createDestinationsList(destination.cities);
@@ -29,6 +31,7 @@ const createNewTripPoint = (obj) => {
 
                     <div class="event__type-list">
                        <!--Чекбоксы выбора транспорта-->
+                       ${checkboxTypes}
                     </div>
                   </div>
 

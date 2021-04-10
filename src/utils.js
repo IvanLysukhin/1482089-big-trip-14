@@ -26,8 +26,8 @@ const renderElement = (parentClass, position, text) => {
   parent.insertAdjacentHTML(position, text);
 };
 
-const render = (parentClass,position, element) => {
-  const parent = document.querySelector(parentClass);
+const render = (parent, element, position) => {
+
   if (position === 'beforeend') {
     parent.append(element);
   } else {parent.prepend(element);}
@@ -39,5 +39,20 @@ const creatElementDOM = (template) => {
   return parent.firstChild;
 };
 
+const creatCheckboxTypeList = (array) => {
+  const typesList = array.map((_, i) => {
+    const lowerType = array[i].toLowerCase();
+    return `<div class="event__type-item">
+      <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}">
+      <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${array[i]}</label>
+    </div>`;
+  }).join('');
 
-export {generateRandomNumber, createDestinationsList, creatPhotosList, sumTripPrice, renderElement, render, creatElementDOM};
+  return `<fieldset class="event__type-group">
+             <legend class="visually-hidden">Event type</legend>
+             ${typesList}
+          </fieldset>`;
+};
+
+
+export {generateRandomNumber, createDestinationsList, creatPhotosList, sumTripPrice, renderElement, render, creatElementDOM, creatCheckboxTypeList};
