@@ -1,4 +1,4 @@
-import {sumTripPrice} from '../utils.js';
+import {creatElementDOM, sumTripPrice} from '../utils.js';
 
 const creatTripPrice = (array) => {
   const price = sumTripPrice(array);
@@ -7,5 +7,24 @@ const creatTripPrice = (array) => {
            </p>`;
 };
 
+export default class TripPrice {
+  constructor(array) {
+    this._element = null;
+    this._array = array;
+  }
 
-export {creatTripPrice};
+  getTemplate() {
+    return creatTripPrice(this._array);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = creatElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}

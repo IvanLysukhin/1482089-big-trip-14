@@ -1,5 +1,5 @@
 import {creatOfferSelector} from './offer-selector.js';
-import {createDestinationsList, creatPhotosList} from '../utils.js';
+import {createDestinationsList, creatElementDOM, creatPhotosList} from '../utils.js';
 
 const createNewTripPoint = (obj) => {
   const {date, destination, pointType, price, options, destinationInfo} = obj;
@@ -28,10 +28,7 @@ const createNewTripPoint = (obj) => {
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
                     <div class="event__type-list">
-                      <fieldset class="event__type-group">
-                        <legend class="visually-hidden">Event type</legend>
-                            <!--Чекбоксы выбора транспорта-->
-                      </fieldset>
+                       <!--Чекбоксы выбора транспорта-->
                     </div>
                   </div>
 
@@ -88,5 +85,24 @@ const createNewTripPoint = (obj) => {
               </form>
             </li>`;
 };
+export default class NewTripPoint {
+  constructor(obj) {
+    this._element = null;
+    this._obj = obj;
+  }
 
-export {createNewTripPoint};
+  getTemplate() {
+    return createNewTripPoint(this._obj);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = creatElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}

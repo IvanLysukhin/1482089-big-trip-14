@@ -21,5 +21,23 @@ const sumTripPrice = (array) => {
   }, 0);
 };
 
+const renderElement = (parentClass, position, text) => {
+  const parent = document.querySelector(parentClass);
+  parent.insertAdjacentHTML(position, text);
+};
 
-export {generateRandomNumber, createDestinationsList, creatPhotosList, sumTripPrice};
+const render = (parentClass,position, element) => {
+  const parent = document.querySelector(parentClass);
+  if (position === 'beforeend') {
+    parent.append(element);
+  } else {parent.prepend(element);}
+};
+
+const creatElementDOM = (template) => {
+  const parent = document.createElement('div');
+  parent.innerHTML = template;
+  return parent.firstChild;
+};
+
+
+export {generateRandomNumber, createDestinationsList, creatPhotosList, sumTripPrice, renderElement, render, creatElementDOM};

@@ -1,3 +1,5 @@
+import {creatElementDOM} from '../utils';
+
 const createOfferItem = (array) => {
   return array.map((_, i) => {
     const {text, price} = array[i];
@@ -55,4 +57,25 @@ const creatTripPoint = (obj) => {
             </li>`;
 };
 
-export {creatTripPoint};
+
+export default class TripPoint {
+  constructor(obj) {
+    this._element = null;
+    this._obj = obj;
+  }
+
+  getTemplate () {
+    return creatTripPoint(this._obj);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = creatElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}

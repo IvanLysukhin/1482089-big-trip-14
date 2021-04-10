@@ -1,3 +1,5 @@
+import {creatElementDOM} from '../utils';
+
 const createSort = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             <div class="trip-sort__item  trip-sort__item--day">
@@ -27,4 +29,23 @@ const createSort = () => {
           </form>`;
 };
 
-export {createSort};
+export default class SortList {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate () {
+    return createSort();
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = creatElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}

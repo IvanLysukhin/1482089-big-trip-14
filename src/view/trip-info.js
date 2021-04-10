@@ -1,3 +1,5 @@
+import {creatElementDOM} from '../utils.js';
+
 const creatRoute = (array) => {
 
   const citiesArray = new Array(array.length).fill('').map((_, i) => {
@@ -46,4 +48,24 @@ const creatTripInfo = (array) => {
           </section>`;
 };
 
-export {creatTripInfo};
+export default class TripInfo {
+  constructor(array) {
+    this._element = null;
+    this._array = array;
+  }
+
+  getTemplate() {
+    return creatTripInfo(this._array);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = creatElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}
