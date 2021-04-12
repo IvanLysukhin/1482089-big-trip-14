@@ -1,6 +1,6 @@
-import {creatElementDOM} from '../utils.js';
+import {createElementDOM} from '../utils.js';
 
-const creatContentItem = () => {
+const createContentItem = () => {
   return '<li class="trip-events__item"></li>';
 };
 
@@ -10,12 +10,12 @@ export default class TripPointItem {
   }
 
   getTemplate () {
-    return creatContentItem();
+    return createContentItem();
   }
 
   getElement () {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

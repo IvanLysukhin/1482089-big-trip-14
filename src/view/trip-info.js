@@ -1,6 +1,6 @@
-import {creatElementDOM} from '../utils.js';
+import {createElementDOM} from '../utils.js';
 
-const creatRoute = (array) => {
+const createRoute = (array) => {
 
   const citiesArray = new Array(array.length).fill('').map((_, i) => {
     return array[i].destination.city;
@@ -36,8 +36,8 @@ const routeDates = (array) => {
   });
 };
 
-const creatTripInfo = (array) => {
-  const citiesRout = creatRoute(array);
+const createTripInfo = (array) => {
+  const citiesRout = createRoute(array);
   const first = routeDates(array)[routeDates(array).length - 1];
   const last = routeDates(array)[0];
   return `<section class="trip-main__trip-info  trip-info">
@@ -55,12 +55,12 @@ export default class TripInfo {
   }
 
   getTemplate() {
-    return creatTripInfo(this._array);
+    return createTripInfo(this._array);
   }
 
   getElement() {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

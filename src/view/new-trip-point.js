@@ -1,9 +1,9 @@
-import {creatOfferSelector} from './offer-selector.js';
-import {createDestinationsList, creatElementDOM, creatPhotosList, creatCheckboxTypeList} from '../utils.js';
+import {createOfferSelector} from './offer-selector.js';
+import {createDestinationsList, createElementDOM, createPhotosList, createCheckboxTypeList} from '../utils.js';
 import {DATA} from '../constants';
 
 const createNewTripPoint = (obj) => {
-  const checkboxTypes = creatCheckboxTypeList(DATA.TRANSPORT_TYPES);
+  const checkboxTypes = createCheckboxTypeList(DATA.TRANSPORT_TYPES);
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
   const citiesList = createDestinationsList(destination.cities);
@@ -11,13 +11,13 @@ const createNewTripPoint = (obj) => {
   if (!options.length) {
     hidden = 'visually-hidden';
   }
-  const offerList = creatOfferSelector(options);
+  const offerList = createOfferSelector(options);
 
   let photosListHidden = '';
   if (!destinationInfo.photos.length) {
     photosListHidden = 'visually-hidden';
   }
-  const photosList = creatPhotosList(destinationInfo.photos);
+  const photosList = createPhotosList(destinationInfo.photos);
 
   return `<li class="trip-events__item">
              <form class="event event--edit" action="#" method="post">
@@ -100,7 +100,7 @@ export default class NewTripPoint {
 
   getElement() {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

@@ -1,6 +1,6 @@
-import {creatElementDOM} from '../utils.js';
+import {createElementDOM} from '../utils.js';
 
-const creatContentList = () => {
+const createContentList = () => {
   return `<ul class="trip-events__list">
 
           </ul>`;
@@ -12,12 +12,12 @@ export default class TripPointList {
   }
 
   getTemplate () {
-    return creatContentList();
+    return createContentList();
   }
 
   getElement () {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

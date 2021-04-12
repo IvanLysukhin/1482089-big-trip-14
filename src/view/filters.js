@@ -1,6 +1,6 @@
-import {creatElementDOM} from '../utils.js';
+import {createElementDOM} from '../utils.js';
 
-const creatFilters = (array) => {
+const createFilters = (array) => {
   return array.map((_, i) => {
     return `<div class="trip-filters__filter">
              <input id="filter-${array[i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${array[i]}">
@@ -9,8 +9,8 @@ const creatFilters = (array) => {
   }).join('');
 };
 
-const creatFilterForm = (array) => {
-  const filters = creatFilters(array);
+const createFilterForm = (array) => {
+  const filters = createFilters(array);
   return `<form class="trip-filters" action="#" method="get">
               <button class="visually-hidden" type="submit">Accept filter</button>
               ${filters}
@@ -23,12 +23,12 @@ export default class FilterForm {
     this._array = array;
   }
   getTemplate () {
-    return creatFilterForm(this._array);
+    return createFilterForm(this._array);
   }
 
   getElement () {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

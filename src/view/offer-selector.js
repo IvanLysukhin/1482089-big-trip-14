@@ -1,4 +1,4 @@
-const creatOfferSelector = (array) => {
+const createOfferSelector = (array) => {
   return array.map((_, i) => {
     const {type,  text,  price} = array[i];
     return `<div class="event__offer-selector">
@@ -11,4 +11,4 @@ const creatOfferSelector = (array) => {
           </div>`;
   }).join('');
 };
-export {creatOfferSelector};
+export {createOfferSelector};

@@ -1,6 +1,6 @@
-import {creatElementDOM} from '../utils.js';
+import {createElementDOM} from '../utils.js';
 
-const creatMenu = () => {
+const createMenu = () => {
   return `<nav class="trip-controls__trip-tabs  trip-tabs">
               <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
               <a class="trip-tabs__btn" href="#">Stats</a>
@@ -13,12 +13,12 @@ export default class SiteMenu {
   }
 
   getTemplate () {
-    return creatMenu();
+    return createMenu();
   }
 
   getElement () {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

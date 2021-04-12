@@ -7,7 +7,7 @@ const createDestinationsList = (array) => {
   return array.map((_, i) => {return `<option value="${array[i]}"></option>`;}).join('');
 };
 
-const creatPhotosList = (array) => {
+const createPhotosList = (array) => {
   return array.map((_, i) => {return `<img class="event__photo" src="${array[i]}" alt="Event photo">`;}).join('');
 };
 
@@ -33,13 +33,13 @@ const render = (parent, element, position) => {
   } else {parent.prepend(element);}
 };
 
-const creatElementDOM = (template) => {
+const createElementDOM = (template) => {
   const parent = document.createElement('div');
   parent.innerHTML = template;
   return parent.firstChild;
 };
 
-const creatCheckboxTypeList = (array) => {
+const createCheckboxTypeList = (array) => {
   const typesList = array.map((_, i) => {
     const lowerType = array[i].toLowerCase();
     return `<div class="event__type-item">
@@ -55,4 +55,4 @@ const creatCheckboxTypeList = (array) => {
 };
 
 
-export {generateRandomNumber, createDestinationsList, creatPhotosList, sumTripPrice, renderElement, render, creatElementDOM, creatCheckboxTypeList};
+export {generateRandomNumber, createDestinationsList, createPhotosList, sumTripPrice, renderElement, render, createElementDOM, createCheckboxTypeList};

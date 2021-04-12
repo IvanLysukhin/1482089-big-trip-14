@@ -1,4 +1,4 @@
-import {creatElementDOM} from '../utils';
+import {createElementDOM} from '../utils';
 
 const createSort = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -40,7 +40,7 @@ export default class SortList {
 
   getElement () {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }

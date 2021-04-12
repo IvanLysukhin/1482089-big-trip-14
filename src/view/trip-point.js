@@ -1,4 +1,4 @@
-import {creatElementDOM} from '../utils';
+import {createElementDOM} from '../utils';
 
 const createOfferItem = (array) => {
   return array.map((_, i) => {
@@ -11,7 +11,7 @@ const createOfferItem = (array) => {
   }).join('');
 };
 
-const creatTripPoint = (obj) => {
+const createTripPoint = (obj) => {
   const {date, destination, pointType, price, isFavorite, options, duration} = obj;
 
   const offerItems = createOfferItem(options);
@@ -65,12 +65,12 @@ export default class TripPoint {
   }
 
   getTemplate () {
-    return creatTripPoint(this._obj);
+    return createTripPoint(this._obj);
   }
 
   getElement () {
     if (!this._element) {
-      this._element = creatElementDOM(this.getTemplate());
+      this._element = createElementDOM(this.getTemplate());
     }
     return this._element;
   }
