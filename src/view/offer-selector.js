@@ -1,3 +1,5 @@
+import {createElementDOM} from '../utils';
+
 const createOfferSelector = (array) => {
   return array.map((offer) => {
     const {type,  text,  price} = offer;
@@ -11,4 +13,25 @@ const createOfferSelector = (array) => {
           </div>`;
   }).join('');
 };
-export {createOfferSelector};
+
+export default class OfferSelectors {
+  constructor(array) {
+    this._element = null;
+    this._array = array;
+  }
+
+  getTemplate() {
+    return createOfferSelector(this._array);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}

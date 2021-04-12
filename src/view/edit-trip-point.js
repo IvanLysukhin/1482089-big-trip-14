@@ -1,18 +1,20 @@
-import {createDestinationsList, createElementDOM, createCheckboxTypeList} from '../utils.js';
-import {createOfferSelector} from './offer-selector.js';
+import {createElementDOM} from '../utils.js';
 import {DATA} from '../constants.js';
+import DestinationsListView from './destinations-list.js';
+import CheckboxTypeListView from './checkbox-list.js';
+import OfferSelectorsView from './offer-selector.js';
 
 const createEditTripPoint = (obj) => {
-  const checkboxTypes = createCheckboxTypeList(DATA.TRANSPORT_TYPES);
+  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
-  const citiesList = createDestinationsList(destination.cities);
+  const citiesList = new DestinationsListView(destination.cities).getTemplate();
 
   let hidden = '';
   if (!options.length) {
     hidden = 'visually-hidden';
   }
-  const offerList = createOfferSelector(options);
+  const offerList = new OfferSelectorsView(options).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">

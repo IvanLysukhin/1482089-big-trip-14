@@ -3,14 +3,6 @@ const generateRandomNumber= function (min = 0 , max = 1, point = 0) {
   return Number(num.toFixed(point));  //https://learn.javascript.ru/number#okruglenie
 };
 
-const createDestinationsList = (array) => {
-  return array.map((destination) => {return `<option value="${destination}"></option>`;}).join('');
-};
-
-const createPhotosList = (array) => {
-  return array.map((url) => {return `<img class="event__photo" src="${url}" alt="Event photo">`;}).join('');
-};
-
 const sumTripPrice = (array) => {
   return array.reduce((accumulator,obj) => {
     const offersPriceSum =  obj.options.reduce((accumulator, option) => {
@@ -39,20 +31,4 @@ const createElementDOM = (template) => {
   return parent.firstChild;
 };
 
-const createCheckboxTypeList = (array) => {
-  const typesList = array.map((type) => {
-    const lowerType = type.toLowerCase();
-    return `<div class="event__type-item">
-      <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}">
-      <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${type}</label>
-    </div>`;
-  }).join('');
-
-  return `<fieldset class="event__type-group">
-             <legend class="visually-hidden">Event type</legend>
-             ${typesList}
-          </fieldset>`;
-};
-
-
-export {generateRandomNumber, createDestinationsList, createPhotosList, sumTripPrice, renderElement, render, createElementDOM, createCheckboxTypeList};
+export {generateRandomNumber, sumTripPrice, renderElement, render, createElementDOM};
