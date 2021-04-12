@@ -1,9 +1,7 @@
 import {createElementDOM} from '../utils.js';
 
 const createContentList = () => {
-  return `<ul class="trip-events__list">
-
-          </ul>`;
+  return '<ul class="trip-events__list"></ul>';
 };
 
 export default class TripPointList {

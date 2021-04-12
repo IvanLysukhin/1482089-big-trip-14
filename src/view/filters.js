@@ -1,10 +1,10 @@
 import {createElementDOM} from '../utils.js';
 
 const createFilters = (array) => {
-  return array.map((_, i) => {
+  return array.map((filterType) => {
     return `<div class="trip-filters__filter">
-             <input id="filter-${array[i]}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${array[i]}">
-             <label class="trip-filters__filter-label" for="filter-${array[i]}">${array[i]}</label>
+             <input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}">
+             <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType}</label>
            </div>`;
   }).join('');
 };

@@ -1,6 +1,6 @@
 const createOfferSelector = (array) => {
-  return array.map((_, i) => {
-    const {type,  text,  price} = array[i];
+  return array.map((offer) => {
+    const {type,  text,  price} = offer;
     return `<div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-1" type="checkbox" name="event-offer-${type}">
             <label class="event__offer-label" for="event-offer-${type}-1">

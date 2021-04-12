@@ -1,8 +1,8 @@
 import {createElementDOM} from '../utils';
 
 const createOfferItem = (array) => {
-  return array.map((_, i) => {
-    const {text, price} = array[i];
+  return array.map((offer) => {
+    const {text, price} = offer;
     return `<li class="event__offer">
             <span class="event__offer-title">${text}</span>
             &plus;&euro;&nbsp;
@@ -15,7 +15,6 @@ const createTripPoint = (obj) => {
   const {date, destination, pointType, price, isFavorite, options, duration} = obj;
 
   const offerItems = createOfferItem(options);
-
   let favoriteButtonClass = '';
 
   if (isFavorite) {

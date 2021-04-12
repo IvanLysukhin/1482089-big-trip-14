@@ -4,11 +4,11 @@ const generateRandomNumber= function (min = 0 , max = 1, point = 0) {
 };
 
 const createDestinationsList = (array) => {
-  return array.map((_, i) => {return `<option value="${array[i]}"></option>`;}).join('');
+  return array.map((destination) => {return `<option value="${destination}"></option>`;}).join('');
 };
 
 const createPhotosList = (array) => {
-  return array.map((_, i) => {return `<img class="event__photo" src="${array[i]}" alt="Event photo">`;}).join('');
+  return array.map((url) => {return `<img class="event__photo" src="${url}" alt="Event photo">`;}).join('');
 };
 
 const sumTripPrice = (array) => {
@@ -40,11 +40,11 @@ const createElementDOM = (template) => {
 };
 
 const createCheckboxTypeList = (array) => {
-  const typesList = array.map((_, i) => {
-    const lowerType = array[i].toLowerCase();
+  const typesList = array.map((type) => {
+    const lowerType = type.toLowerCase();
     return `<div class="event__type-item">
       <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}">
-      <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${array[i]}</label>
+      <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${type}</label>
     </div>`;
   }).join('');
 
