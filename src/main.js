@@ -63,6 +63,7 @@ const renderTripPoint = (point) => {
 
   editFrom.setHandlerForm(()=>{
     swapEditToPoint();
+    document.removeEventListener('keydown',  closeEscape);
   });
 };
 
