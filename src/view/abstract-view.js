@@ -4,6 +4,7 @@ export default class AbstractView {
   constructor() {
     if (new.target === AbstractView) {throw new Error ('Ошибка создания абстрактного класса');}
     this._element = null;
+    this._callback = {};
   }
   getTemplate() {
     throw new Error('Необходимо опредлить функция создания шаблона элемента');

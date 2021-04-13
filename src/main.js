@@ -56,18 +56,13 @@ const renderTripPoint = (point) => {
     }
   };
 
-  tripPoint.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  tripPoint.setClickHandler(() => {
     swapPointToEdit();
     document.addEventListener('keydown',  closeEscape);
   });
-  editFrom.getElement().addEventListener('submit', (evt) => {
-    evt.preventDefault();
+
+  editFrom.setHandlerForm(()=>{
     swapEditToPoint();
-    document.removeEventListener('keydown', closeEscape);
-  });
-  editFrom.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
-    swapEditToPoint();
-    document.removeEventListener('keydown', closeEscape);
   });
 };
 

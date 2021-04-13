@@ -85,9 +85,21 @@ export default class EditTripPoint extends AbstractView {
   constructor(obj) {
     super();
     this._obj = obj;
+    this._closeForm = this._closeForm.bind(this);
   }
 
   getTemplate() {
     return createEditTripPoint(this._obj);
+  }
+
+  _closeForm(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  setHandlerForm(cb) {
+    this._callback.click = cb;
+    this.getElement().addEventListener('submit', this._closeForm);
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeForm);
   }
 }
