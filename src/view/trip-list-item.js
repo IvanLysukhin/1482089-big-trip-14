@@ -1,19 +1,16 @@
 import {createElementDOM} from '../utils.js';
 
-const createMenu = () => {
-  return `<nav class="trip-controls__trip-tabs  trip-tabs">
-              <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-              <a class="trip-tabs__btn" href="#">Stats</a>
-          </nav>`;
+const createContentItem = () => {
+  return '<li class="trip-events__item"></li>';
 };
 
-export default class SiteMenu {
+export default class TripPointItem {
   constructor() {
     this._element = null;
   }
 
   getTemplate () {
-    return createMenu();
+    return createContentItem();
   }
 
   getElement () {

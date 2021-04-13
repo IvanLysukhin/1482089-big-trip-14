@@ -1,6 +1,8 @@
+import {createElementDOM} from '../utils';
+
 const createOfferItem = (array) => {
-  return array.map((_, i) => {
-    const {text, price} = array[i];
+  return array.map((offer) => {
+    const {text, price} = offer;
     return `<li class="event__offer">
             <span class="event__offer-title">${text}</span>
             &plus;&euro;&nbsp;
@@ -9,11 +11,10 @@ const createOfferItem = (array) => {
   }).join('');
 };
 
-const creatTripPoint = (obj) => {
+const createTripPoint = (obj) => {
   const {date, destination, pointType, price, isFavorite, options, duration} = obj;
 
   const offerItems = createOfferItem(options);
-
   let favoriteButtonClass = '';
 
   if (isFavorite) {
@@ -55,4 +56,25 @@ const creatTripPoint = (obj) => {
             </li>`;
 };
 
-export {creatTripPoint};
+
+export default class TripPoint {
+  constructor(obj) {
+    this._element = null;
+    this._obj = obj;
+  }
+
+  getTemplate () {
+    return createTripPoint(this._obj);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}

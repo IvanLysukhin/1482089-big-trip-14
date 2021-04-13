@@ -1,55 +1,63 @@
 import {DATA} from './constants.js';
-import {creatMenu} from './view/menu.js';
-import {creatTripInfo} from './view/trip-info.js';
-import {creatTripPrice} from './view/trip-price.js';
-import {creatFilterForm, creatFilter} from './view/filters.js';
-import {createSort} from './view/sort.js';
-import {creatContentList} from './view/content-list.js';
-import {createNewTripPoint} from './view/new-trip-point.js';
-import {createEditTripPoint} from './view/edit-trip-point.js';
-import {creatTripPoint} from './view/trip-point.js';
-import {creatItem} from './view/event-type.js';
+import {render} from './utils.js';
 import {generateTripPoint} from './mock/mocks.js';
+import SiteMenuView from './view/menu.js';
+import SortListView from './view/sort.js';
+import TripPointListView from './view/content-list.js';
+import TripPointItemView from './view/trip-list-item.js';
+import FilterFormView from './view/filters.js';
+import TripPointView from './view/trip-point.js';
+import TripInfoView from './view/trip-info.js';
+import TripPriceView from './view/trip-price.js';
+import EditTripPointView from './view/edit-trip-point.js';
 
 const tripPointsArray = new Array(DATA.COUNT_TRIP_POINTS).fill('').map(generateTripPoint);
 
-const renderElement = (parentClass, position, text) => {
-  const parent = document.querySelector(parentClass);
-  parent.insertAdjacentHTML(position, text);
-};
-
 // Крупные элементы
-renderElement('.trip-controls__navigation', 'beforeend', creatMenu());
-renderElement('.trip-main', 'afterbegin', creatTripInfo(tripPointsArray));
-renderElement('.trip-info', 'beforeend', creatTripPrice(tripPointsArray));
-renderElement('.trip-events', 'beforeend', createSort());
-renderElement('.trip-events', 'beforeend', creatContentList());
+const navContainer = document.querySelector('.trip-controls__navigation');
+const eventsContainer = document.querySelector('.trip-events');
+const mainInfoContainer = document.querySelector('.trip-main');
+
+render(navContainer, new SiteMenuView().getElement(), 'beforeend');
+render(eventsContainer, new SortListView().getElement(), 'beforeend');
+
+render(mainInfoContainer, new TripInfoView(tripPointsArray).getElement(), 'afterbegin');
+
+const priceContainer = document.querySelector('.trip-info');
+render(priceContainer, new TripPriceView(tripPointsArray).getElement(), 'beforeend');
 
 // Формы фильтров
-renderElement('.trip-controls__filters','beforeend', creatFilterForm());
-
-// Сами фильтры
-for (const filter of DATA.FILTER_TYPES) {
-  renderElement('.trip-filters','afterbegin', creatFilter(filter));
-}
+const filtersContainer = document.querySelector('.trip-controls__filters');
+render(filtersContainer, new FilterFormView(DATA.FILTER_TYPES).getElement(), 'beforeend');
 
 // Точки путешествия
-for (const point of tripPointsArray) {
-  renderElement('.trip-events__list', 'beforeend', creatTripPoint(point));
-}
+const eventsList = new TripPointListView();
+render(eventsContainer, eventsList.getElement(), 'beforeend');
 
-// Функция создания формы создания или редактирования точки путешествия
-const renderTripPointForm = (formType) => {
-  let renderFunction = createNewTripPoint(tripPointsArray[0]);
-  if (formType === 'edit') {
-    renderFunction = createEditTripPoint(tripPointsArray[0]);
-  }
-  renderElement('.trip-events__list', 'afterbegin', renderFunction);
-  for (const type of DATA.TRANSPORT_TYPES) {
-    renderElement('.event__type-group', 'beforeend', creatItem(type));
-  }
+const renderTripPoint = (point) => {
+  const parentContainer = new TripPointItemView();
+  const tripPoint = new TripPointView(point);
+  const editFrom = new EditTripPointView(point);
+
+  render(eventsList.getElement(), parentContainer.getElement(), 'beforeend');
+  render(parentContainer.getElement(), tripPoint.getElement(), 'beforeend');
+
+  const swapPointToEdit = () => {
+    parentContainer.getElement().replaceChild(editFrom.getElement(), tripPoint.getElement());
+  };
+
+  const swapEditToPoint = () => {
+    parentContainer.getElement().replaceChild(tripPoint.getElement(), editFrom.getElement());
+  };
+
+  tripPoint.getElement().querySelector('.event__rollup-btn').addEventListener('click', swapPointToEdit);
+  editFrom.getElement().querySelector('.event__save-btn').addEventListener('click', (evt) => {
+    evt.preventDefault();
+    swapEditToPoint();
+  });
+  editFrom.getElement().querySelector('.event__rollup-btn').addEventListener('click', swapEditToPoint);
 };
 
-renderTripPointForm();
-renderTripPointForm('edit');
-
+for (const point of tripPointsArray) {
+  renderTripPoint(point);
+}

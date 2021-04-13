@@ -3,14 +3,6 @@ const generateRandomNumber= function (min = 0 , max = 1, point = 0) {
   return Number(num.toFixed(point));  //https://learn.javascript.ru/number#okruglenie
 };
 
-const createDestinationsList = (array) => {
-  return array.map((_, i) => {return `<option value="${array[i]}"></option>`;}).join('');
-};
-
-const creatPhotosList = (array) => {
-  return array.map((_, i) => {return `<img class="event__photo" src="${array[i]}" alt="Event photo">`;}).join('');
-};
-
 const sumTripPrice = (array) => {
   return array.reduce((accumulator,obj) => {
     const offersPriceSum =  obj.options.reduce((accumulator, option) => {
@@ -21,5 +13,22 @@ const sumTripPrice = (array) => {
   }, 0);
 };
 
+const renderElement = (parentClass, position, text) => {
+  const parent = document.querySelector(parentClass);
+  parent.insertAdjacentHTML(position, text);
+};
 
-export {generateRandomNumber, createDestinationsList, creatPhotosList, sumTripPrice};
+const render = (parent, element, position) => {
+
+  if (position === 'beforeend') {
+    parent.append(element);
+  } else {parent.prepend(element);}
+};
+
+const createElementDOM = (template) => {
+  const parent = document.createElement('div');
+  parent.innerHTML = template;
+  return parent.firstChild;
+};
+
+export {generateRandomNumber, sumTripPrice, renderElement, render, createElementDOM};

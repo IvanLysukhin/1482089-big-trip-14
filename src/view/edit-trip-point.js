@@ -1,19 +1,22 @@
-import {createDestinationsList} from '../utils.js';
-import {creatOfferSelector} from './offer-selector';
+import {createElementDOM} from '../utils.js';
+import {DATA} from '../constants.js';
+import DestinationsListView from './destinations-list.js';
+import CheckboxTypeListView from './checkbox-list.js';
+import OfferSelectorsView from './offer-selector.js';
 
 const createEditTripPoint = (obj) => {
+  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
-  const citiesList = createDestinationsList(destination.cities);
+  const citiesList = new DestinationsListView(destination.cities).getTemplate();
 
   let hidden = '';
   if (!options.length) {
     hidden = 'visually-hidden';
   }
-  const offerList = creatOfferSelector(options);
+  const offerList = new OfferSelectorsView(options).getTemplate();
 
-  return `<li class="trip-events__item">
-              <form class="event event--edit" action="#" method="post">
+  return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -23,10 +26,8 @@ const createEditTripPoint = (obj) => {
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
                     <div class="event__type-list">
-                      <fieldset class="event__type-group">
-                        <legend class="visually-hidden">Event type</legend>
-                         <!--Чекбоксы выбора транспорта-->
-                      </fieldset>
+                      <!--Чекбоксы выбора транспорта-->
+                      ${checkboxTypes}
                     </div>
                   </div>
 
@@ -77,8 +78,27 @@ const createEditTripPoint = (obj) => {
                     <p class="event__destination-description">${destinationInfo.infoText}</p>
                   </section>
                 </section>
-              </form>
-            </li>`;
+              </form>`;
 };
 
-export {createEditTripPoint};
+export default class EditTripPoint {
+  constructor(obj) {
+    this._element = null;
+    this._obj = obj;
+  }
+
+  getTemplate() {
+    return createEditTripPoint(this._obj);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElementDOM(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  clearElement() {
+    this._element = null;
+  }
+}
