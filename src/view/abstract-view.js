@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils';
+import {createElementDOM} from '../utils/render-DOM-elements.js';
 
 export default class AbstractView {
   constructor() {

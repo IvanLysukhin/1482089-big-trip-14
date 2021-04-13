@@ -1,4 +1,4 @@
-import {generateRandomNumber} from '../utils.js';
+import {generateRandomNumber} from '../utils/common.js';
 import {DATA} from '../constants.js';
 
 const generateRandomDate = () => {

@@ -1,5 +1,5 @@
 import {DATA} from './constants.js';
-import {render} from './utils.js';
+import {render} from './utils/render-DOM-elements.js';
 import {generateTripPoint} from './mock/mocks.js';
 import SiteMenuView from './view/menu.js';
 import SortListView from './view/sort.js';
