@@ -1,4 +1,5 @@
-import {createElementDOM, sumTripPrice} from '../utils.js';
+import {sumTripPrice} from '../utils.js';
+import AbstractView from './abstract-view.js';
 
 const createTripPrice = (array) => {
   const price = sumTripPrice(array);
@@ -7,24 +8,13 @@ const createTripPrice = (array) => {
            </p>`;
 };
 
-export default class TripPrice {
+export default class TripPrice extends AbstractView {
   constructor(array) {
-    this._element = null;
+    super();
     this._array = array;
   }
 
   getTemplate() {
     return createTripPrice(this._array);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

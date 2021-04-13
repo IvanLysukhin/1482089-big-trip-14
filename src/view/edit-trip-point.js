@@ -1,5 +1,5 @@
-import {createElementDOM} from '../utils.js';
 import {DATA} from '../constants.js';
+import AbstractView from './abstract-view.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
@@ -81,24 +81,13 @@ const createEditTripPoint = (obj) => {
               </form>`;
 };
 
-export default class EditTripPoint {
+export default class EditTripPoint extends AbstractView {
   constructor(obj) {
-    this._element = null;
+    super();
     this._obj = obj;
   }
 
   getTemplate() {
     return createEditTripPoint(this._obj);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

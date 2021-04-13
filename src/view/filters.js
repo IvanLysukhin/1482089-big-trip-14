@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils.js';
+import AbstractView from './abstract-view.js';
 
 const createFilters = (array) => {
   return array.map((filterType) => {
@@ -17,23 +17,12 @@ const createFilterForm = (array) => {
           </form>`;
 };
 
-export default class FilterForm {
+export default class FilterForm extends AbstractView {
   constructor(array) {
-    this._element = null;
+    super();
     this._array = array;
   }
   getTemplate () {
     return createFilterForm(this._array);
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

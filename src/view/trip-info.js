@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils.js';
+import AbstractView from './abstract-view.js';
 
 const createRoute = (array) => {
 
@@ -48,24 +48,13 @@ const createTripInfo = (array) => {
           </section>`;
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractView {
   constructor(array) {
-    this._element = null;
+    super();
     this._array = array;
   }
 
   getTemplate() {
     return createTripInfo(this._array);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

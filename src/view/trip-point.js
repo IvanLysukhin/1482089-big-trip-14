@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils';
+import AbstractView from './abstract-view.js';
 
 const createOfferItem = (array) => {
   return array.map((offer) => {
@@ -57,24 +57,13 @@ const createTripPoint = (obj) => {
 };
 
 
-export default class TripPoint {
+export default class TripPoint extends AbstractView {
   constructor(obj) {
-    this._element = null;
+    super();
     this._obj = obj;
   }
 
   getTemplate () {
     return createTripPoint(this._obj);
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

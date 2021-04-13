@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils.js';
+import AbstractView from './abstract-view.js';
 
 const createCheckboxTypeList = (array) => {
   const typesList = array.map((type) => {
@@ -16,24 +16,13 @@ const createCheckboxTypeList = (array) => {
 };
 
 
-export default class CheckboxTypeList {
+export default class CheckboxTypeList extends AbstractView {
   constructor(array) {
-    this._element = null;
+    super();
     this._array = array;
   }
 
   getTemplate() {
     return createCheckboxTypeList(this._array);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }
