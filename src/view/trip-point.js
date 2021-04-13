@@ -70,11 +70,11 @@ export default class TripPoint extends AbstractView {
 
   _clickHandler(evt) {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.closeFunction();
   }
 
   setClickHandler(cb) {
-    this._callback.click = cb;
+    this._callback.closeFunction = cb;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
   }
 }

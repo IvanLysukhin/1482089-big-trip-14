@@ -94,11 +94,11 @@ export default class EditTripPoint extends AbstractView {
 
   _closeForm(evt) {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.closeFunction();
   }
 
   setHandlerForm(cb) {
-    this._callback.click = cb;
+    this._callback.closeFunction = cb;
     this.getElement().addEventListener('submit', this._closeForm);
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeForm);
   }
