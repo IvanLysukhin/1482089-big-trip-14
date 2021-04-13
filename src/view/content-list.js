@@ -1,26 +1,11 @@
-import {createElementDOM} from '../utils.js';
+import AbstractView from './abstract-view.js';
 
 const createContentList = () => {
   return '<ul class="trip-events__list"></ul>';
 };
 
-export default class TripPointList {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripPointList extends AbstractView {
   getTemplate () {
     return createContentList();
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }
