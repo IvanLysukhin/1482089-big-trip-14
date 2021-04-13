@@ -60,7 +60,7 @@ const renderTripPoint = (point) => {
     swapPointToEdit();
     document.addEventListener('keydown',  closeEscape);
   });
-  editFrom.getElement().querySelector('.event__save-btn').addEventListener('click', (evt) => {
+  editFrom.getElement().addEventListener('submit', (evt) => {
     evt.preventDefault();
     swapEditToPoint();
     document.removeEventListener('keydown', closeEscape);
