@@ -56,6 +56,7 @@ const renderTripPoint = (point) => {
     }
   };
 
+
   tripPoint.setClickHandler(() => {
     swapPointToEdit();
     document.addEventListener('keydown',  closeEscape);
