@@ -1,4 +1,5 @@
 import AbstractView from '../view/abstract-view.js';
+
 const render = (parent, element, position) => {
 
   if (parent instanceof AbstractView) {
@@ -21,4 +22,18 @@ const createElementDOM = (template) => {
   return parent.firstChild;
 };
 
-export {render, createElementDOM};
+const replaceElements = (newChild, oldChild) => {
+  if (oldChild instanceof AbstractView) {
+    oldChild = oldChild.getElement();
+  }
+
+  if (newChild instanceof AbstractView) {
+    newChild = newChild.getElement();
+  }
+
+  const parent = oldChild.parentElement;
+
+  parent.replaceChild(newChild, oldChild);
+};
+
+export {render, createElementDOM, replaceElements};

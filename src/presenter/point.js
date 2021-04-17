@@ -1,7 +1,7 @@
 import TripPointItemView from '../view/trip-list-item.js';
 import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
-import {render} from '../utils/render-DOM-elements.js';
+import {render, replaceElements} from '../utils/render-DOM-elements.js';
 
 export default class PointPresenter {
   constructor(container) {
@@ -24,11 +24,11 @@ export default class PointPresenter {
   }
 
   _swapPointToEdit () {
-    this._parentContainer.getElement().replaceChild(this._editFormComponent.getElement(), this._pointComponent.getElement());
+    replaceElements(this._editFormComponent, this._pointComponent);
   }
 
   _swapEditToPoint () {
-    this._parentContainer.getElement().replaceChild(this._pointComponent.getElement(), this._editFormComponent.getElement());
+    replaceElements(this._pointComponent, this._editFormComponent);
   }
 
   _handlerPointClick() {
