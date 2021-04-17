@@ -2,15 +2,11 @@ import {DATA} from './constants.js';
 import {render} from './utils/render-DOM-elements.js';
 import {generateTripPoint} from './mock/mocks.js';
 import SiteMenuView from './view/menu.js';
-import SortListView from './view/sort.js';
-import TripPointListView from './view/content-list.js';
-import TripPointItemView from './view/trip-list-item.js';
 import FilterFormView from './view/filters.js';
-import TripPointView from './view/trip-point.js';
 import TripInfoView from './view/trip-info.js';
 import TripPriceView from './view/trip-price.js';
-import EditTripPointView from './view/edit-trip-point.js';
-import EmptyListMessageView from './view/empty-list-message.js';
+
+import TripPresenter from './presenter/trip.js';
 
 const tripPointsArray = new Array(DATA.COUNT_TRIP_POINTS).fill('').map(generateTripPoint);
 
@@ -31,54 +27,4 @@ const filtersContainer = document.querySelector('.trip-controls__filters');
 render(filtersContainer, new FilterFormView(DATA.FILTER_TYPES), 'beforeend');
 
 // Точки путешествия
-const eventsList = new TripPointListView();
-
-const renderTripPoint = (point) => {
-  const parentContainer = new TripPointItemView();
-  const tripPoint = new TripPointView(point);
-  const editFrom = new EditTripPointView(point);
-
-  render(eventsList, parentContainer, 'beforeend');
-  render(parentContainer, tripPoint, 'beforeend');
-
-  const swapPointToEdit = () => {
-    parentContainer.getElement().replaceChild(editFrom.getElement(), tripPoint.getElement());
-  };
-
-  const swapEditToPoint = () => {
-    parentContainer.getElement().replaceChild(tripPoint.getElement(), editFrom.getElement());
-  };
-
-  const closeEscape = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      swapEditToPoint();
-      document.removeEventListener('keydown', closeEscape);
-    }
-  };
-
-
-  tripPoint.setClickHandler(() => {
-    swapPointToEdit();
-    document.addEventListener('keydown',  closeEscape);
-  });
-
-  editFrom.setHandlerForm(()=>{
-    swapEditToPoint();
-    document.removeEventListener('keydown',  closeEscape);
-  });
-};
-
-const renderContent = (array) => {
-  if (array.length) {
-    render(eventsContainer, eventsList, 'beforeend');
-    render(eventsContainer, new SortListView(), 'afterbegin');
-
-    for (const point of array) {
-      renderTripPoint(point);
-    }
-  } else {
-    render(eventsContainer, new EmptyListMessageView(), 'beforeend');
-  }
-};
-
-renderContent(tripPointsArray);
+new TripPresenter(eventsContainer).initialize(tripPointsArray);

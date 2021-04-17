@@ -21,8 +21,7 @@ const createTripPoint = (obj) => {
     favoriteButtonClass = 'event__favorite-btn--active';
   }
 
-  return `<li class="trip-events__item">
-              <div class="event">
+  return `<div class="event">
                 <time class="event__date" datetime="${date.dateStart}">${date.dateStart}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
@@ -52,8 +51,7 @@ const createTripPoint = (obj) => {
                 <button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
                 </button>
-              </div>
-            </li>`;
+              </div>`;
 };
 
 
