@@ -19,16 +19,16 @@ const navContainer = document.querySelector('.trip-controls__navigation');
 const eventsContainer = document.querySelector('.trip-events');
 const mainInfoContainer = document.querySelector('.trip-main');
 
-render(navContainer, new SiteMenuView().getElement(), 'beforeend');
+render(navContainer, new SiteMenuView(), 'beforeend');
 
-render(mainInfoContainer, new TripInfoView(tripPointsArray).getElement(), 'afterbegin');
+render(mainInfoContainer, new TripInfoView(tripPointsArray), 'afterbegin');
 
 const priceContainer = document.querySelector('.trip-info');
-render(priceContainer, new TripPriceView(tripPointsArray).getElement(), 'beforeend');
+render(priceContainer, new TripPriceView(tripPointsArray), 'beforeend');
 
 // Формы фильтров
 const filtersContainer = document.querySelector('.trip-controls__filters');
-render(filtersContainer, new FilterFormView(DATA.FILTER_TYPES).getElement(), 'beforeend');
+render(filtersContainer, new FilterFormView(DATA.FILTER_TYPES), 'beforeend');
 
 // Точки путешествия
 const eventsList = new TripPointListView();
@@ -38,8 +38,8 @@ const renderTripPoint = (point) => {
   const tripPoint = new TripPointView(point);
   const editFrom = new EditTripPointView(point);
 
-  render(eventsList.getElement(), parentContainer.getElement(), 'beforeend');
-  render(parentContainer.getElement(), tripPoint.getElement(), 'beforeend');
+  render(eventsList, parentContainer, 'beforeend');
+  render(parentContainer, tripPoint, 'beforeend');
 
   const swapPointToEdit = () => {
     parentContainer.getElement().replaceChild(editFrom.getElement(), tripPoint.getElement());
@@ -70,14 +70,14 @@ const renderTripPoint = (point) => {
 
 const renderContent = (array) => {
   if (array.length) {
-    render(eventsContainer, eventsList.getElement(), 'beforeend');
-    render(eventsContainer, new SortListView().getElement(), 'afterbegin');
+    render(eventsContainer, eventsList, 'beforeend');
+    render(eventsContainer, new SortListView(), 'afterbegin');
 
     for (const point of array) {
       renderTripPoint(point);
     }
   } else {
-    render(eventsContainer, new EmptyListMessageView().getElement(), 'beforeend');
+    render(eventsContainer, new EmptyListMessageView(), 'beforeend');
   }
 };
 
