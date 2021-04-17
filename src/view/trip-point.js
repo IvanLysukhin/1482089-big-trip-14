@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils';
+import AbstractView from './abstract-view.js';
 
 const createOfferItem = (array) => {
   return array.map((offer) => {
@@ -57,24 +57,24 @@ const createTripPoint = (obj) => {
 };
 
 
-export default class TripPoint {
+export default class TripPoint extends AbstractView {
   constructor(obj) {
-    this._element = null;
+    super();
     this._obj = obj;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
-  getTemplate () {
+  getTemplate() {
     return createTripPoint(this._obj);
   }
 
-  getElement () {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeFunction();
   }
 
-  clearElement() {
-    this._element = null;
+  setClickHandler(cb) {
+    this._callback.closeFunction = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
   }
 }

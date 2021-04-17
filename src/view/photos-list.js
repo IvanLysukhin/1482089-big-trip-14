@@ -1,27 +1,16 @@
-import {createElementDOM} from '../utils';
+import AbstractView from './abstract-view.js';
 
 const createPhotosList = (array) => {
   return array.map((url) => {return `<img class="event__photo" src="${url}" alt="Event photo">`;}).join('');
 };
 
-export default class PhotosList {
+export default class PhotosList extends AbstractView{
   constructor(array) {
-    this._element = null;
+    super();
     this._array = array;
   }
 
   getTemplate() {
     return createPhotosList(this._array);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

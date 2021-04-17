@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils';
+import AbstractView from './abstract-view.js';
 
 const createOfferSelector = (array) => {
   return array.map((offer) => {
@@ -14,24 +14,13 @@ const createOfferSelector = (array) => {
   }).join('');
 };
 
-export default class OfferSelectors {
+export default class OfferSelectors extends AbstractView {
   constructor(array) {
-    this._element = null;
+    super();
     this._array = array;
   }
 
   getTemplate() {
     return createOfferSelector(this._array);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElementDOM(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  clearElement() {
-    this._element = null;
   }
 }

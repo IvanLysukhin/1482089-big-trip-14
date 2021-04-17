@@ -1,5 +1,5 @@
 import {DATA} from './constants.js';
-import {render} from './utils.js';
+import {render} from './utils/render-DOM-elements.js';
 import {generateTripPoint} from './mock/mocks.js';
 import SiteMenuView from './view/menu.js';
 import SortListView from './view/sort.js';
@@ -56,18 +56,15 @@ const renderTripPoint = (point) => {
     }
   };
 
-  tripPoint.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+
+  tripPoint.setClickHandler(() => {
     swapPointToEdit();
     document.addEventListener('keydown',  closeEscape);
   });
-  editFrom.getElement().addEventListener('submit', (evt) => {
-    evt.preventDefault();
+
+  editFrom.setHandlerForm(()=>{
     swapEditToPoint();
-    document.removeEventListener('keydown', closeEscape);
-  });
-  editFrom.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
-    swapEditToPoint();
-    document.removeEventListener('keydown', closeEscape);
+    document.removeEventListener('keydown',  closeEscape);
   });
 };
 
