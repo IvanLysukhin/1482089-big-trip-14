@@ -4,13 +4,16 @@ import EditTripPointView from '../view/edit-trip-point.js';
 import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
 
 export default class PointPresenter {
-  constructor(container) {
+  constructor(container, changeData) {
     this._container = container;
+    this._changeData = changeData;
 
     this._parentContainer = new TripPointItemView();
 
     this._pointComponent = null;
     this._editFormComponent = null;
+
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
     this._handlerPointClick = this._handlerPointClick.bind(this);
     this._closeEscape = this._closeEscape.bind(this);
@@ -18,8 +21,7 @@ export default class PointPresenter {
   }
 
   initialize (point) {
-
-
+    this._point = point;
     const prevPoint = this._pointComponent;
     const prevEditForm = this._editFormComponent;
 
@@ -28,6 +30,8 @@ export default class PointPresenter {
 
     this._pointComponent.setClickHandler(this._handlerPointClick);
     this._editFormComponent.setHandlerForm(this._handlerEditForm);
+
+    this._pointComponent.setFavoriteHandler(this._handleFavoriteClick);
 
     if (prevPoint === null || prevEditForm === null) {
       this._renderPoint();
@@ -57,6 +61,18 @@ export default class PointPresenter {
 
   _swapEditToPoint () {
     replaceElements(this._pointComponent, this._editFormComponent);
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+      Object.assign(
+        {},
+        this._point,
+        {
+          isFavorite: !this._point.isFavorite,
+        },
+      ),
+    );
   }
 
   _handlerPointClick() {

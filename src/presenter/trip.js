@@ -1,4 +1,5 @@
 import {render} from '../utils/render-DOM-elements';
+import {updateItem} from '../utils/common.js';
 
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
@@ -12,6 +13,10 @@ export default class TripPresenter {
     this._eventsList = null;
     this._sortList =  null;
     this._emptyMessage = null;
+
+    this._pointPresenter = {};
+
+    this._handleTripPointChange = this._handleTripPointChange.bind(this);
   }
 
   initialize(tripPoints) {
@@ -20,6 +25,7 @@ export default class TripPresenter {
     this._emptyMessage = new EmptyListMessageView();
 
     this._tripPoints = tripPoints.slice();
+
     if (this._tripPoints.length) {
       this._renderEventsList();
       this._renderSortList();
@@ -38,13 +44,23 @@ export default class TripPresenter {
   }
 
   _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList);
+    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleTripPointChange);
     pointPresenter.initialize(point);
+    this._pointPresenter[point.id] = pointPresenter;
   }
-
 
   _renderTripPoints (pointsArray) {
     pointsArray.forEach((point) => {this._renderPoint(point);});
+  }
+
+  _clearTripPoints () {
+    Object.values(this._pointPresenter).forEach((pointPresenter) => {pointPresenter.destroy();});
+    this._pointPresenter = {};
+  }
+
+  _handleTripPointChange (updatedPoint) {
+    this._tripPoints = updateItem(this._tripPoints, updatedPoint);
+    this._pointPresenter[updatedPoint.id].initialize(updatedPoint);
   }
 
   _renderEmptyMessage () {
