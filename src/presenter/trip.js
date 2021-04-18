@@ -9,12 +9,16 @@ import TripPointPresenter from '../presenter/point.js';
 export default class TripPresenter {
   constructor(listContainer) {
     this._listContainer = listContainer;
-    this._eventsList = new TripPointListView();
-    this._sortList =  new SortListView();
-    this._emptyMessage = new EmptyListMessageView();
+    this._eventsList = null;
+    this._sortList =  null;
+    this._emptyMessage = null;
   }
 
   initialize(tripPoints) {
+    this._eventsList = new TripPointListView();
+    this._sortList =  new SortListView();
+    this._emptyMessage = new EmptyListMessageView();
+
     this._tripPoints = tripPoints.slice();
     if (this._tripPoints.length) {
       this._renderEventsList();
