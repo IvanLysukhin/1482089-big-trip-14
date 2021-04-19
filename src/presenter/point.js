@@ -3,15 +3,22 @@ import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
 import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
 
+const pointMode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class PointPresenter {
-  constructor(container, changeData) {
+  constructor(container, changeData, changeMode) {
     this._container = container;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._parentContainer = new TripPointItemView();
 
     this._pointComponent = null;
     this._editFormComponent = null;
+    this._mode = pointMode.DEFAULT;
 
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
@@ -38,11 +45,11 @@ export default class PointPresenter {
       return;
     }
 
-    if (this._parentContainer.getElement().contains(prevPoint.getElement())) {
+    if (this._mode === pointMode.DEFAULT) {
       replaceElements(this._pointComponent, prevPoint);
     }
 
-    if (this._parentContainer.getElement().contains(prevEditForm.getElement())) {
+    if (this._mode === pointMode.EDITING) {
       replaceElements(this._editFormComponent, prevEditForm);
     }
 
@@ -55,12 +62,21 @@ export default class PointPresenter {
     removeElement(this._editFormComponent);
   }
 
+  resetView () {
+    if (this._mode !== pointMode.DEFAULT) {
+      this._swapEditToPoint();
+    }
+  }
+
   _swapPointToEdit () {
     replaceElements(this._editFormComponent, this._pointComponent);
+    this._changeMode();
+    this._mode = pointMode.EDITING;
   }
 
   _swapEditToPoint () {
     replaceElements(this._pointComponent, this._editFormComponent);
+    this._mode = pointMode.DEFAULT;
   }
 
   _handleFavoriteClick() {

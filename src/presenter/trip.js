@@ -17,6 +17,7 @@ export default class TripPresenter {
     this._pointPresenter = {};
 
     this._handleTripPointChange = this._handleTripPointChange.bind(this);
+    this._handleChangeMode = this._handleChangeMode.bind(this);
   }
 
   initialize(tripPoints) {
@@ -44,7 +45,7 @@ export default class TripPresenter {
   }
 
   _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleTripPointChange);
+    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleTripPointChange, this._handleChangeMode);
     pointPresenter.initialize(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
@@ -65,5 +66,11 @@ export default class TripPresenter {
 
   _renderEmptyMessage () {
     render(this._listContainer, this._emptyMessage, 'beforeend');
+  }
+
+  _handleChangeMode () {
+    Object
+      .values(this._pointPresenter)
+      .forEach((pointPresenter) =>{pointPresenter.resetView();});
   }
 }
