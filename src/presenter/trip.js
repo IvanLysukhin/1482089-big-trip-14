@@ -21,10 +21,6 @@ export default class TripPresenter {
   }
 
   initialize(tripPoints) {
-    this._eventsList = new TripPointListView();
-    this._sortList =  new SortListView();
-    this._emptyMessage = new EmptyListMessageView();
-
     this._tripPoints = tripPoints.slice();
 
     if (this._tripPoints.length) {
@@ -37,15 +33,17 @@ export default class TripPresenter {
   }
 
   _renderEventsList () {
+    this._eventsList = new TripPointListView();
     render(this._listContainer, this._eventsList, 'beforeend');
   }
 
   _renderSortList () {
+    this._sortList =  new SortListView();
     render(this._listContainer, this._sortList, 'afterbegin');
   }
 
   _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleTripPointChange, this._handleChangeMode);
+    const pointPresenter = new TripPointPresenter(this._eventsList, point, this._handleTripPointChange, this._handleChangeMode);
     pointPresenter.initialize(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
@@ -65,6 +63,7 @@ export default class TripPresenter {
   }
 
   _renderEmptyMessage () {
+    this._emptyMessage = new EmptyListMessageView();
     render(this._listContainer, this._emptyMessage, 'beforeend');
   }
 
