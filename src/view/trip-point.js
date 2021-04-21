@@ -21,8 +21,7 @@ const createTripPoint = (obj) => {
     favoriteButtonClass = 'event__favorite-btn--active';
   }
 
-  return `<li class="trip-events__item">
-              <div class="event">
+  return `<div class="event">
                 <time class="event__date" datetime="${date.dateStart}">${date.dateStart}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
@@ -52,8 +51,7 @@ const createTripPoint = (obj) => {
                 <button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
                 </button>
-              </div>
-            </li>`;
+              </div>`;
 };
 
 
@@ -62,6 +60,7 @@ export default class TripPoint extends AbstractView {
     super();
     this._obj = obj;
     this._clickHandler = this._clickHandler.bind(this);
+    this._favoriteClick = this._favoriteClick.bind(this);
   }
 
   getTemplate() {
@@ -76,5 +75,15 @@ export default class TripPoint extends AbstractView {
   setClickHandler(cb) {
     this._callback.closeFunction = cb;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
+  }
+
+  _favoriteClick (evt) {
+    evt.preventDefault();
+    this._callback.faboriteBtnClick();
+  }
+
+  setFavoriteHandler (cb) {
+    this._callback.faboriteBtnClick = cb;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClick);
   }
 }

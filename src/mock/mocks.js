@@ -1,5 +1,6 @@
 import {generateRandomNumber} from '../utils/common.js';
 import {DATA} from '../constants.js';
+import {nanoid} from 'nanoid';
 
 const generateRandomDate = () => {
   const months =['APR', 'MAR'];
@@ -66,6 +67,7 @@ const generateTripPoint = () => {
 
 
   return {
+    id: nanoid(),
     price: generateRandomNumber(0, 200),
     date: {
       dateStart,

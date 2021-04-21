@@ -3,4 +3,18 @@ const generateRandomNumber= function (min = 0 , max = 1, point = 0) {
   return Number(num.toFixed(point));  //https://learn.javascript.ru/number#okruglenie
 };
 
-export {generateRandomNumber};
+const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
+export {generateRandomNumber, updateItem};
