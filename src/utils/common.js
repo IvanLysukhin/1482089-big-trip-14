@@ -17,4 +17,29 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {generateRandomNumber, updateItem};
+const sortTime = (pointA, pointB) => {
+  let timeA = 0;
+  let timeB = 0;
+  if (pointA.duration.search(/\dH/) !== -1) {
+    timeA += pointA.duration[0] * 60;
+  }
+
+  if (pointB.duration.search(/\dH/) !== -1) {
+    timeB += pointB.duration[0] * 60;
+  }
+  if (pointA.duration.match(/[0-9]*M/) !== null) {
+    const array = pointA.duration.match(/[0-9]*M/)[0].split('');
+    timeA += Number(array.splice(0, array.length - 1).join(''));
+  }
+
+  if (pointB.duration.match(/[0-9]*M/) !== null) {
+    const array = pointB.duration.match(/[0-9]*M/)[0].split('');
+    timeB += Number(array.splice(0, array.length - 1).join(''));
+  }
+
+  return timeB - timeA;
+};
+
+const sortPrice = (pointA, pointB) => {return pointB.price - pointA.price;};
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice};

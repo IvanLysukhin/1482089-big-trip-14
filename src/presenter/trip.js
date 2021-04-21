@@ -1,5 +1,6 @@
 import {render} from '../utils/render-DOM-elements';
-import {updateItem} from '../utils/common.js';
+import {updateItem, sortTime, sortPrice} from '../utils/common.js';
+import {DATA} from '../constants.js';
 
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
@@ -15,13 +16,16 @@ export default class TripPresenter {
     this._emptyMessage = null;
 
     this._pointPresenter = {};
+    this._currentSortType = DATA.SORT_TYPE.DEFAULT;
 
     this._handleTripPointChange = this._handleTripPointChange.bind(this);
     this._handleChangeMode = this._handleChangeMode.bind(this);
+    this._handleSort = this._handleSort.bind(this);
   }
 
   initialize(tripPoints) {
     this._tripPoints = tripPoints.slice();
+    this._sourcedTripPoints = tripPoints.slice();
 
     if (this._tripPoints.length) {
       this._renderEventsList();
@@ -40,8 +44,31 @@ export default class TripPresenter {
   _renderSortList () {
     this._sortList =  new SortListView();
     render(this._listContainer, this._sortList, 'afterbegin');
+    this._sortList.setSortClick(this._handleSort);
+  }
+  _handleSort (sortType) {
+    if (this._currentSortType !== sortType.target.getAttribute('for')) {
+      this._sortPoints(sortType);
+      this._clearTripPoints();
+      this._renderTripPoints(this._tripPoints);
+    }
   }
 
+  _sortPoints (sortType) {
+    switch (sortType.target.getAttribute('for')) {
+      case DATA.SORT_TYPE.TIME:
+        this._tripPoints.sort(sortTime);
+        break;
+      case DATA.SORT_TYPE.PRICE:
+        this._tripPoints.sort(sortPrice);
+        break;
+      case DATA.SORT_TYPE.DEFAULT:
+        this._tripPoints = this._sourcedTripPoints.slice();
+        break;
+    }
+
+    this._currentSortType = sortType.target.getAttribute('for');
+  }
   _renderPoint (point) {
     const pointPresenter = new TripPointPresenter(this._eventsList, point, this._handleTripPointChange, this._handleChangeMode);
     pointPresenter.initialize(point);
@@ -59,6 +86,7 @@ export default class TripPresenter {
 
   _handleTripPointChange (updatedPoint) {
     this._tripPoints = updateItem(this._tripPoints, updatedPoint);
+    this._sourcedTripPoints = updateItem(this._sourcedTripPoints, updatedPoint);
     this._pointPresenter[updatedPoint.id].initialize(updatedPoint);
   }
 

@@ -60,6 +60,7 @@ export default class PointPresenter {
   destroy () {
     removeElement(this._pointComponent);
     removeElement(this._editFormComponent);
+    removeElement(this._parentContainer);
   }
 
   resetView () {
