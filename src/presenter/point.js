@@ -9,11 +9,11 @@ const pointMode = {
 };
 
 export default class PointPresenter {
-  constructor(container, point, changeData, changeMode) {
+  constructor(container, changeData, changeMode) {
     this._container = container;
     this._changeData = changeData;
     this._changeMode = changeMode;
-    this._point = point;
+
 
     this._parentContainer = new TripPointItemView();
 
@@ -28,7 +28,8 @@ export default class PointPresenter {
     this._handlerEditForm = this._handlerEditForm.bind(this);
   }
 
-  initialize () {
+  initialize (point) {
+    this._point = point;
     const prevPoint = this._pointComponent;
     const prevEditForm = this._editFormComponent;
 

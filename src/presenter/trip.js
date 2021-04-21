@@ -70,7 +70,7 @@ export default class TripPresenter {
     this._currentSortType = sortType.target.getAttribute('for');
   }
   _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList, point, this._handleTripPointChange, this._handleChangeMode);
+    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleTripPointChange, this._handleChangeMode);
     pointPresenter.initialize(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
