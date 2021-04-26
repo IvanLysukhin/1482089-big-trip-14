@@ -1,5 +1,5 @@
 import {generateRandomNumber} from '../utils/common.js';
-import {DATA, POINT_TYPES} from '../constants.js';
+import {DATA} from '../constants.js';
 import {nanoid} from 'nanoid';
 
 const generateRandomDate = () => {
