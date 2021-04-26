@@ -1,5 +1,5 @@
 import {generateRandomNumber} from '../utils/common.js';
-import {DATA} from '../constants.js';
+import {DATA, POINT_TYPES} from '../constants.js';
 import {nanoid} from 'nanoid';
 
 const generateRandomDate = () => {
@@ -14,7 +14,7 @@ const generateRandomDate = () => {
 };
 
 const getRandomArrayElement = (array) => {
-  return array[generateRandomNumber(0, array.length - 1)].toLowerCase();
+  return array[generateRandomNumber(0, array.length - 1)];
 };
 
 const getRandomArray = (array) => {
@@ -65,6 +65,7 @@ const generateTripPoint = () => {
 
   const randomWords = DATA.RANDOM_TEXT.split('. ');
 
+  const pointType =  getRandomArrayElement(DATA.POINT_TYPES);
 
   return {
     id: nanoid(),
@@ -75,12 +76,12 @@ const generateTripPoint = () => {
       dateEnd,
       timeEnd,
     },
-    pointType: getRandomArrayElement(DATA.TRANSPORT_TYPES),
+    pointType: pointType.type,
     destination: {
       city: getRandomArrayElement(DATA.CITIES),
       cities: DATA.CITIES,
     },
-    options: getRandomArray(DATA.SELECTOR_SETTINGS),
+    options: pointType.offers,
     destinationInfo:
       {
         infoText: getRandomArray(randomWords).join('. '),

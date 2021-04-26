@@ -5,7 +5,8 @@ import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
 
 const createEditTripPoint = (obj) => {
-  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
+  const typesArray = DATA.POINT_TYPES.map((element) => element.type);
+  const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
   const citiesList = new DestinationsListView(destination.cities).getTemplate();
