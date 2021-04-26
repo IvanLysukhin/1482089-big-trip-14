@@ -15,7 +15,7 @@ const createEditTripPoint = (obj) => {
   if (!options.length) {
     hidden = 'visually-hidden';
   }
-  const offerList = new OfferSelectorsView(options).getTemplate();
+  const offerList = new OfferSelectorsView(options, pointType).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">

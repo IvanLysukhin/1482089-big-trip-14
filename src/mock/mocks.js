@@ -67,6 +67,8 @@ const generateTripPoint = () => {
 
   const pointType =  getRandomArrayElement(DATA.POINT_TYPES);
 
+  pointType.offers.forEach((point) => point.isChecked = generateRandomNumber());
+
   return {
     id: nanoid(),
     price: generateRandomNumber(0, 200),
