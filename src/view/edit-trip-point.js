@@ -85,11 +85,20 @@ export default class EditTripPoint extends AbstractView {
     this._closeForm = this._closeForm.bind(this);
     this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
 
-    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
     return createEditTripPoint(this._data);
+  }
+
+  _setInnerHandlers () {
+    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
+  }
+
+  restoreHandler () {
+    this._setInnerHandlers();
+    this.setHandlerForm(this._callback.closeFunction);
   }
 
   _closeForm(evt) {
@@ -138,6 +147,7 @@ export default class EditTripPoint extends AbstractView {
     );
 
     this.updateElement();
+    this.restoreHandler();
   }
 
   updateElement() {
