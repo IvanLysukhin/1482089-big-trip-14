@@ -1,4 +1,6 @@
 import AbstractView from './abstract-view.js';
+import {DATA} from '../constants.js';
+import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
 
 const createOfferSelector = (array, type) => {
   return array.map((offer, i) => {
@@ -22,6 +24,10 @@ export default class OfferSelectors extends AbstractView {
   }
 
   getTemplate() {
+    const index = findTypeOfferIndex(this._type);
+    if (index !== -1) {
+      this._array = DATA.POINT_TYPES[index].offers;
+    }
     return createOfferSelector(this._array, this._type);
   }
 }

@@ -3,18 +3,15 @@ import AbstractView from './abstract-view.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
+import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
 
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, destination, pointType, price, options, destinationInfo} = obj;
+  const {date, destination, pointType, price, hasOptions,options, destinationInfo} = obj;
 
   const citiesList = new DestinationsListView(destination.cities).getTemplate();
 
-  let hidden = '';
-  if (!options.length) {
-    hidden = 'visually-hidden';
-  }
   const offerList = new OfferSelectorsView(options, pointType).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
@@ -65,16 +62,15 @@ const createEditTripPoint = (obj) => {
                   </button>
                 </header>
                 <section class="event__details">
-                  <section class="event__section  event__section--offers ${hidden}">
+                ${hasOptions ? `<section class="event__section  event__section--offers ">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
                     <div class="event__available-offers">
                      <!--Выбор опций-->
                      ${offerList}
                     </div>
-                  </section>
-
-                  <section class="event__section  event__section--destination">
+                  </section>` : ''}
+                  <section class="event__section  event__section--destination ${destinationInfo.infoText ? '' : 'visually-hidden'}">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${destinationInfo.infoText}</p>
                   </section>
@@ -85,22 +81,72 @@ const createEditTripPoint = (obj) => {
 export default class EditTripPoint extends AbstractView {
   constructor(obj) {
     super();
-    this._obj = obj;
+    this._data = EditTripPoint.parsePointToData(obj);
     this._closeForm = this._closeForm.bind(this);
+    this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
+
+    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
   }
 
   getTemplate() {
-    return createEditTripPoint(this._obj);
+    return createEditTripPoint(this._data);
   }
 
   _closeForm(evt) {
     evt.preventDefault();
-    this._callback.closeFunction();
+    this._callback.closeFunction(this._data);
   }
 
   setHandlerForm(cb) {
     this._callback.closeFunction = cb;
     this.getElement().addEventListener('submit', this._closeForm);
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeForm);
+  }
+
+  static parsePointToData (obj) {
+    return Object.assign(
+      {},
+      obj,
+      {
+        whichType: obj.pointType.toLowerCase(),
+        hasOptions: obj.options.length > 0,
+      },
+    );
+  }
+
+  _checkboxTypeHandler (evt) {
+    if (evt.target.classList.contains('event__type-label')) {
+      evt.preventDefault();
+      const type = evt.target.getAttribute('data-point-type');
+      const index = findTypeOfferIndex(type);
+      this.updateData({
+        pointType: type,
+        hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
+      });
+    }
+  }
+
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+      {},
+      this._data,
+      update,
+    );
+
+    this.updateElement();
+  }
+
+  updateElement() {
+    const prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.clearElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, prevElement);
   }
 }
