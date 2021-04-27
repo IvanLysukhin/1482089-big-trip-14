@@ -1,4 +1,4 @@
-import {generateRandomNumber} from '../utils/common.js';
+import {generateRandomNumber, getRandomArray} from '../utils/common.js';
 import {DATA} from '../constants.js';
 import {nanoid} from 'nanoid';
 
@@ -15,10 +15,6 @@ const generateRandomDate = () => {
 
 const getRandomArrayElement = (array) => {
   return array[generateRandomNumber(0, array.length - 1)];
-};
-
-const getRandomArray = (array) => {
-  return array.slice(generateRandomNumber(0, array.length), generateRandomNumber(0, array.length));
 };
 
 const getRandomPhotosArray = () => {
@@ -79,10 +75,8 @@ const generateTripPoint = () => {
       timeEnd,
     },
     pointType: pointType.type,
-    destination: {
-      city: getRandomArrayElement(DATA.CITIES),
-      cities: DATA.CITIES,
-    },
+    city: getRandomArrayElement(DATA.CITIES),
+    destinations: DATA.CITIES,
     options: pointType.offers,
     destinationInfo:
       {

@@ -4,13 +4,13 @@ import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
 import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
+import {getRandomArray} from '../utils/common.js';
 
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, destination, pointType, price, hasOptions,options, destinationInfo} = obj;
-
-  const citiesList = new DestinationsListView(destination.cities).getTemplate();
+  const {date, city, destinations, pointType, price, hasOptions, hasDestinationInfo, options, infoText} = obj;
+  const citiesList = new DestinationsListView(destinations).getTemplate();
 
   const offerList = new OfferSelectorsView(options, pointType).getTemplate();
 
@@ -33,7 +33,7 @@ const createEditTripPoint = (obj) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${pointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.city}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${citiesList}
                     </datalist>
@@ -70,10 +70,10 @@ const createEditTripPoint = (obj) => {
                      ${offerList}
                     </div>
                   </section>` : ''}
-                  <section class="event__section  event__section--destination ${destinationInfo.infoText ? '' : 'visually-hidden'}">
+                ${hasDestinationInfo ? `<section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">${destinationInfo.infoText}</p>
-                  </section>
+                    <p class="event__destination-description">${infoText}</p>
+                  </section>` : ''}
                 </section>
               </form>`;
 };
@@ -84,7 +84,7 @@ export default class EditTripPoint extends AbstractView {
     this._data = EditTripPoint.parsePointToData(obj);
     this._closeForm = this._closeForm.bind(this);
     this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
-
+    this._cityInputHandler = this._cityInputHandler.bind(this);
     this._setInnerHandlers();
   }
 
@@ -94,6 +94,7 @@ export default class EditTripPoint extends AbstractView {
 
   _setInnerHandlers () {
     this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
+    this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
   }
 
   restoreHandler () {
@@ -103,7 +104,7 @@ export default class EditTripPoint extends AbstractView {
 
   _closeForm(evt) {
     evt.preventDefault();
-    this._callback.closeFunction(this._data);
+    this._callback.closeFunction(EditTripPoint.parseDataToPoint(this._data));
   }
 
   setHandlerForm(cb) {
@@ -117,10 +118,23 @@ export default class EditTripPoint extends AbstractView {
       {},
       obj,
       {
-        whichType: obj.pointType.toLowerCase(),
         hasOptions: obj.options.length > 0,
+        hasDestinationInfo: obj.destinationInfo.infoText.length > 0,
+        infoText: obj.destinationInfo.infoText,
       },
     );
+  }
+
+  static parseDataToPoint (data) {
+    data = Object.assign({}, data);
+
+    data.destinationInfo.infoText = data.infoText;
+
+    delete data.hasOptions;
+    delete data.hasDestinationInfo;
+    delete data.infoText;
+
+    return data;
   }
 
   _checkboxTypeHandler (evt) {
@@ -130,9 +144,19 @@ export default class EditTripPoint extends AbstractView {
       const index = findTypeOfferIndex(type);
       this.updateData({
         pointType: type,
+        options: DATA.POINT_TYPES[index].offers,
         hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
       });
     }
+  }
+
+  _cityInputHandler (evt) {
+    const randomText = getRandomArray(DATA.RANDOM_TEXT.split('. ')).join('. ');
+    this.updateData({
+      city: evt.target.value,
+      infoText: randomText,
+      hasDestinationInfo: randomText.length > 0,
+    });
   }
 
   updateData(update) {
