@@ -1,10 +1,11 @@
 import {DATA} from '../constants.js';
-import AbstractView from './abstract-view.js';
+// import AbstractView from './abstract-view.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
 import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
 import {getRandomArray} from '../utils/common.js';
+import Smart from './smart-view.js';
 
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
@@ -78,7 +79,7 @@ const createEditTripPoint = (obj) => {
               </form>`;
 };
 
-export default class EditTripPoint extends AbstractView {
+export default class EditTripPoint extends Smart {
   constructor(obj) {
     super();
     this._data = EditTripPoint.parsePointToData(obj);
@@ -97,7 +98,7 @@ export default class EditTripPoint extends AbstractView {
     this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
   }
 
-  restoreHandler () {
+  restoreHandlers () {
     this._setInnerHandlers();
     this.setHandlerForm(this._callback.closeFunction);
   }
@@ -157,30 +158,5 @@ export default class EditTripPoint extends AbstractView {
       infoText: randomText,
       hasDestinationInfo: randomText.length > 0,
     });
-  }
-
-  updateData(update) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-      {},
-      this._data,
-      update,
-    );
-
-    this.updateElement();
-    this.restoreHandler();
-  }
-
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.clearElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
   }
 }
