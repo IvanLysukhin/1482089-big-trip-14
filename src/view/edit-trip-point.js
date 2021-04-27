@@ -1,5 +1,4 @@
 import {DATA} from '../constants.js';
-// import AbstractView from './abstract-view.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
@@ -10,10 +9,10 @@ import Smart from './smart-view.js';
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, city, destinations, pointType, price, hasOptions, hasDestinationInfo, options, infoText} = obj;
+  const {date, city, destinations, pointType, price, hasOptions, hasDestinationInfo, infoText} = obj;
   const citiesList = new DestinationsListView(destinations).getTemplate();
 
-  const offerList = new OfferSelectorsView(options, pointType).getTemplate();
+  const offerList = new OfferSelectorsView(pointType).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
@@ -115,11 +114,12 @@ export default class EditTripPoint extends Smart {
   }
 
   static parsePointToData (obj) {
+    const index = findTypeOfferIndex(obj.pointType.toLowerCase());
     return Object.assign(
       {},
       obj,
       {
-        hasOptions: obj.options.length > 0,
+        hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
         hasDestinationInfo: obj.destinationInfo.infoText.length > 0,
         infoText: obj.destinationInfo.infoText,
       },
@@ -145,7 +145,6 @@ export default class EditTripPoint extends Smart {
       const index = findTypeOfferIndex(type);
       this.updateData({
         pointType: type,
-        options: DATA.POINT_TYPES[index].offers,
         hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
       });
     }

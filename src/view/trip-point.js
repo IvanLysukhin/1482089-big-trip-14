@@ -2,8 +2,7 @@ import AbstractView from './abstract-view.js';
 
 const createOfferItem = (array) => {
   return array.map((offer) => {
-    const {text, price, isChecked} = offer;
-    if (!isChecked) {return;}
+    const {text, price} = offer;
     return `<li class="event__offer">
             <span class="event__offer-title">${text}</span>
             &plus;&euro;&nbsp;

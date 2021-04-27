@@ -17,14 +17,14 @@ const createOfferSelector = (array, type) => {
 };
 
 export default class OfferSelectors extends AbstractView {
-  constructor(array, type) {
+  constructor(type) {
     super();
-    this._array = array;
+    this._array = [];
     this._type = type;
   }
 
   getTemplate() {
-    const index = findTypeOfferIndex(this._type);
+    const index = findTypeOfferIndex(this._type.toLowerCase());
     if (index !== -1) {
       this._array = DATA.POINT_TYPES[index].offers;
     }
