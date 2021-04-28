@@ -6,6 +6,9 @@ import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
 import {getRandomArray} from '../utils/common.js';
 import Smart from './smart-view.js';
 
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
