@@ -9,10 +9,10 @@ import Smart from './smart-view.js';
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, city, destinations, pointType, price, hasOptions, hasDestinationInfo, infoText} = obj;
+  const {date, city, destinations, pointType, price, options, hasOptions, hasDestinationInfo, infoText} = obj;
   const citiesList = new DestinationsListView(destinations).getTemplate();
 
-  const offerList = new OfferSelectorsView(pointType).getTemplate();
+  const offerList = new OfferSelectorsView(pointType, options).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
@@ -85,6 +85,7 @@ export default class EditTripPoint extends Smart {
     this._closeForm = this._closeForm.bind(this);
     this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
+    this._optionsCheckHandler = this._optionsCheckHandler.bind(this);
     this._setInnerHandlers();
   }
 
@@ -95,6 +96,10 @@ export default class EditTripPoint extends Smart {
   _setInnerHandlers () {
     this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
     this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
+
+    if (this.getElement().querySelector('.event__available-offers') !== null) {
+      this.getElement().querySelector('.event__available-offers').addEventListener('click', this._optionsCheckHandler);
+    }
   }
 
   restoreHandlers () {
@@ -137,6 +142,21 @@ export default class EditTripPoint extends Smart {
 
     return data;
   }
+  _optionsCheckHandler (evt) {
+    if (evt.target.tagName === 'INPUT') {
+      const checkedOptionIndex = this._data.options.findIndex((el) => {
+        return el.text === evt.target.getAttribute('data-option-name');
+      });
+      this.updateData({
+        options: this._data.options.map((element, i) => {
+          if (i === checkedOptionIndex) {
+            element.isChecked = !this._data.options[i].isChecked;
+          }
+          return element;
+        }),
+      });
+    }
+  }
 
   _checkboxTypeHandler (evt) {
     if (evt.target.classList.contains('event__type-label')) {
@@ -145,6 +165,7 @@ export default class EditTripPoint extends Smart {
       const index = findTypeOfferIndex(type);
       this.updateData({
         pointType: type,
+        options: DATA.POINT_TYPES[index].offers,
         hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
       });
     }

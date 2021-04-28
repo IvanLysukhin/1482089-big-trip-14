@@ -62,6 +62,13 @@ const generateTripPoint = () => {
   const randomWords = DATA.RANDOM_TEXT.split('. ');
 
   const offer = getRandomArrayElement(DATA.POINT_TYPES);
+  const offersArray = offer.offers.map((element) => {
+    return {
+      text: element.text,
+      price: element.price,
+      isChecked: generateRandomNumber() > 0,
+    };
+  });
 
   return {
     id: nanoid(),
@@ -75,7 +82,7 @@ const generateTripPoint = () => {
     pointType: offer.type,
     city: getRandomArrayElement(DATA.CITIES),
     destinations: DATA.CITIES,
-    options: getRandomArray(offer.offers),
+    options: offersArray,
     destinationInfo:
       {
         infoText: getRandomArray(randomWords).join('. '),
