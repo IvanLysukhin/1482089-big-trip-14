@@ -25,7 +25,7 @@ const createTripPoint = (obj) => {
   return `<div class="event">
                 <time class="event__date" datetime="${date.dateStart}">${date.dateStart}</time>
                 <div class="event__type">
-                  <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
+                  <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${pointType} ${city}</h3>
                 <div class="event__schedule">

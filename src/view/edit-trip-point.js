@@ -9,10 +9,10 @@ import Smart from './smart-view.js';
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, city, destinations, pointType, price, options, hasOptions, hasDestinationInfo, infoText} = obj;
+  const {date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText} = obj;
   const citiesList = new DestinationsListView(destinations).getTemplate();
 
-  const offerList = new OfferSelectorsView(pointType, options).getTemplate();
+  const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
@@ -124,6 +124,7 @@ export default class EditTripPoint extends Smart {
       {},
       obj,
       {
+        defaultOptions: obj.options,
         hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
         hasDestinationInfo: obj.destinationInfo.infoText.length > 0,
         infoText: obj.destinationInfo.infoText,
@@ -135,7 +136,9 @@ export default class EditTripPoint extends Smart {
     data = Object.assign({}, data);
 
     data.destinationInfo.infoText = data.infoText;
+    data.options = data.defaultOptions;
 
+    delete data.defaultOptions;
     delete data.hasOptions;
     delete data.hasDestinationInfo;
     delete data.infoText;
@@ -144,13 +147,13 @@ export default class EditTripPoint extends Smart {
   }
   _optionsCheckHandler (evt) {
     if (evt.target.tagName === 'INPUT') {
-      const checkedOptionIndex = this._data.options.findIndex((el) => {
+      const checkedOptionIndex = this._data.defaultOptions.findIndex((el) => {
         return el.text === evt.target.getAttribute('data-option-name');
       });
       this.updateData({
-        options: this._data.options.map((element, i) => {
+        defaultOptions: this._data.defaultOptions.map((element, i) => {
           if (i === checkedOptionIndex) {
-            element.isChecked = !this._data.options[i].isChecked;
+            element.isChecked = !this._data.defaultOptions[i].isChecked;
           }
           return element;
         }),
@@ -165,7 +168,7 @@ export default class EditTripPoint extends Smart {
       const index = findTypeOfferIndex(type);
       this.updateData({
         pointType: type,
-        options: DATA.POINT_TYPES[index].offers,
+        defaultOptions: DATA.POINT_TYPES[index].offers,
         hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
       });
     }
