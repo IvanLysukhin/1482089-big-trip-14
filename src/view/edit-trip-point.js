@@ -3,16 +3,17 @@ import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
 import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
-import {getRandomArray} from '../utils/common.js';
+import {getRandomArray, showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
 
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
 
 const createEditTripPoint = (obj) => {
   const typesArray = DATA.POINT_TYPES.map((element) => element.type);
   const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, city, destinations, pointType, price, options, hasOptions, hasDestinationInfo, infoText} = obj;
+  const {_date, city, destinations, pointType, price, options, hasOptions, hasDestinationInfo, infoText} = obj;
   const citiesList = new DestinationsListView(destinations).getTemplate();
 
   const offerList = new OfferSelectorsView(pointType, options).getTemplate();
@@ -44,10 +45,10 @@ const createEditTripPoint = (obj) => {
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${date.dateStart} ${date.timeStart}">
+                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${_date.startTime.format('YYYY-MM-DDTHH:mm')}">
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${date.dateEnd} ${date.timeEnd}">
+                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${_date.endTime.format('YYYY-MM-DDTHH:mm')}">
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -84,12 +85,22 @@ const createEditTripPoint = (obj) => {
 export default class EditTripPoint extends Smart {
   constructor(obj) {
     super();
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
     this._data = EditTripPoint.parsePointToData(obj);
     this._closeForm = this._closeForm.bind(this);
     this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._optionsCheckHandler = this._optionsCheckHandler.bind(this);
+    this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
+    this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+
+    this._checkTimeValidity = this._checkTimeValidity.bind(this);
+
     this._setInnerHandlers();
+    this._setDatepicker();
+
+    this._setValidity();
   }
 
   getTemplate() {
@@ -108,6 +119,9 @@ export default class EditTripPoint extends Smart {
   restoreHandlers () {
     this._setInnerHandlers();
     this.setHandlerForm(this._callback.closeFunction);
+    this._setDatepicker();
+
+    this._setValidity();
   }
 
   _closeForm(evt) {
@@ -181,5 +195,68 @@ export default class EditTripPoint extends Smart {
       infoText: randomText,
       hasDestinationInfo: randomText.length > 0,
     });
+  }
+
+  _setDatepicker() {
+    if (this._datepickerStart || this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
+
+    this._datepickerStart = flatpickr(
+      this.getElement().querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        time_24hr: true,
+        defaultDate: this._data._date.startTime.format('DD-MM-YY HH:mm'),
+        onChange: this._startDateChangeHandler,
+      },
+    );
+    this._datepickerEnd = flatpickr(
+      this.getElement().querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        time_24hr: true,
+        defaultDate: this._data._date.endTime.format('DD-MM-YY HH:mm'),
+        onChange: this._endDateChangeHandler,
+      },
+    );
+  }
+
+  _startDateChangeHandler (date) {
+    this.updateData({
+      _date: Object.assign({},
+        this._data._date,
+        {startTime: dayjs(date)}),
+    });
+  }
+
+  _endDateChangeHandler (date) {
+    this.updateData({
+      _date: Object.assign({},
+        this._data._date,
+        {endTime: dayjs(date)}),
+    });
+  }
+
+  _checkTimeValidity () {
+    const diff = this._data._date.endTime.diff(this._data._date.startTime);
+    if (diff < 0) {
+      this.getElement().querySelector('.btn').disabled = true;
+      this.getElement().querySelector('.event__rollup-btn').disabled = true;
+      showErrorMassage(this.getElement());
+    } else {
+      this.getElement().querySelector('.btn').disabled = false;
+      this.getElement().querySelector('.event__rollup-btn').disabled = false;
+    }
+  }
+
+  _setValidity () {
+    this.getElement().querySelector('#event-end-time-1').addEventListener('change', this._checkTimeValidity);
+    this.getElement().querySelector('#event-start-time-1').addEventListener('change', this._checkTimeValidity);
   }
 }

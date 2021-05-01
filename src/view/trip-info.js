@@ -1,49 +1,50 @@
 import AbstractView from './abstract-view.js';
+import dayjs from 'dayjs';
+//eslint-disable-next-line
+const minMax = require('dayjs/plugin/minMax');
+dayjs.extend(minMax);
 
-const createRoute = (array) => {
-
-  const citiesArray = new Array(array.length).fill('').map((_, i) => {
-    return array[i].city;
+const createRoute =  (array) => {
+  const datesStartArr = new Array(array.length).fill('').map((_, i) => {
+    return array[i]._date.startTime;
+  });const datesEndArr = new Array(array.length).fill('').map((_, i) => {
+    return array[i]._date.endTime;
   });
 
+  const firsPointIndex = array.findIndex((point) => {
+    return point._date.startTime === dayjs.min(datesStartArr);
+  });
+
+  const lastPointIndex = array.findIndex((point) => {
+    return point._date.endTime === dayjs.max(datesEndArr);
+  });
   if (array.length > 3) {
-    return `${citiesArray[0]} — . . . — ${citiesArray[citiesArray.length - 1]}`;
+    return `${array[firsPointIndex].city} — . . . — ${array[lastPointIndex].city}`;
   } else {
-    return citiesArray.filter((item, index) => {
-      return citiesArray.indexOf(item) === index;
-    }).join(' — ');
+    return array.slice().sort((pointA, pointB) => {
+      return pointA._date.startTime.diff(pointB._date.startTime);
+    }).map((point)=>{return point.city;}).join(' — ');
   }
-};
-
-const getRank = (date) => {
-  let rank = 0;
-
-  if ( date.includes('MAR')) {
-    rank += 2;
-  }
-  return rank;
 };
 
 const routeDates = (array) => {
-  const startDates = new Set(array.map((_, i) => {
-    return array[i].date.dateStart;
-  }));
-  const startDatesArray = Array.from(startDates);
-  return startDatesArray.sort((a, b) => {
-    const rankA = getRank(a);
-    const rankB = getRank(b);
-    return rankA - rankB;
+  const startDates = new Array(array.length).fill('').map((_, i) => {
+    return array[i]._date.startTime;
   });
+  const endDates = new Array(array.length).fill('').map((_, i) => {
+    return array[i]._date.endTime;
+  });
+
+  const minDate = dayjs.min(startDates).format('MMM DD');
+  const maxDate = dayjs.max(endDates).format('MMM DD');
+  return `${minDate} — ${maxDate}`;
 };
 
 const createTripInfo = (array) => {
-  const citiesRout = createRoute(array);
-  const first = routeDates(array)[routeDates(array).length - 1];
-  const last = routeDates(array)[0];
   return `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
-              <h1 class="trip-info__title">${citiesRout}</h1>
-              <p class="trip-info__dates">${first} — ${last}</p>
+              <h1 class="trip-info__title">${createRoute(array)}</h1>
+              <p class="trip-info__dates">${routeDates(array)}</p>
             </div>
           </section>`;
 };

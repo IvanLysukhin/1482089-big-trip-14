@@ -1,5 +1,31 @@
 import AbstractView from './abstract-view.js';
 
+const findDuration = (diff) => {
+  const daysInMinutes = Math.floor(diff / 1440);
+  const hoursInMinutes = Math.floor((diff  % 1440)/60);
+
+  let days = `${daysInMinutes}D`;
+
+  let hour = `${hoursInMinutes}H`;
+
+  let minutes =`${(diff  % 1440)%60}M`;
+
+  if (daysInMinutes < 1) {
+    days = '';
+  }
+
+  if (hoursInMinutes < 1) {
+    hour = '';
+  }
+
+  if (minutes < 1) {
+    minutes = '';
+  }
+
+  return `${days} ${hour} ${minutes}`;
+};
+
+
 const createOfferItem = (array) => {
   return array.map((offer) => {
     const {text, price, isChecked} = offer;
@@ -13,7 +39,9 @@ const createOfferItem = (array) => {
 };
 
 const createTripPoint = (obj) => {
-  const {date, city, pointType, price, isFavorite, options, duration} = obj;
+  const {city, pointType, price, isFavorite, options, _date} = obj;
+
+  const duration = findDuration(_date.endTime.diff(_date.startTime, 'minute'));
 
   const offerItems = createOfferItem(options);
   let favoriteButtonClass = '';
@@ -23,16 +51,16 @@ const createTripPoint = (obj) => {
   }
 
   return `<div class="event">
-                <time class="event__date" datetime="${date.dateStart}">${date.dateStart}</time>
+                <time class="event__date" datetime="${_date.startTime.format('YYYY-MM-DDTHH:mm')}">${_date.startTime.format('D MMM')}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${pointType} ${city}</h3>
                 <div class="event__schedule">
                   <p class="event__time">
-                    <time class="event__start-time" datetime="${date.timeStart}">${date.timeStart}</time>
+                    <time class="event__start-time" datetime="${_date.startTime.format('YYYY-MM-DDTHH:mm')}">${_date.startTime.format('HH:mm')}</time>
                     &mdash;
-                    <time class="event__end-time" datetime="${date.timeEnd}">${date.timeEnd}</time>
+                    <time class="event__end-time" datetime="${_date.endTime.format('YYYY-MM-DDTHH:mm')}">${_date.endTime.format('HH:mm')}</time>
                   </p>
                   <p class="event__duration">${duration}</p>
                 </div>
