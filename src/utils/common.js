@@ -43,7 +43,9 @@ const sortTime = (pointA, pointB) => {
 const sortPrice = (pointA, pointB) => {return pointB.price - pointA.price;};
 
 const getRandomArray = (array) => {
-  return array.slice(generateRandomNumber(0, array.length), generateRandomNumber(0, array.length));
+  const start = generateRandomNumber(0, array.length);
+  const end =  generateRandomNumber(start, array.length);
+  return array.slice(start, end);
 };
 
 

@@ -2,16 +2,11 @@ import {DATA} from '../constants.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
-import {findTypeOfferIndex} from '../utils/render-DOM-elements.js';
-import {getRandomArray} from '../utils/common.js';
 import Smart from './smart-view.js';
 
-const createEditTripPoint = (obj) => {
-  const typesArray = DATA.POINT_TYPES.map((element) => element.type);
-  const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
-  const {date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText} = obj;
+const createEditTripPoint = ({date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText}) => {
+  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
   const citiesList = new DestinationsListView(destinations).getTemplate();
-
   const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
@@ -19,7 +14,7 @@ const createEditTripPoint = (obj) => {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -119,15 +114,15 @@ export default class EditTripPoint extends Smart {
   }
 
   static parsePointToData (obj) {
-    const index = findTypeOfferIndex(obj.pointType.toLowerCase());
+    const {options, destinationInfo} = obj;
     return Object.assign(
       {},
       obj,
       {
-        defaultOptions: obj.options,
-        hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
-        hasDestinationInfo: obj.destinationInfo.infoText.length > 0,
-        infoText: obj.destinationInfo.infoText,
+        defaultOptions: options,
+        hasOptions: options.length > 0,
+        hasDestinationInfo: destinationInfo.infoText.length > 0,
+        infoText: destinationInfo.infoText,
       },
     );
   }
@@ -165,21 +160,24 @@ export default class EditTripPoint extends Smart {
     if (evt.target.classList.contains('event__type-label')) {
       evt.preventDefault();
       const type = evt.target.getAttribute('data-point-type');
-      const index = findTypeOfferIndex(type);
+      const index = this._data.baseOptions.findIndex((el) => {
+        return el.type.toLowerCase() === type;
+      });
       this.updateData({
         pointType: type,
-        defaultOptions: DATA.POINT_TYPES[index].offers,
-        hasOptions: DATA.POINT_TYPES[index].offers.length > 0,
+        defaultOptions: this._data.baseOptions[index].offers,
+        hasOptions: this._data.baseOptions[index].offers.length > 0,
       });
     }
   }
 
   _cityInputHandler (evt) {
-    const randomText = getRandomArray(DATA.RANDOM_TEXT.split('. ')).join('. ');
+    const city = evt.target.value;
+    const cityDescription = this._data.citiesDescriptions[city];
     this.updateData({
-      city: evt.target.value,
-      infoText: randomText,
-      hasDestinationInfo: randomText.length > 0,
+      city,
+      infoText: cityDescription,
+      hasDestinationInfo: cityDescription.length > 0,
     });
   }
 }

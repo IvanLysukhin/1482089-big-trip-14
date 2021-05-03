@@ -1,5 +1,5 @@
 import {generateRandomNumber, getRandomArray} from '../utils/common.js';
-import {DATA} from '../constants.js';
+import {DATA, OPTIONS} from '../constants.js';
 import {nanoid} from 'nanoid';
 
 const generateRandomDate = () => {
@@ -22,6 +22,50 @@ const getRandomPhotosArray = () => {
     return `http://picsum.photos/248/152?r=${generateRandomNumber(0, 100)}`;
   });
 };
+const generateIdForOptions = (options) => {
+  return options.map((option) => {
+    option.id = nanoid(5);
+    return option;
+  });
+};
+
+const generateOptionsIdArray = (optionsArray) => {
+  return optionsArray.map((option) => {
+    return option.id;
+  });
+};
+
+const typesOffers = () => {
+  const options = generateIdForOptions(OPTIONS);
+  const optionsIDs = generateOptionsIdArray(options);
+  return DATA.TRANSPORT_TYPES.map((type) => {
+    const offers = optionsIDs.slice(0, generateRandomNumber(0, options.length - 1)).map((optionId) => {
+      return options.find((option) => {return option.id === optionId;});
+    });
+    return {
+      type,
+      offers,
+    };
+  });
+};
+
+const baseOptions = typesOffers();
+
+const generateRandomCitiesDescription = (words) => {
+  return {
+    'Tokyo':getRandomArray(words).join('. '),
+    'Seul':getRandomArray(words).join('. '),
+    'Shanghai':getRandomArray(words).join('. '),
+    'Singapore':getRandomArray(words).join('. '),
+    'New-York':getRandomArray(words).join('. '),
+    'Pusan':getRandomArray(words).join('. '),
+    'Helsinki':getRandomArray(words).join('. '),
+    'Heppenheim':getRandomArray(words).join('. '),
+  };
+};
+
+const words = DATA.RANDOM_TEXT.split('. ');
+const citiesDescriptions = generateRandomCitiesDescription(words);
 
 const generateTripPoint = () => {
   const date = generateRandomDate().date;
@@ -59,9 +103,8 @@ const generateTripPoint = () => {
     return `${hour}H ${minute}M`;
   };
 
-  const randomWords = DATA.RANDOM_TEXT.split('. ');
+  const offer = getRandomArrayElement(baseOptions);
 
-  const offer = getRandomArrayElement(DATA.POINT_TYPES);
   const offersArray = offer.offers.map((element) => {
     return {
       text: element.text,
@@ -69,6 +112,7 @@ const generateTripPoint = () => {
       isChecked: generateRandomNumber() > 0,
     };
   });
+  const city = getRandomArrayElement(DATA.CITIES);
 
   return {
     id: nanoid(),
@@ -80,16 +124,18 @@ const generateTripPoint = () => {
       timeEnd,
     },
     pointType: offer.type,
-    city: getRandomArrayElement(DATA.CITIES),
+    city,
+    citiesDescriptions,
     destinations: DATA.CITIES,
     options: offersArray,
     destinationInfo:
       {
-        infoText: getRandomArray(randomWords).join('. '),
+        infoText: citiesDescriptions[city],
         photos:getRandomPhotosArray(),
       },
     isFavorite: !!generateRandomNumber(),
     duration: findDuration(),
+    baseOptions,
   };
 };
 
