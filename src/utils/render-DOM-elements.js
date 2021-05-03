@@ -1,5 +1,4 @@
 import AbstractView from '../view/abstract-view.js';
-import {DATA} from '../constants';
 
 const render = (parent, element, position) => {
 
@@ -46,10 +45,4 @@ const removeElement = (component) => {
   component.clearElement();
 };
 
-const findTypeOfferIndex =  (type) => {
-  return DATA.POINT_TYPES.findIndex((element) => {
-    return element.type.toLowerCase() === type;
-  });
-};
-
-export {render, createElementDOM, replaceElements, removeElement,findTypeOfferIndex};
+export {render, createElementDOM, replaceElements, removeElement};

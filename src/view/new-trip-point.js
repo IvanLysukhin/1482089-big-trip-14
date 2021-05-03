@@ -7,8 +7,7 @@ import PhotosListView from './photos-list.js';
 
 
 const createNewTripPoint = (obj) => {
-  const typesArray = DATA.POINT_TYPES.map((element) => element.type);
-  const checkboxTypes = new CheckboxTypeListView(typesArray).getTemplate();
+  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
   const {date, destination, pointType, price, options, destinationInfo} = obj;
 
   const citiesList = new DestinationsListView(destination.cities).getTemplate();
