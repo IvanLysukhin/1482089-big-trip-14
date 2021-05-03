@@ -3,7 +3,10 @@ import AbstractView from './abstract-view.js';
 const sumTripPrice = (array) => {
   return array.reduce((accumulator,obj) => {
     const offersPriceSum =  obj.options.reduce((accumulator, option) => {
-      return accumulator + option.price;
+      if (option.isChecked) {
+        return accumulator + option.price;
+      }
+      return accumulator;
     }, 0);
 
     return accumulator + obj.price + offersPriceSum;

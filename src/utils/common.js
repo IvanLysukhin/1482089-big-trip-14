@@ -42,4 +42,11 @@ const sortTime = (pointA, pointB) => {
 
 const sortPrice = (pointA, pointB) => {return pointB.price - pointA.price;};
 
-export {generateRandomNumber, updateItem, sortTime, sortPrice};
+const getRandomArray = (array) => {
+  const start = generateRandomNumber(0, array.length);
+  const end =  generateRandomNumber(start, array.length);
+  return array.slice(start, end);
+};
+
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice, getRandomArray};

@@ -98,7 +98,8 @@ export default class PointPresenter {
     document.addEventListener('keydown',  this._closeEscape);
   }
 
-  _handlerEditForm() {
+  _handlerEditForm(point) {
+    this._changeData(point);
     this._swapEditToPoint();
     document.removeEventListener('keydown',  this._closeEscape);
   }

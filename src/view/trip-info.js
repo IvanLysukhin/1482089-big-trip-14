@@ -3,7 +3,7 @@ import AbstractView from './abstract-view.js';
 const createRoute = (array) => {
 
   const citiesArray = new Array(array.length).fill('').map((_, i) => {
-    return array[i].destination.city;
+    return array[i].city;
   });
 
   if (array.length > 3) {

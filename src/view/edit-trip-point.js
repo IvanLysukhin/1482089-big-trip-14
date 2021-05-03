@@ -1,27 +1,20 @@
 import {DATA} from '../constants.js';
-import AbstractView from './abstract-view.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
+import Smart from './smart-view.js';
 
-const createEditTripPoint = (obj) => {
+const createEditTripPoint = ({date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText}) => {
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
-  const {date, destination, pointType, price, options, destinationInfo} = obj;
-
-  const citiesList = new DestinationsListView(destination.cities).getTemplate();
-
-  let hidden = '';
-  if (!options.length) {
-    hidden = 'visually-hidden';
-  }
-  const offerList = new OfferSelectorsView(options).getTemplate();
+  const citiesList = new DestinationsListView(destinations).getTemplate();
+  const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();
 
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -35,7 +28,7 @@ const createEditTripPoint = (obj) => {
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${pointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.city}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${citiesList}
                     </datalist>
@@ -64,42 +57,127 @@ const createEditTripPoint = (obj) => {
                   </button>
                 </header>
                 <section class="event__details">
-                  <section class="event__section  event__section--offers ${hidden}">
+                ${hasOptions ? `<section class="event__section  event__section--offers ">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
                     <div class="event__available-offers">
                      <!--Выбор опций-->
                      ${offerList}
                     </div>
-                  </section>
-
-                  <section class="event__section  event__section--destination">
+                  </section>` : ''}
+                ${hasDestinationInfo ? `<section class="event__section  event__section--destination">
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">${destinationInfo.infoText}</p>
-                  </section>
+                    <p class="event__destination-description">${infoText}</p>
+                  </section>` : ''}
                 </section>
               </form>`;
 };
 
-export default class EditTripPoint extends AbstractView {
+export default class EditTripPoint extends Smart {
   constructor(obj) {
     super();
-    this._obj = obj;
+    this._data = EditTripPoint.parsePointToData(obj);
     this._closeForm = this._closeForm.bind(this);
+    this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
+    this._cityInputHandler = this._cityInputHandler.bind(this);
+    this._optionsCheckHandler = this._optionsCheckHandler.bind(this);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
-    return createEditTripPoint(this._obj);
+    return createEditTripPoint(this._data);
+  }
+
+  _setInnerHandlers () {
+    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
+    this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
+
+    if (this.getElement().querySelector('.event__available-offers') !== null) {
+      this.getElement().querySelector('.event__available-offers').addEventListener('click', this._optionsCheckHandler);
+    }
+  }
+
+  restoreHandlers () {
+    this._setInnerHandlers();
+    this.setHandlerForm(this._callback.closeFunction);
   }
 
   _closeForm(evt) {
     evt.preventDefault();
-    this._callback.closeFunction();
+    this._callback.closeFunction(EditTripPoint.parseDataToPoint(this._data));
   }
 
   setHandlerForm(cb) {
     this._callback.closeFunction = cb;
     this.getElement().addEventListener('submit', this._closeForm);
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeForm);
+  }
+
+  static parsePointToData (obj) {
+    const {options, destinationInfo} = obj;
+    return Object.assign(
+      {},
+      obj,
+      {
+        defaultOptions: options,
+        hasOptions: options.length > 0,
+        hasDestinationInfo: destinationInfo.infoText.length > 0,
+        infoText: destinationInfo.infoText,
+      },
+    );
+  }
+
+  static parseDataToPoint (data) {
+    data = Object.assign({}, data);
+
+    data.destinationInfo.infoText = data.infoText;
+    data.options = data.defaultOptions;
+
+    delete data.defaultOptions;
+    delete data.hasOptions;
+    delete data.hasDestinationInfo;
+    delete data.infoText;
+
+    return data;
+  }
+  _optionsCheckHandler (evt) {
+    if (evt.target.tagName === 'INPUT') {
+      const checkedOptionIndex = this._data.defaultOptions.findIndex((el) => {
+        return el.text === evt.target.getAttribute('data-option-name');
+      });
+      this.updateData({
+        defaultOptions: this._data.defaultOptions.map((element, i) => {
+          if (i === checkedOptionIndex) {
+            element.isChecked = !this._data.defaultOptions[i].isChecked;
+          }
+          return element;
+        }),
+      });
+    }
+  }
+
+  _checkboxTypeHandler (evt) {
+    if (evt.target.classList.contains('event__type-label')) {
+      evt.preventDefault();
+      const type = evt.target.getAttribute('data-point-type');
+      const index = this._data.baseOptions.findIndex((el) => {
+        return el.type.toLowerCase() === type;
+      });
+      this.updateData({
+        pointType: type,
+        defaultOptions: this._data.baseOptions[index].offers,
+        hasOptions: this._data.baseOptions[index].offers.length > 0,
+      });
+    }
+  }
+
+  _cityInputHandler (evt) {
+    const city = evt.target.value;
+    const cityDescription = this._data.citiesDescriptions[city];
+    this.updateData({
+      city,
+      infoText: cityDescription,
+      hasDestinationInfo: cityDescription.length > 0,
+    });
   }
 }
