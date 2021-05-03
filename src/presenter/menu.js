@@ -18,6 +18,14 @@ export default class Menu {
   }
 
   initialize(array) {
+    if (array) {
+      this._navigation = new SiteMenuView();
+      this._filters = new FilterFormView(DATA.FILTER_TYPES);
+      this._renderNav();
+      this._renderFilters();
+      return;
+    }
+
     this._navigation = new SiteMenuView();
     this._mainInfo = new TripInfoView(array);
     this._price = new TripPriceView(array);

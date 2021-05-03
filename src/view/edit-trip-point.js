@@ -56,7 +56,7 @@ const createEditTripPoint = (obj) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+                    <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1">
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -94,12 +94,13 @@ export default class EditTripPoint extends Smart {
     this._optionsCheckHandler = this._optionsCheckHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
+    this._priceChange = this._priceChange.bind(this);
 
     this._checkTimeValidity = this._checkTimeValidity.bind(this);
 
     this._setInnerHandlers();
     this._setDatepicker();
-
+    this._setPriceHandler();
     this._setValidity();
   }
 
@@ -120,6 +121,7 @@ export default class EditTripPoint extends Smart {
     this._setInnerHandlers();
     this.setHandlerForm(this._callback.closeFunction);
     this._setDatepicker();
+    this._setPriceHandler();
 
     this._setValidity();
   }
@@ -159,6 +161,17 @@ export default class EditTripPoint extends Smart {
 
     return data;
   }
+
+  _setPriceHandler () {
+    this.getElement().querySelector('#event-price-1').addEventListener('change', this._priceChange);
+  }
+
+  _priceChange (evt) {
+    this.updateData({
+      price: Number(evt.target.value),
+    });
+  }
+
   _optionsCheckHandler (evt) {
     if (evt.target.tagName === 'INPUT') {
       const checkedOptionIndex = this._data.options.findIndex((el) => {

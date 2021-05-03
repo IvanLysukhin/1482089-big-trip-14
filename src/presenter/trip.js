@@ -9,7 +9,9 @@ import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
 
 export default class TripPresenter {
-  constructor(listContainer) {
+  constructor(listContainer, pointsModel) {
+    this._pointsModel = pointsModel;
+
     this._listContainer = listContainer;
     this._eventsList = null;
     this._sortList =  null;
@@ -23,17 +25,26 @@ export default class TripPresenter {
     this._handleSort = this._handleSort.bind(this);
   }
 
-  initialize(tripPoints) {
-    this._tripPoints = tripPoints.slice();
-    this._sourcedTripPoints = tripPoints.slice();
-
-    if (this._tripPoints.length) {
+  initialize() {
+    // this._tripPoints = this._getPoints().slice();
+    // this._sourcedTripPoints = this._getPoints().slice();
+    if (this._getPoints().slice().length) {
       this._renderEventsList();
       this._renderSortList();
-      this._renderTripPoints(this._tripPoints);
+      this._renderTripPoints(this._getPoints().slice());
     } else {
       this._renderEmptyMessage();
     }
+  }
+
+  _getPoints () {
+    switch (this._currentSortType) {
+      case DATA.SORT_TYPE.TIME:
+        return this._pointsModel.getPoints().slice().sort(sortTime);
+      case DATA.SORT_TYPE.PRICE:
+        return this._pointsModel.getPoints().slice().sort(sortPrice);
+    }
+    return this._pointsModel.getPoints();
   }
 
   _renderEventsList () {
@@ -48,27 +59,12 @@ export default class TripPresenter {
   }
   _handleSort (sortType) {
     if (this._currentSortType !== sortType.target.getAttribute('for')) {
-      this._sortPoints(sortType);
+      this._currentSortType = sortType.target.getAttribute('for');
       this._clearTripPoints();
-      this._renderTripPoints(this._tripPoints);
+      this._renderTripPoints(this._getPoints());
     }
   }
 
-  _sortPoints (sortType) {
-    switch (sortType.target.getAttribute('for')) {
-      case DATA.SORT_TYPE.TIME:
-        this._tripPoints.sort(sortTime);
-        break;
-      case DATA.SORT_TYPE.PRICE:
-        this._tripPoints.sort(sortPrice);
-        break;
-      case DATA.SORT_TYPE.DEFAULT:
-        this._tripPoints = this._sourcedTripPoints.slice();
-        break;
-    }
-
-    this._currentSortType = sortType.target.getAttribute('for');
-  }
   _renderPoint (point) {
     const pointPresenter = new TripPointPresenter(this._eventsList, this._handleTripPointChange, this._handleChangeMode);
     pointPresenter.initialize(point);
