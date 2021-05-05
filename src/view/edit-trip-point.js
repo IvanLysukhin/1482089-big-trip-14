@@ -5,10 +5,10 @@ import OfferSelectorsView from './offer-selector.js';
 import {showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
 import PhotosListView from './photos-list.js';
-
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
+import he from 'he';
 
 const createEditTripPoint = ({_date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText, photos}, isNewPoint = false) => {
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
@@ -35,7 +35,7 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${pointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(city)}" list="destination-list-1">
                     <datalist id="destination-list-1">
                       ${citiesList}
                     </datalist>
@@ -87,7 +87,6 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
 
 export default class EditTripPoint extends Smart {
   constructor(obj, isNewPoint) {
-    console.log(obj);
     super();
     this._isNewPoint = isNewPoint;
     this._datepickerStart = null;

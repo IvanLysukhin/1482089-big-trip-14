@@ -100,7 +100,6 @@ export default class PointPresenter {
 
   _handlerPointClick() {
     this._swapPointToEdit();
-    this._newpoint.destroy();
     document.addEventListener('keydown',  this._closeEscape);
   }
 

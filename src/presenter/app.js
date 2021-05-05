@@ -1,6 +1,5 @@
 import MenuPresenter from './menu.js';
 import TripPresenter from './trip.js';
-import {generateTripPoint} from '../mock/mocks';
 
 export default class App {
   constructor (pointsModel, filterModel) {
