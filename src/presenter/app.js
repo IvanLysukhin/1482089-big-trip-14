@@ -1,5 +1,6 @@
 import MenuPresenter from './menu.js';
 import TripPresenter from './trip.js';
+import {generateTripPoint} from '../mock/mocks';
 
 export default class App {
   constructor (pointsModel, filterModel) {
@@ -8,6 +9,8 @@ export default class App {
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+
+    this._creatNewPoint = this._creatNewPoint.bind(this);
   }
 
   initialize () {
@@ -28,5 +31,13 @@ export default class App {
     const eventsContainer = document.querySelector('.trip-events');
     this._tripList = new TripPresenter(eventsContainer, this._pointsModel, this._filterModel);
     this._tripList.initialize();
+    const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
+    addNewPointButton.addEventListener('click', this._creatNewPoint);
+  }
+
+  _creatNewPoint (evt) {
+    evt.preventDefault();
+    this._tripList.createNewPoint(evt.target);
+    evt.target.disabled = true;
   }
 }

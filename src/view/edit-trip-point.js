@@ -4,17 +4,18 @@ import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
 import {showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
+import PhotosListView from './photos-list.js';
 
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
 
-const createEditTripPoint = ({_date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText}) => {
+const createEditTripPoint = ({_date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText, photos}, isNewPoint = false) => {
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();
   const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();
-
+  const photosList = new PhotosListView(photos).getTemplate();
   return `<form class="event event--edit" action="#" method="post">
                 <header class="event__header">
                   <div class="event__type-wrapper">
@@ -57,7 +58,7 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
                   </div>
 
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">Delete</button>
+                  <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
                   <button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
                   </button>
@@ -75,13 +76,20 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${infoText}</p>
                   </section>` : ''}
+
+                ${isNewPoint ? `<div class="event__photos-container">
+                      <div class="event__photos-tape">
+                        ${photosList}
+                      </div>` : ''}
                 </section>
               </form>`;
 };
 
 export default class EditTripPoint extends Smart {
-  constructor(obj) {
+  constructor(obj, isNewPoint) {
+    console.log(obj);
     super();
+    this._isNewPoint = isNewPoint;
     this._datepickerStart = null;
     this._datepickerEnd = null;
     this._data = EditTripPoint.parsePointToData(obj);
@@ -103,7 +111,7 @@ export default class EditTripPoint extends Smart {
   }
 
   getTemplate() {
-    return createEditTripPoint(this._data);
+    return createEditTripPoint(this._data, this._isNewPoint);
   }
 
   _setInnerHandlers () {
@@ -147,6 +155,7 @@ export default class EditTripPoint extends Smart {
         hasOptions: options.length > 0,
         hasDestinationInfo: destinationInfo.infoText.length > 0,
         infoText: destinationInfo.infoText,
+        photos: destinationInfo.photos,
       },
     );
   }
@@ -209,8 +218,10 @@ export default class EditTripPoint extends Smart {
   _cityInputHandler (evt) {
     const city = evt.target.value;
     const cityDescription = this._data.citiesDescriptions[city];
+    const photos = this._data.citiesPhotos[city];
     this.updateData({
       city,
+      photos,
       infoText: cityDescription,
       hasDestinationInfo: cityDescription.length > 0,
     });

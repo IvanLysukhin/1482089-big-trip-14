@@ -5,7 +5,7 @@ import PointsModel from './model/points-model.js';
 import FilterModel from './model/filters-model.js';
 
 const tripPointsArray = new Array(DATA.COUNT_TRIP_POINTS).fill('').map(generateTripPoint);
-
+tripPointsArray.forEach((point) => {console.log(point)})
 const pointsModel = new PointsModel();
 pointsModel.setPoints(tripPointsArray);
 

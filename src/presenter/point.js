@@ -10,11 +10,11 @@ const pointMode = {
 };
 
 export default class PointPresenter {
-  constructor(container, changeData, changeMode) {
+  constructor(container, changeData, changeMode, newPoint) {
     this._container = container;
     this._changeData = changeData;
     this._changeMode = changeMode;
-
+    this._newpoint = newPoint;
 
     this._parentContainer = new TripPointItemView();
 
@@ -100,6 +100,7 @@ export default class PointPresenter {
 
   _handlerPointClick() {
     this._swapPointToEdit();
+    this._newpoint.destroy();
     document.addEventListener('keydown',  this._closeEscape);
   }
 
