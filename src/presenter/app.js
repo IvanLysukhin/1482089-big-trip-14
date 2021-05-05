@@ -19,7 +19,7 @@ export default class App {
   }
 
   _renderMenu (pointsArray) {
-    this._menu = new MenuPresenter();
+    this._menu = new MenuPresenter(this._pointsModel);
     this._menu.initialize(pointsArray);
   }
 

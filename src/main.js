@@ -1,7 +1,7 @@
 import {DATA} from './constants.js';
 import {generateTripPoint} from './mock/mocks.js';
 import App from './presenter/app.js';
-import PointsModel from './model/points.js';
+import PointsModel from './model/points-model.js';
 
 const tripPointsArray = new Array(DATA.COUNT_TRIP_POINTS).fill('').map(generateTripPoint);
 

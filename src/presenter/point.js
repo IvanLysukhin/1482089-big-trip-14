@@ -2,6 +2,7 @@ import TripPointItemView from '../view/trip-list-item.js';
 import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
 import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
+import {UserAction, UpdateType} from '../constants.js';
 
 const pointMode = {
   DEFAULT: 'DEFAULT',
@@ -83,6 +84,8 @@ export default class PointPresenter {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._point,
@@ -99,7 +102,10 @@ export default class PointPresenter {
   }
 
   _handlerEditForm(point) {
-    this._changeData(point);
+    this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      point);
     this._swapEditToPoint();
     document.removeEventListener('keydown',  this._closeEscape);
   }
