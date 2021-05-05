@@ -92,6 +92,7 @@ export default class EditTripPoint extends Smart {
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._priceChange = this._priceChange.bind(this);
+    this._deletePointByClick = this._deletePointByClick.bind(this);
 
     this._checkTimeValidity = this._checkTimeValidity.bind(this);
 
@@ -121,6 +122,8 @@ export default class EditTripPoint extends Smart {
     this._setPriceHandler();
 
     this._setValidity();
+
+    this.setDeleteBtnHandler(this._callback.deleteClick);
   }
 
   _closeForm(evt) {
@@ -274,5 +277,27 @@ export default class EditTripPoint extends Smart {
   _setValidity () {
     this.getElement().querySelector('#event-end-time-1').addEventListener('change', this._checkTimeValidity);
     this.getElement().querySelector('#event-start-time-1').addEventListener('change', this._checkTimeValidity);
+  }
+
+  setDeleteBtnHandler (cb) {
+    this._callback.deleteClick = cb;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deletePointByClick);
+  }
+
+  _deletePointByClick (evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EditTripPoint.parseDataToPoint(this._data));
+  }
+
+  clearElement () {
+    super.clearElement();
+
+    if (this._datepickerStart && this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
+
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
   }
 }

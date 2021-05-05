@@ -27,6 +27,7 @@ export default class PointPresenter {
     this._handlerPointClick = this._handlerPointClick.bind(this);
     this._closeEscape = this._closeEscape.bind(this);
     this._handlerEditForm = this._handlerEditForm.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   initialize (point) {
@@ -41,6 +42,7 @@ export default class PointPresenter {
     this._editFormComponent.setHandlerForm(this._handlerEditForm);
 
     this._pointComponent.setFavoriteHandler(this._handleFavoriteClick);
+    this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
 
     if (prevPoint === null || prevEditForm === null) {
       this._renderPoint();
@@ -120,6 +122,14 @@ export default class PointPresenter {
   _renderPoint () {
     render(this._container, this._parentContainer, 'beforeend');
     render(this._parentContainer, this._pointComponent, 'beforeend');
+  }
+
+  _handleDeleteClick (point) {
+    this._changeData(
+      UserAction.DELETE_TASK,
+      UpdateType.MINOR,
+      point,
+    );
   }
 }
 
