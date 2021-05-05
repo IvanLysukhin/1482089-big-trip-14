@@ -1,25 +1,11 @@
 import {render, removeElement} from '../utils/render-DOM-elements';
 import {updateItem, sortTime, sortPrice} from '../utils/common.js';
-import {DATA, UserAction, UpdateType, FilterType} from '../constants.js';
+import {DATA, UserAction, UpdateType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
 import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
-import dayjs from 'dayjs';
-
-const getFilter = {
-  [FilterType.EVERYTHING]: (points) => {return points;},
-  [FilterType.FUTURE]: (points) => {
-    return points.filter((point) => {
-      return point._date.startTime.diff(dayjs()) > 0;
-    });
-  },
-  [FilterType.PAST]: (points) => {
-    return points.filter((point) => {
-      return point._date.startTime.diff(dayjs()) < 0;
-    });
-  },
-};
+import {getFilter} from '../utils/filters.js';
 
 export default class TripPresenter {
   constructor(listContainer, pointsModel, filterModel) {

@@ -4,6 +4,7 @@ import TripPriceView from '../view/trip-price.js';
 import {render, removeElement} from '../utils/render-DOM-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
 import {UpdateType} from '../constants.js';
+import {getFilter} from '../utils/filters.js';
 
 export default class Menu {
   constructor(pointsModel, filterModel) {
@@ -50,7 +51,7 @@ export default class Menu {
   }
 
   _getPoints () {
-    return this._pointsModel.getPoints().slice();
+    return getFilter[this._filterModel.getFilter()](this._pointsModel.getPoints().slice());
   }
 
   _renderNav () {
