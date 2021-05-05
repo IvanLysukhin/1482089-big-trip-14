@@ -2,25 +2,27 @@ import SiteMenuView from '../view/menu.js';
 import TripInfoView from '../view/trip-info.js';
 import TripPriceView from '../view/trip-price.js';
 import {render, removeElement} from '../utils/render-DOM-elements.js';
-import FilterFormView from '../view/filters.js';
-import {DATA, UpdateType} from '../constants.js';
+import FiltersPresenter from '../presenter/filters-presenter.js';
+import {UpdateType} from '../constants.js';
 
 export default class Menu {
-  constructor(pointsModel) {
+  constructor(pointsModel, filterModel) {
     this._navContainer = document.querySelector('.trip-controls__navigation');
     this._mainInfoContainer = document.querySelector('.trip-main');
     this._filtersContainer = document.querySelector('.trip-controls__filters');
 
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._navigation = null;
     this._mainInfo = null;
     this._price = null;
-    this._filters = null;
+    this.filtersPresenter = new FiltersPresenter(this._filtersContainer, this._filterModel, this._pointsModel);
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   initialize() {
@@ -38,7 +40,6 @@ export default class Menu {
     removeElement(this._navigation);
     removeElement(this._mainInfo);
     removeElement(this._price);
-    removeElement(this._filters);
   }
 
   _renderMenu () {
@@ -69,7 +70,6 @@ export default class Menu {
   }
 
   _renderFilters () {
-    this._filters = new FilterFormView(DATA.FILTER_TYPES);
-    render(this._filtersContainer, this._filters, 'beforeend');
+    this.filtersPresenter.initialize();
   }
 }

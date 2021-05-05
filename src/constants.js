@@ -49,3 +49,9 @@ export const OPTIONS = [
     price: 200,
   },
 ];
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};

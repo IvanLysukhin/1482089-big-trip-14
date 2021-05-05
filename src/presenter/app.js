@@ -2,11 +2,12 @@ import MenuPresenter from './menu.js';
 import TripPresenter from './trip.js';
 
 export default class App {
-  constructor (pointsModel) {
+  constructor (pointsModel, filterModel) {
     this._menu = null;
     this._tripList = null;
 
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
   }
 
   initialize () {
@@ -19,13 +20,13 @@ export default class App {
   }
 
   _renderMenu (pointsArray) {
-    this._menu = new MenuPresenter(this._pointsModel);
+    this._menu = new MenuPresenter(this._pointsModel, this._filterModel);
     this._menu.initialize(pointsArray);
   }
 
   _renderTripList () {
     const eventsContainer = document.querySelector('.trip-events');
-    this._tripList = new TripPresenter(eventsContainer, this._pointsModel);
+    this._tripList = new TripPresenter(eventsContainer, this._pointsModel, this._filterModel);
     this._tripList.initialize();
   }
 }

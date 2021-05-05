@@ -1,17 +1,30 @@
 import {render, removeElement} from '../utils/render-DOM-elements';
 import {updateItem, sortTime, sortPrice} from '../utils/common.js';
-import {DATA} from '../constants.js';
-import {UserAction, UpdateType} from '../constants.js';
-
+import {DATA, UserAction, UpdateType, FilterType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
 import SortListView from '../view/sort';
-
 import TripPointPresenter from '../presenter/point.js';
+import dayjs from 'dayjs';
+
+const getFilter = {
+  [FilterType.EVERYTHING]: (points) => {return points;},
+  [FilterType.FUTURE]: (points) => {
+    return points.filter((point) => {
+      return point._date.startTime.diff(dayjs()) > 0;
+    });
+  },
+  [FilterType.PAST]: (points) => {
+    return points.filter((point) => {
+      return point._date.startTime.diff(dayjs()) < 0;
+    });
+  },
+};
 
 export default class TripPresenter {
-  constructor(listContainer, pointsModel) {
+  constructor(listContainer, pointsModel, filterModel) {
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._listContainer = listContainer;
     this._eventsList = null;
@@ -29,6 +42,7 @@ export default class TripPresenter {
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   initialize() {
@@ -77,13 +91,18 @@ export default class TripPresenter {
   }
 
   _getPoints () {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints().slice();
+    const filterPoints = getFilter[filterType](points);
+
+
     switch (this._currentSortType) {
       case DATA.SORT_TYPE.TIME:
-        return this._pointsModel.getPoints().slice().sort(sortTime);
+        return filterPoints.sort(sortTime);
       case DATA.SORT_TYPE.PRICE:
-        return this._pointsModel.getPoints().slice().sort(sortPrice);
+        return filterPoints.sort(sortPrice);
     }
-    return this._pointsModel.getPoints();
+    return filterPoints;
   }
 
   _renderEventsList () {
