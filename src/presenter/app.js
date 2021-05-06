@@ -1,10 +1,13 @@
 import MenuPresenter from './menu.js';
 import TripPresenter from './trip.js';
+import StatsView from '../view/stats-view.js';
+import {render} from '../utils/render-DOM-elements.js';
 
 export default class App {
   constructor (pointsModel, filterModel) {
     this._menu = null;
     this._tripList = null;
+    this._stats = null;
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
@@ -13,8 +16,9 @@ export default class App {
   }
 
   initialize () {
-    this._renderMenu(this._getPoints());
     this._renderTripList(this._getPoints());
+    this._renderStats();
+    this._renderMenu(this._getPoints());
   }
 
   _getPoints () {
@@ -22,7 +26,7 @@ export default class App {
   }
 
   _renderMenu (pointsArray) {
-    this._menu = new MenuPresenter(this._pointsModel, this._filterModel);
+    this._menu = new MenuPresenter(this._pointsModel, this._filterModel, this._stats, this._tripList);
     this._menu.initialize(pointsArray);
   }
 
@@ -38,5 +42,11 @@ export default class App {
     evt.preventDefault();
     this._tripList.createNewPoint(evt.target);
     evt.target.disabled = true;
+  }
+
+  _renderStats () {
+    const statsContainer = document.querySelector('.page-main').querySelector('.page-body__container');
+    this._stats = new StatsView();
+    render(statsContainer, this._stats, 'beforeend');
   }
 }

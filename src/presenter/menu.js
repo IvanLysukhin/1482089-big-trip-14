@@ -3,11 +3,11 @@ import TripInfoView from '../view/trip-info.js';
 import TripPriceView from '../view/trip-price.js';
 import {render, removeElement} from '../utils/render-DOM-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
-import {UpdateType} from '../constants.js';
+import {PAGE_CONDITION, UpdateType, FilterType} from '../constants.js';
 import {getFilter} from '../utils/filters.js';
 
 export default class Menu {
-  constructor(pointsModel, filterModel) {
+  constructor(pointsModel, filterModel, stats, trip) {
     this._navContainer = document.querySelector('.trip-controls__navigation');
     this._mainInfoContainer = document.querySelector('.trip-main');
     this._filtersContainer = document.querySelector('.trip-controls__filters');
@@ -24,6 +24,10 @@ export default class Menu {
 
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._stats = stats;
+    this._trip = trip;
+    this._toggleMenu = this._toggleMenu.bind(this);
   }
 
   initialize() {
@@ -57,6 +61,21 @@ export default class Menu {
   _renderNav () {
     this._navigation = new SiteMenuView();
     render(this._navContainer, this._navigation, 'beforeend');
+    this._navigation.setToggleMenuClick(this._toggleMenu);
+  }
+
+  _toggleMenu (evt) {
+    switch (evt.target.textContent) {
+      case PAGE_CONDITION.TABLE:
+        this._stats.hide();
+        this._trip.showTrip();
+        break;
+      case PAGE_CONDITION.STATS:
+        this._stats.show();
+        this._trip.hideTrip();
+        this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+        break;
+    }
   }
 
   _renderMainInfo () {

@@ -55,3 +55,10 @@ export const FilterType = {
   FUTURE: 'future',
   PAST: 'past',
 };
+
+export const VISUALLY_HIDDEN = 'visually-hidden';
+
+export const PAGE_CONDITION = {
+  TABLE: 'Table',
+  STATS: 'Stats',
+};

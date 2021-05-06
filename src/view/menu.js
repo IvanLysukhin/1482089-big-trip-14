@@ -8,7 +8,25 @@ const createMenu = () => {
 };
 
 export default class SiteMenu extends AbstractView {
+  constructor() {
+    super();
+
+    this._togglePage = this._togglePage.bind(this);
+  }
+
   getTemplate () {
     return createMenu();
+  }
+
+  setToggleMenuClick (cb) {
+    this._callback.togglePage = cb;
+    this.getElement().addEventListener('click', this._togglePage);
+  }
+
+  _togglePage (evt) {
+    if (evt.target.tagName === 'A') {
+      evt.preventDefault();
+      this._callback.togglePage(evt);
+    }
   }
 }
