@@ -3,7 +3,7 @@ import TripInfoView from '../view/trip-info.js';
 import TripPriceView from '../view/trip-price.js';
 import {render, removeElement} from '../utils/render-DOM-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
-import {PAGE_CONDITION, UpdateType, FilterType} from '../constants.js';
+import {PAGE_CONDITION, UpdateType, FilterType, VISUALLY_HIDDEN} from '../constants.js';
 import {getFilter} from '../utils/filters.js';
 import StatsView from '../view/stats-view';
 
@@ -77,15 +77,21 @@ export default class Menu {
   }
 
   _toggleMenu (evt) {
+    const newEventBtn = document.querySelector('.trip-main__event-add-btn');
+    const filterContainer = document.querySelector('.trip-controls__filters');
     switch (evt.target.textContent) {
       case PAGE_CONDITION.TABLE:
         this._stats.hide();
         this._trip.showTrip();
+        newEventBtn.disabled = false;
+        filterContainer.classList.remove(VISUALLY_HIDDEN);
         this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
         break;
       case PAGE_CONDITION.STATS:
         this._stats.show();
         this._trip.hideTrip();
+        newEventBtn.disabled = true;
+        filterContainer.classList.add(VISUALLY_HIDDEN);
         this._filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
         break;
     }

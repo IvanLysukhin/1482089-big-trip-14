@@ -126,5 +126,25 @@ const findDuration = (diff) => {
   return `${days} ${hour} ${minutes}`;
 };
 
+const makeObj = (nameTypeArr, numbresArr) => {
+  return nameTypeArr.map((name, index) => {
+    return {
+      name,
+      price: numbresArr[index],
+    };
+  });
+};
 
-export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration};
+const makeRange =  (names, numbers) => {
+  const arr = makeObj(names,numbers).sort((pointA, pointB) => {
+    return pointB.price - pointA.price;
+  });
+
+  return {
+    types:  arr.map((el) => {return el.name;}),
+    numbers:  arr.map((el) => {return el.price;}),
+  };
+};
+
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange};

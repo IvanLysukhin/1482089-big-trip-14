@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view';
-import {sumTypesPrices, countTypes, sumTimeSpend, findDuration} from '../utils/common.js';
+import {sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange} from '../utils/common.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
@@ -258,12 +258,16 @@ export default class StatsView extends AbstractView {
     const timeCtx = this.getElement().querySelector('.statistics__chart--time');
 
 
-    moneyCtx.height = BAR_HEIGHT * 6;
-    typeCtx.height = BAR_HEIGHT * 6;
-    timeCtx.height = BAR_HEIGHT * 6;
+    moneyCtx.height = BAR_HEIGHT * 7;
+    typeCtx.height = BAR_HEIGHT * 7;
+    timeCtx.height = BAR_HEIGHT * 7;
 
-    this._moneyChart = renderMoneyChart(moneyCtx, typesArr, sumTypesPrices(typesArr, this._getPoints()));
-    this._typeChart = renderTypeChart(typeCtx, typesArr, countTypes(typesArr, this._getPoints()));
-    this._timeChart = renderTimeSpendChart(timeCtx, typesArr, sumTimeSpend(typesArr, this._getPoints()));
+    const pricesSumArr = makeRange(typesArr, sumTypesPrices(typesArr, this._getPoints()));
+    const typesSumArr =  makeRange(typesArr, countTypes(typesArr, this._getPoints()));
+    const timesSumArr = makeRange(typesArr, sumTimeSpend(typesArr, this._getPoints()));
+
+    this._moneyChart = renderMoneyChart(moneyCtx, pricesSumArr.types, pricesSumArr.numbers);
+    this._typeChart = renderTypeChart(typeCtx, typesSumArr.types, typesSumArr.numbers);
+    this._timeChart = renderTimeSpendChart(timeCtx, timesSumArr.types, timesSumArr.numbers);
   }
 }
