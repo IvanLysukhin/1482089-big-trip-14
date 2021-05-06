@@ -49,7 +49,7 @@ export default class NewPoint {
   _handlerEditForm(point) {
     this._changeData(
       UserAction.ADD_TASK,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       Object.assign({id: nanoid()}, point),
     );
 
@@ -64,7 +64,6 @@ export default class NewPoint {
   _closeEscape (evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-
       this.destroy();
     }
   }

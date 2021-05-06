@@ -1,30 +1,5 @@
 import AbstractView from './abstract-view.js';
-
-const findDuration = (diff) => {
-  const daysInMinutes = Math.floor(diff / 1440);
-  const hoursInMinutes = Math.floor((diff  % 1440)/60);
-
-  let days = `${daysInMinutes}D`;
-
-  let hour = `${hoursInMinutes}H`;
-
-  let minutes =`${(diff  % 1440)%60}M`;
-
-  if (daysInMinutes < 1) {
-    days = '';
-  }
-
-  if (hoursInMinutes < 1) {
-    hour = '';
-  }
-
-  if (minutes < 1) {
-    minutes = '';
-  }
-
-  return `${days} ${hour} ${minutes}`;
-};
-
+import {findDuration} from '../utils/common.js';
 
 const createOfferItem = (array) => {
   return array.map((offer) => {

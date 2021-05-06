@@ -5,9 +5,10 @@ import {render, removeElement} from '../utils/render-DOM-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
 import {PAGE_CONDITION, UpdateType, FilterType} from '../constants.js';
 import {getFilter} from '../utils/filters.js';
+import StatsView from '../view/stats-view';
 
 export default class Menu {
-  constructor(pointsModel, filterModel, stats, trip) {
+  constructor(pointsModel, filterModel, trip) {
     this._navContainer = document.querySelector('.trip-controls__navigation');
     this._mainInfoContainer = document.querySelector('.trip-main');
     this._filtersContainer = document.querySelector('.trip-controls__filters');
@@ -18,6 +19,7 @@ export default class Menu {
     this._navigation = null;
     this._mainInfo = null;
     this._price = null;
+    this._stats = null;
     this.filtersPresenter = new FiltersPresenter(this._filtersContainer, this._filterModel, this._pointsModel);
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -25,19 +27,29 @@ export default class Menu {
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
-    this._stats = stats;
     this._trip = trip;
     this._toggleMenu = this._toggleMenu.bind(this);
+    this._statsContainer = document.querySelector('.page-main').querySelector('.page-body__container');
   }
 
   initialize() {
     this._renderMenu();
+    this._renderStats();
   }
 
   _handleModelEvent (changedMode) {
-    if (changedMode !== UpdateType.PATCH) {
-      this._clearMenu();
-      this._renderMenu();
+    switch (changedMode) {
+      case UpdateType.MAJOR:
+        this._clearMenu();
+        removeElement(this._stats);
+        this._renderMenu();
+        this._renderStats();
+        break;
+
+      case UpdateType.MINOR:
+        this._clearMenu();
+        this._renderMenu();
+        break;
     }
   }
 
@@ -69,11 +81,12 @@ export default class Menu {
       case PAGE_CONDITION.TABLE:
         this._stats.hide();
         this._trip.showTrip();
+        this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
         break;
       case PAGE_CONDITION.STATS:
         this._stats.show();
         this._trip.hideTrip();
-        this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+        this._filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
         break;
     }
   }
@@ -91,5 +104,10 @@ export default class Menu {
 
   _renderFilters () {
     this.filtersPresenter.initialize();
+  }
+
+  _renderStats () {
+    this._stats = new StatsView(this._pointsModel);
+    render(this._statsContainer, this._stats, 'beforeend');
   }
 }

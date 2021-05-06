@@ -56,5 +56,75 @@ const showErrorMassage = (parent) => {
   }, 5000);
 };
 
+const sumTypesPrices = (typesArray, pointsArr) => {
+  const pricesArray = [];
+  typesArray.forEach((type) => {
+    pricesArray.push(pointsArr.reduce((accumulator, point) => {
+      if (type.toLowerCase() === point.pointType.toLowerCase()) {
+        accumulator += point.price;
+        return accumulator;
+      } else {
+        return accumulator;
+      }
+    },0));
+  });
+  return pricesArray;
+};
 
-export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, showErrorMassage};
+const countTypes = (typesArray, pointsArr) => {
+  const pricesArray = [];
+  typesArray.forEach((type) => {
+    pricesArray.push(pointsArr.reduce((accumulator, point) => {
+      if (type.toLowerCase() === point.pointType.toLowerCase()) {
+        accumulator += 1;
+        return accumulator;
+      } else {
+        return accumulator;
+      }
+    },0));
+  });
+  return pricesArray;
+};
+
+const sumTimeSpend = (typesArray, pointsArr) => {
+  const pricesArray = [];
+  typesArray.forEach((type) => {
+    pricesArray.push(pointsArr.reduce((accumulator, point) => {
+      if (type.toLowerCase() === point.pointType.toLowerCase()) {
+        accumulator += point._date.endTime.diff(point._date.startTime, 'minute');
+        return accumulator;
+      } else {
+        return accumulator;
+      }
+    },0));
+  });
+  return pricesArray;
+};
+
+const findDuration = (diff) => {
+  const daysInMinutes = Math.floor(diff / 1440);
+  const hoursInMinutes = Math.floor((diff  % 1440)/60);
+
+  let days = `${daysInMinutes}D`;
+
+  let hour = `${hoursInMinutes}H`;
+
+  let minutes =`${(diff  % 1440)%60}M`;
+
+  if (daysInMinutes < 1) {
+    days = '';
+  }
+
+  if (hoursInMinutes < 1) {
+    hour = '';
+  }
+
+  if (minutes < 1) {
+    minutes = '';
+  }
+
+  return `${days} ${hour} ${minutes}`;
+};
+
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration};
