@@ -1,17 +1,7 @@
 import {generateRandomNumber, getRandomArray} from '../utils/common.js';
 import {DATA, OPTIONS} from '../constants.js';
 import {nanoid} from 'nanoid';
-
-const generateRandomDate = () => {
-  const months =['APR', 'MAR'];
-
-  return {
-    date: generateRandomNumber(5, 30),
-    month: months[generateRandomNumber()],
-    timeHour: generateRandomNumber(10, 12),
-    timeMinute: generateRandomNumber(10, 30),
-  };
-};
+import dayjs from 'dayjs';
 
 const getRandomArrayElement = (array) => {
   return array[generateRandomNumber(0, array.length - 1)];
@@ -67,42 +57,39 @@ const generateRandomCitiesDescription = (words) => {
 const words = DATA.RANDOM_TEXT.split('. ');
 const citiesDescriptions = generateRandomCitiesDescription(words);
 
+const generateRandomTime = () => {
+  let month = generateRandomNumber(4, 5);
+  const endMonth = month + generateRandomNumber();
+  if (month < 10) {
+    month = `0${month}`;
+  }
+
+  let day = generateRandomNumber(1, 31);
+  const endDay = day + generateRandomNumber(0, 3);
+  if (day < 10) {
+    day = `0${day}`;
+  }
+
+  let hour = generateRandomNumber(0, 24);
+  const endHour = hour + generateRandomNumber(0, 2);
+  if (hour < 10) {
+    hour = `0${hour}`;
+  }
+
+  let min = generateRandomNumber(0, 60);
+  const endMin = min + generateRandomNumber(0, 10);
+  if (min < 10) {
+    min = `0${min}`;
+  }
+
+  return {
+    startTime: dayjs(`2021-${month}-${day} ${hour}:${min}`),
+    endTime: dayjs(`2021-${endMonth}-${endDay} ${endHour}:${endMin}`),
+  };
+};
+
 const generateTripPoint = () => {
-  const date = generateRandomDate().date;
-  const month = generateRandomDate().month;
-  const nextDay = date + generateRandomNumber(0, 5);
-  const startHour = generateRandomDate().timeHour;
-  const startMinute = generateRandomDate().timeMinute;
-  const endHour = startHour + generateRandomNumber(0, 5);
-  const endMinute = startMinute + generateRandomNumber(0, 5);
-
-  const dateStart = `${month} ${date}`;
-  const dateEnd = `${month} ${nextDay}`;
-  const timeStart = `${startHour}:${startMinute}`;
-  const timeEnd = `${endHour}:${endMinute}`;
-
-  const findDurationHour = (...times) => {
-    const array = times.sort();
-    return array[1] - array[0];
-  };
-
-  const findDurationMinute = (...times) => {
-    const array = times.sort();
-    return array[1] - array[0];
-  };
-
-  const findDuration = () => {
-    const hour = findDurationHour(startHour, endHour);
-    const minute = findDurationMinute(startMinute, endMinute);
-    if (!hour) {
-      return `${minute}M`;
-    }
-    if (!minute) {
-      return `${hour}H`;
-    }
-    return `${hour}H ${minute}M`;
-  };
-
+  const _date = generateRandomTime();
   const offer = getRandomArrayElement(baseOptions);
 
   const offersArray = offer.offers.map((element) => {
@@ -117,12 +104,7 @@ const generateTripPoint = () => {
   return {
     id: nanoid(),
     price: generateRandomNumber(0, 200),
-    date: {
-      dateStart,
-      timeStart,
-      dateEnd,
-      timeEnd,
-    },
+    _date,
     pointType: offer.type,
     city,
     citiesDescriptions,
@@ -134,7 +116,6 @@ const generateTripPoint = () => {
         photos:getRandomPhotosArray(),
       },
     isFavorite: !!generateRandomNumber(),
-    duration: findDuration(),
     baseOptions,
   };
 };
