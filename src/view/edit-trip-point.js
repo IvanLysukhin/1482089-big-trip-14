@@ -234,7 +234,11 @@ export default class EditTripPoint extends Smart {
         this._data._date,
         {startTime: dayjs(date)}),
     });
-    this._datepickerStart.destroy();
+
+    if (this._datepickerStart !== null) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
+    }
   }
 
   _endDateChangeHandler (date) {
@@ -243,7 +247,12 @@ export default class EditTripPoint extends Smart {
         this._data._date,
         {endTime: dayjs(date)}),
     });
-    this._datepickerEnd.destroy();
+
+    if (this._datepickerEnd !== null) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
+    }
+
   }
 
   _checkTimeValidity () {
@@ -293,29 +302,33 @@ export default class EditTripPoint extends Smart {
     if (evt.target.tagName === 'INPUT') {
       switch (evt.target.getAttribute('name')) {
         case TimeInputs.START:
-          this._datepickerStart = flatpickr(
-            evt.target,
-            {
-              dateFormat: 'd/m/y H:i',
-              enableTime: true,
-              time_24hr: true,
-              defaultDate: this._data._date.startTime.format('DD-MM-YY HH:mm'),
-              onClose: this._startDateChangeHandler,
-            },
-          );
+          if (this._datepickerStart === null) {
+            this._datepickerStart = flatpickr(
+              evt.target,
+              {
+                dateFormat: 'd/m/y H:i',
+                enableTime: true,
+                time_24hr: true,
+                defaultDate: this._data._date.startTime.format('DD-MM-YY HH:mm'),
+                onClose: this._startDateChangeHandler,
+              },
+            );
+          }
           this._datepickerStart.open();
           break;
         case TimeInputs.END:
-          this._datepickerEnd = flatpickr(
-            evt.target,
-            {
-              dateFormat: 'd/m/y H:i',
-              enableTime: true,
-              time_24hr: true,
-              defaultDate: this._data._date.endTime.format('DD-MM-YY HH:mm'),
-              onClose: this._endDateChangeHandler,
-            },
-          );
+          if (this._datepickerEnd === null) {
+            this._datepickerEnd = flatpickr(
+              evt.target,
+              {
+                dateFormat: 'd/m/y H:i',
+                enableTime: true,
+                time_24hr: true,
+                defaultDate: this._data._date.endTime.format('DD-MM-YY HH:mm'),
+                onClose: this._endDateChangeHandler,
+              },
+            );
+          }
           this._datepickerEnd.open();
           break;
       }
