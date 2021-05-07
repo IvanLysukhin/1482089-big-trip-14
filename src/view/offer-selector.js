@@ -1,8 +1,7 @@
 import AbstractView from './abstract-view.js';
 
 const createOfferSelector = (array, type) => {
-  return array.map((offer, i) => {
-    const {text,  price, isChecked} = offer;
+  return array.map(({text,  price, isChecked} , i) => {
     return `<div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-${type.toLowerCase()}-${i+1}" type="checkbox" data-option-name="${text}" name="event-offer-${type.toLowerCase()}" ${isChecked ? 'checked' : ''}>
             <label class="event__offer-label" for="event-offer-${type.toLowerCase()}-${i+1}">

@@ -88,34 +88,30 @@ const words = DATA.RANDOM_TEXT.split('. ');
 const citiesDescriptions = generateRandomCitiesDescription(words);
 const citiesPhotos = generateRandomCitiesPhotos();
 
+const formatSmallNum = (formatedNum) => {
+  if (formatedNum < 10) {
+    return `0${formatedNum}`;
+  } else {
+    return formatedNum;
+  }
+};
+
 const generateRandomTime = () => {
-  let month = generateRandomNumber(MONTHS.APR, MONTHS.MAY);
+  const month = generateRandomNumber(MONTHS.APR, MONTHS.MAY);
   const endMonth = month + generateRandomNumber();
-  if (month < 10) {
-    month = `0${month}`;
-  }
 
-  let day = generateRandomNumber(MIN_DAY, MAX_DAY);
+  const day = generateRandomNumber(MIN_DAY, MAX_DAY);
   const endDay = day + generateRandomNumber(0, ADD_DAY);
-  if (day < 10) {
-    day = `0${day}`;
-  }
 
-  let hour = generateRandomNumber(0, MAX_HOUR);
+  const hour = generateRandomNumber(0, MAX_HOUR);
   const endHour = hour + generateRandomNumber(0, ADD_HOUR);
-  if (hour < 10) {
-    hour = `0${hour}`;
-  }
 
-  let min = generateRandomNumber(0, MAX_MINUTES);
+  const min = generateRandomNumber(0, MAX_MINUTES);
   const endMin = min + generateRandomNumber(0, ADD_MINUTES);
-  if (min < 10) {
-    min = `0${min}`;
-  }
 
   return {
-    startTime: dayjs(`2021-${month}-${day} ${hour}:${min}`),
-    endTime: dayjs(`2021-${endMonth}-${endDay} ${endHour}:${endMin}`),
+    startTime: dayjs(`2021-${formatSmallNum(month)}-${formatSmallNum(day)} ${formatSmallNum(hour)}:${formatSmallNum(min)}`),
+    endTime: dayjs(`2021-${formatSmallNum(endMonth)}-${formatSmallNum(endDay)} ${formatSmallNum(endHour)}:${formatSmallNum(endMin)}`),
   };
 };
 

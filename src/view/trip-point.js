@@ -2,8 +2,7 @@ import AbstractView from './abstract-view.js';
 import {findDuration} from '../utils/common.js';
 
 const createOfferItem = (array) => {
-  return array.map((offer) => {
-    const {text, price, isChecked} = offer;
+  return array.map(({text, price, isChecked}) => {
     if (isChecked) {
       return `<li class="event__offer">
             <span class="event__offer-title">${text}</span>
@@ -13,8 +12,7 @@ const createOfferItem = (array) => {
   }).join('');
 };
 
-const createTripPoint = (obj) => {
-  const {city, pointType, price, isFavorite, options, _date} = obj;
+const createTripPoint = ({city, pointType, price, isFavorite, options, _date}) => {
 
   const duration = findDuration(_date.endTime.diff(_date.startTime, 'minute'));
 

@@ -2,7 +2,7 @@ import AbstractView from './abstract-view';
 import {sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange} from '../utils/common.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {BAR_HEIGHT, DATA_LABELS_FONT_SIZE, TITLE_FONT_SIZE, BAR_THICKNESS, MIN_BAR_LENGTH, MIN_BAR_LENGTH_TIMES, PADDING, HEIGHT_MULTIPLIER} from '../constants.js'
+import {BAR_HEIGHT, DATA_LABELS_FONT_SIZE, TITLE_FONT_SIZE, BAR_THICKNESS, MIN_BAR_LENGTH, MIN_BAR_LENGTH_TIMES, PADDING, HEIGHT_MULTIPLIER} from '../constants.js';
 
 const renderMoneyChart = (moneyCtx, labelsArr, pricesArr) => {
   return new Chart(moneyCtx, {

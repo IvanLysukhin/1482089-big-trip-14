@@ -110,7 +110,7 @@ const findDuration = (diff) => {
 
   let days = `${daysInMinutes}D`;
 
-  let hour = `${hoursInMinutes}H`;
+  let hour = ` ${hoursInMinutes}H `;
 
   let minutes =`${(diff  % MINUTES_IN_DAY)%MINUTES_IN_HOUR}M`;
 
@@ -119,14 +119,14 @@ const findDuration = (diff) => {
   }
 
   if (hoursInMinutes < 1) {
-    hour = '';
+    hour = ' ';
   }
 
   if (minutes < 1) {
     minutes = '';
   }
 
-  return `${days} ${hour} ${minutes}`;
+  return `${days}${hour}${minutes}`;
 };
 
 const makeObj = (nameTypeArr, numbresArr) => {

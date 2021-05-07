@@ -38,7 +38,7 @@ const replaceElements = (newChild, oldChild) => {
 };
 
 const removeElement = (component) => {
-  if (component === null) {
+  if (!component) {
     return;
   }
 

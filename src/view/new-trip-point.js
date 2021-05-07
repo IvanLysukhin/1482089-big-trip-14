@@ -6,9 +6,8 @@ import OfferSelectorsView from './offer-selector.js';
 import PhotosListView from './photos-list.js';
 
 
-const createNewTripPoint = (obj) => {
+const createNewTripPoint = ({date, destination, pointType, price, options, destinationInfo}) => {
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
-  const {date, destination, pointType, price, options, destinationInfo} = obj;
 
   const citiesList = new DestinationsListView(destination.cities).getTemplate();
   let hidden = '';
