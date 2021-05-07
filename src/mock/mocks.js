@@ -3,18 +3,35 @@ import {DATA, OPTIONS} from '../constants.js';
 import {nanoid} from 'nanoid';
 import dayjs from 'dayjs';
 
+const PHOTO_URL_MAX = 100;
+const ID_NUMBERS = 5;
+const MONTHS = {
+  APR: 4,
+  MAY: 5,
+};
+
+const MIN_DAY = 1;
+const MAX_DAY = 30;
+const ADD_DAY = 30;
+const MAX_HOUR = 24;
+const ADD_HOUR = 2;
+const MAX_MINUTES = 60;
+const ADD_MINUTES = 10;
+const MAX_PRICE = 200;
+const MAX_PHOTOS_ARR_LENGTH = 200;
+
 const getRandomArrayElement = (array) => {
   return array[generateRandomNumber(0, array.length - 1)];
 };
 
 const getRandomPhotosArray = () => {
-  return new Array(generateRandomNumber(0, 10)).fill('').map(() => {
-    return `http://picsum.photos/248/152?r=${generateRandomNumber(0, 100)}`;
+  return new Array(generateRandomNumber(0, MAX_PHOTOS_ARR_LENGTH)).fill('').map(() => {
+    return `http://picsum.photos/248/152?r=${generateRandomNumber(0, PHOTO_URL_MAX)}`;
   });
 };
 const generateIdForOptions = (options) => {
   return options.map((option) => {
-    option.id = nanoid(5);
+    option.id = nanoid(ID_NUMBERS);
     return option;
   });
 };
@@ -72,26 +89,26 @@ const citiesDescriptions = generateRandomCitiesDescription(words);
 const citiesPhotos = generateRandomCitiesPhotos();
 
 const generateRandomTime = () => {
-  let month = generateRandomNumber(4, 5);
+  let month = generateRandomNumber(MONTHS.APR, MONTHS.MAY);
   const endMonth = month + generateRandomNumber();
   if (month < 10) {
     month = `0${month}`;
   }
 
-  let day = generateRandomNumber(1, 31);
-  const endDay = day + generateRandomNumber(0, 3);
+  let day = generateRandomNumber(MIN_DAY, MAX_DAY);
+  const endDay = day + generateRandomNumber(0, ADD_DAY);
   if (day < 10) {
     day = `0${day}`;
   }
 
-  let hour = generateRandomNumber(0, 24);
-  const endHour = hour + generateRandomNumber(0, 2);
+  let hour = generateRandomNumber(0, MAX_HOUR);
+  const endHour = hour + generateRandomNumber(0, ADD_HOUR);
   if (hour < 10) {
     hour = `0${hour}`;
   }
 
-  let min = generateRandomNumber(0, 60);
-  const endMin = min + generateRandomNumber(0, 10);
+  let min = generateRandomNumber(0, MAX_MINUTES);
+  const endMin = min + generateRandomNumber(0, ADD_MINUTES);
   if (min < 10) {
     min = `0${min}`;
   }
@@ -117,7 +134,7 @@ const generateTripPoint = () => {
 
   return {
     id: nanoid(),
-    price: generateRandomNumber(0, 200),
+    price: generateRandomNumber(0, MAX_PRICE),
     _date,
     pointType: offer.type,
     city,

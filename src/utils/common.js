@@ -101,15 +101,18 @@ const sumTimeSpend = (typesArray, pointsArr) => {
   return pricesArray;
 };
 
+const MINUTES_IN_DAY = 1440;
+const MINUTES_IN_HOUR = 60;
+
 const findDuration = (diff) => {
-  const daysInMinutes = Math.floor(diff / 1440);
-  const hoursInMinutes = Math.floor((diff  % 1440)/60);
+  const daysInMinutes = Math.floor(diff / MINUTES_IN_DAY);
+  const hoursInMinutes = Math.floor((diff  % MINUTES_IN_DAY)/MINUTES_IN_HOUR);
 
   let days = `${daysInMinutes}D`;
 
   let hour = `${hoursInMinutes}H`;
 
-  let minutes =`${(diff  % 1440)%60}M`;
+  let minutes =`${(diff  % MINUTES_IN_DAY)%MINUTES_IN_HOUR}M`;
 
   if (daysInMinutes < 1) {
     days = '';

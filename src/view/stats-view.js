@@ -2,8 +2,7 @@ import AbstractView from './abstract-view';
 import {sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange} from '../utils/common.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
-const BAR_HEIGHT = 55;
+import {BAR_HEIGHT, DATA_LABELS_FONT_SIZE, TITLE_FONT_SIZE, BAR_THICKNESS, MIN_BAR_LENGTH, MIN_BAR_LENGTH_TIMES, PADDING, HEIGHT_MULTIPLIER} from '../constants.js'
 
 const renderMoneyChart = (moneyCtx, labelsArr, pricesArr) => {
   return new Chart(moneyCtx, {
@@ -22,7 +21,7 @@ const renderMoneyChart = (moneyCtx, labelsArr, pricesArr) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13,
+            size: DATA_LABELS_FONT_SIZE,
           },
           color: '#000000',
           anchor: 'end',
@@ -34,21 +33,21 @@ const renderMoneyChart = (moneyCtx, labelsArr, pricesArr) => {
         display: true,
         text: 'MONEY',
         fontColor: '#000000',
-        fontSize: 23,
+        fontSize: TITLE_FONT_SIZE,
         position: 'left',
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
+            padding: PADDING,
+            fontSize: DATA_LABELS_FONT_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
+          barThickness: BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -59,7 +58,7 @@ const renderMoneyChart = (moneyCtx, labelsArr, pricesArr) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
+          minBarLength: MIN_BAR_LENGTH,
         }],
       },
       legend: {
@@ -89,7 +88,7 @@ const renderTypeChart = (typeCtx, labelsArr, typeCountArr) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13,
+            size: DATA_LABELS_FONT_SIZE,
           },
           color: '#000000',
           anchor: 'end',
@@ -101,21 +100,21 @@ const renderTypeChart = (typeCtx, labelsArr, typeCountArr) => {
         display: true,
         text: 'TYPE',
         fontColor: '#000000',
-        fontSize: 23,
+        fontSize: TITLE_FONT_SIZE,
         position: 'left',
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
+            padding: PADDING,
+            fontSize: DATA_LABELS_FONT_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
+          barThickness: BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -126,7 +125,7 @@ const renderTypeChart = (typeCtx, labelsArr, typeCountArr) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
+          minBarLength: MIN_BAR_LENGTH,
         }],
       },
       legend: {
@@ -156,7 +155,7 @@ const renderTimeSpendChart = (typeCtx, labelsArr, typeCountArr) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13,
+            size: DATA_LABELS_FONT_SIZE,
           },
           color: '#000000',
           anchor: 'end',
@@ -168,21 +167,21 @@ const renderTimeSpendChart = (typeCtx, labelsArr, typeCountArr) => {
         display: true,
         text: 'TIME - SPEND',
         fontColor: '#000000',
-        fontSize: 23,
+        fontSize: TITLE_FONT_SIZE,
         position: 'left',
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
+            padding: PADDING,
+            fontSize: DATA_LABELS_FONT_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
+          barThickness: BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -193,7 +192,7 @@ const renderTimeSpendChart = (typeCtx, labelsArr, typeCountArr) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 100,
+          minBarLength: MIN_BAR_LENGTH_TIMES,
         }],
       },
       legend: {
@@ -258,9 +257,9 @@ export default class StatsView extends AbstractView {
     const timeCtx = this.getElement().querySelector('.statistics__chart--time');
 
 
-    moneyCtx.height = BAR_HEIGHT * 7;
-    typeCtx.height = BAR_HEIGHT * 7;
-    timeCtx.height = BAR_HEIGHT * 7;
+    moneyCtx.height = BAR_HEIGHT * HEIGHT_MULTIPLIER;
+    typeCtx.height = BAR_HEIGHT * HEIGHT_MULTIPLIER;
+    timeCtx.height = BAR_HEIGHT * HEIGHT_MULTIPLIER;
 
     const pricesSumArr = makeRange(typesArr, sumTypesPrices(typesArr, this._getPoints()));
     const typesSumArr =  makeRange(typesArr, countTypes(typesArr, this._getPoints()));
