@@ -36,7 +36,7 @@ const getRandomArray = (array) => {
 
 const showErrorMassage = (parent) => {
   const errorMessage = document.createElement('div');
-  errorMessage.textContent = 'Дата окончания не может быть установлена раньше точки начала';
+  errorMessage.textContent = 'Invalid date. End date is earlier than start date';
   errorMessage.style.textAlign = 'center';
   errorMessage.style.fontWeight = 'bold';
   errorMessage.style.fontFamily = 'Montserrat';

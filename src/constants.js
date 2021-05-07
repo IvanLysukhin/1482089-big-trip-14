@@ -71,3 +71,9 @@ export const MIN_BAR_LENGTH = 50;
 export const MIN_BAR_LENGTH_TIMES = 100;
 export const PADDING = 5;
 export const HEIGHT_MULTIPLIER = 7;
+
+export const TimeInputs = {
+  START: 'event-start-time',
+  END: 'event-end-time',
+};
+
