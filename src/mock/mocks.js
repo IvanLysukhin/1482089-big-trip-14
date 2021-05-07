@@ -8,7 +8,7 @@ const getRandomArrayElement = (array) => {
 };
 
 const getRandomPhotosArray = () => {
-  return new Array(generateRandomNumber(0, 5)).fill('').map(() => {
+  return new Array(generateRandomNumber(0, 10)).fill('').map(() => {
     return `http://picsum.photos/248/152?r=${generateRandomNumber(0, 100)}`;
   });
 };
@@ -54,8 +54,22 @@ const generateRandomCitiesDescription = (words) => {
   };
 };
 
+const generateRandomCitiesPhotos = () => {
+  return {
+    'Tokyo':getRandomPhotosArray(),
+    'Seul':getRandomPhotosArray(),
+    'Shanghai':getRandomPhotosArray(),
+    'Singapore':getRandomPhotosArray(),
+    'New-York':getRandomPhotosArray(),
+    'Pusan':getRandomPhotosArray(),
+    'Helsinki':getRandomPhotosArray(),
+    'Heppenheim':getRandomPhotosArray(),
+  };
+};
+
 const words = DATA.RANDOM_TEXT.split('. ');
 const citiesDescriptions = generateRandomCitiesDescription(words);
+const citiesPhotos = generateRandomCitiesPhotos();
 
 const generateRandomTime = () => {
   let month = generateRandomNumber(4, 5);
@@ -108,12 +122,13 @@ const generateTripPoint = () => {
     pointType: offer.type,
     city,
     citiesDescriptions,
+    citiesPhotos,
     destinations: DATA.CITIES,
     options: offersArray,
     destinationInfo:
       {
         infoText: citiesDescriptions[city],
-        photos:getRandomPhotosArray(),
+        photos:citiesPhotos[city],
       },
     isFavorite: !!generateRandomNumber(),
     baseOptions,

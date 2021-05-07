@@ -2,6 +2,7 @@ import TripPointItemView from '../view/trip-list-item.js';
 import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
 import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
+import {UserAction, UpdateType} from '../constants.js';
 
 const pointMode = {
   DEFAULT: 'DEFAULT',
@@ -9,11 +10,11 @@ const pointMode = {
 };
 
 export default class PointPresenter {
-  constructor(container, changeData, changeMode) {
+  constructor(container, changeData, changeMode, newPoint) {
     this._container = container;
     this._changeData = changeData;
     this._changeMode = changeMode;
-
+    this._newpoint = newPoint;
 
     this._parentContainer = new TripPointItemView();
 
@@ -26,6 +27,7 @@ export default class PointPresenter {
     this._handlerPointClick = this._handlerPointClick.bind(this);
     this._closeEscape = this._closeEscape.bind(this);
     this._handlerEditForm = this._handlerEditForm.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   initialize (point) {
@@ -40,6 +42,7 @@ export default class PointPresenter {
     this._editFormComponent.setHandlerForm(this._handlerEditForm);
 
     this._pointComponent.setFavoriteHandler(this._handleFavoriteClick);
+    this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
 
     if (prevPoint === null || prevEditForm === null) {
       this._renderPoint();
@@ -83,6 +86,8 @@ export default class PointPresenter {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._point,
@@ -99,7 +104,10 @@ export default class PointPresenter {
   }
 
   _handlerEditForm(point) {
-    this._changeData(point);
+    this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      point);
     this._swapEditToPoint();
     document.removeEventListener('keydown',  this._closeEscape);
   }
@@ -114,6 +122,14 @@ export default class PointPresenter {
   _renderPoint () {
     render(this._container, this._parentContainer, 'beforeend');
     render(this._parentContainer, this._pointComponent, 'beforeend');
+  }
+
+  _handleDeleteClick (point) {
+    this._changeData(
+      UserAction.DELETE_TASK,
+      UpdateType.MINOR,
+      point,
+    );
   }
 }
 
