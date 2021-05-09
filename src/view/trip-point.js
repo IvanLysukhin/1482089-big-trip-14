@@ -2,10 +2,10 @@ import AbstractView from './abstract-view.js';
 import {findDuration} from '../utils/common.js';
 
 const createOfferItem = (array) => {
-  return array.map(({text, price, isChecked}) => {
+  return array.map(({title, price, isChecked}) => {
     if (isChecked) {
       return `<li class="event__offer">
-            <span class="event__offer-title">${text}</span>
+            <span class="event__offer-title">${title}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
           </li>`;}

@@ -18,7 +18,7 @@ const ADD_HOUR = 2;
 const MAX_MINUTES = 60;
 const ADD_MINUTES = 10;
 const MAX_PRICE = 200;
-const MAX_PHOTOS_ARR_LENGTH = 200;
+const MAX_PHOTOS_ARR_LENGTH = 10;
 
 const getRandomArrayElement = (array) => {
   return array[generateRandomNumber(0, array.length - 1)];
@@ -121,7 +121,7 @@ const generateTripPoint = () => {
 
   const offersArray = offer.offers.map((element) => {
     return {
-      text: element.text,
+      title: element.text,
       price: element.price,
       isChecked: generateRandomNumber() > 0,
     };
