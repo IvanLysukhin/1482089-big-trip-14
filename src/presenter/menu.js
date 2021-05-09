@@ -35,6 +35,7 @@ export default class Menu {
   initialize() {
     this._renderMenu();
     this._renderStats();
+    this._renderNav();
   }
 
   _handleModelEvent (changedMode) {
@@ -54,13 +55,13 @@ export default class Menu {
   }
 
   _clearMenu () {
-    removeElement(this._navigation);
+    // removeElement(this._navigation);
     removeElement(this._mainInfo);
     removeElement(this._price);
   }
 
   _renderMenu () {
-    this._renderNav();
+    // this._renderNav();
     this._renderFilters();
     this._renderMainInfo();
     this._renderPrice();
@@ -79,6 +80,13 @@ export default class Menu {
   _toggleMenu (evt) {
     const newEventBtn = document.querySelector('.trip-main__event-add-btn');
     const filterContainer = document.querySelector('.trip-controls__filters');
+    document.querySelectorAll('.trip-tabs__btn').forEach((btn) => {
+      if (btn.classList.contains('trip-tabs__btn--active')) {
+        btn.classList.remove('trip-tabs__btn--active');
+      } else {
+        btn.classList.add('trip-tabs__btn--active');
+      }
+    });
     switch (evt.target.textContent) {
       case PAGE_CONDITION.TABLE:
         this._stats.hide();
