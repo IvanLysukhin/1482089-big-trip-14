@@ -36,6 +36,11 @@ export default class Api {
         return this._makeOneObj(destinations);
       })
       .then((destinations) => {
+        if (points.length === undefined) {
+          points.citiesDescriptions = destinations;
+          return points;
+        }
+
         return points.map((point) => {
           point.citiesDescriptions = destinations;
           return point;});
@@ -54,6 +59,11 @@ export default class Api {
         return this._makeOneObj(destinations);
       })
       .then((photos) => {
+        if (points.length === undefined) {
+          points.citiesPhotos = photos;
+          return points;
+        }
+
         return points.map((point) => {
           point.citiesPhotos = photos;
           return point;});
@@ -67,6 +77,10 @@ export default class Api {
     return this._load({url: 'offers'})
       .then(Api.toJSON)
       .then((offers) => {
+        if (points.length === undefined) {
+          points.baseOptions = offers;
+          return points;
+        }
         return points.map((point) => {
           point.baseOptions = offers;
           return point;});
@@ -83,6 +97,10 @@ export default class Api {
         return destinations.map((city) => {return city.name;});
       })
       .then((cities) => {
+        if (points.length === undefined) {
+          points.destinations = cities;
+          return points;
+        }
         return points.map((point) => {
           point.destinations = cities;
           return point;});
@@ -97,13 +115,19 @@ export default class Api {
     return newObj;
   }
 
-  updatePoints (point) {
+  updatePoint (point) {
     return this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: new Headers({'Content-Type': 'application/json'}),
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
+      headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((point) => {
+        return PointsModel.adaptToClient(point);})
+      .then((points) => {
+        return this.getDestinations(points);
+      });
   }
 
   _load ({

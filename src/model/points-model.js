@@ -115,4 +115,44 @@ export default class PointsModel extends Observer {
 
     return BaseDestinations;
   }
+
+  static adaptToServer (point) {
+    const serverAdaptedPoint = Object.assign(
+      {},
+      point,
+      {
+        'base_price': point.price,
+        'date_from': point._date.startTime.toISOString(),
+        'date_to': point._date.endTime.toISOString(),
+        type: point.pointType,
+        destination: Object.assign(
+          {},
+          {
+            name: point.city,
+            description: point.destinationInfo.infoText,
+            pictures: point.destinationInfo.photos,
+          },
+        ),
+        'is_favorite': point.isFavorite,
+        offers: point.options.filter((option) => {
+          return option.isChecked;
+        }),
+      },
+    );
+
+    delete serverAdaptedPoint.price;
+    delete serverAdaptedPoint._date;
+    delete serverAdaptedPoint.pointType;
+    delete serverAdaptedPoint.destinationInfo;
+    delete serverAdaptedPoint.city;
+    delete serverAdaptedPoint.baseOptions;
+    delete serverAdaptedPoint.citiesDescriptions;
+    delete serverAdaptedPoint.citiesPhotos;
+    delete serverAdaptedPoint.isFavorite;
+    delete serverAdaptedPoint.destinations;
+    delete serverAdaptedPoint.options;
+    delete serverAdaptedPoint.photos;
+
+    return serverAdaptedPoint;
+  }
 }

@@ -147,13 +147,26 @@ export default class EditTripPoint extends Smart {
   }
 
   static parsePointToData (obj) {
-    const {options, destinationInfo} = obj;
+    const {options, destinationInfo, pointType, baseOptions} = obj;
+
+    const index = baseOptions.findIndex((option) => {
+      return option.type.toLowerCase() === pointType.toLowerCase();
+    });
+
+
+    const newArrOptions = baseOptions[index].offers.slice().map((offer) => {
+      if (options.findIndex(({title}) => {return title === offer.title;}) > -1) {
+        return Object.assign({}, offer, {isChecked: true});
+      }
+      return Object.assign({}, offer, {isChecked: false});
+    });
+
     return Object.assign(
       {},
       obj,
       {
-        defaultOptions: options,
-        hasOptions: options.length > 0,
+        defaultOptions: newArrOptions,
+        hasOptions: newArrOptions.length > 0,
         hasDestinationInfo: destinationInfo.infoText.length > 0,
         infoText: destinationInfo.infoText,
         photos: destinationInfo.photos,

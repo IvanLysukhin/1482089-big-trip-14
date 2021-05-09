@@ -5,13 +5,13 @@ import {removeElement, render} from '../utils/render-DOM-elements.js';
 import {UpdateType} from '../constants.js';
 
 export default class App {
-  constructor (pointsModel, filterModel) {
+  constructor (pointsModel, filterModel, api) {
     this._menu = null;
     this._tripList = null;
 
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
-
+    this._api = api;
     this._creatNewPoint = this._creatNewPoint.bind(this);
     this._renderApp = this._renderApp.bind(this);
 
@@ -54,7 +54,7 @@ export default class App {
 
   _renderTripList () {
     const eventsContainer = document.querySelector('.trip-events');
-    this._tripList = new TripPresenter(eventsContainer, this._pointsModel, this._filterModel);
+    this._tripList = new TripPresenter(eventsContainer, this._pointsModel, this._filterModel, this._api);
     this._tripList.initialize();
     const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
     addNewPointButton.addEventListener('click', this._creatNewPoint);
