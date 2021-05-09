@@ -18,7 +18,6 @@ export default class Api {
   }
 
   getPoints () {
-    // this._getBaseDestinations().then((ell) => console.log(ell));
     return this._load({url: 'points'})
       .then(Api.toJSON)
       .then((points) => {

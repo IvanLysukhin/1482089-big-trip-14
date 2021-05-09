@@ -7,8 +7,10 @@ export default class PointsModel extends Observer {
     this._points = [];
   }
 
-  setPoints (points) {
+  setPoints (updateType, points) {
     this._points = points.slice();
+
+    this._notify(updateType);
   }
 
   getPoints () {
@@ -68,7 +70,7 @@ export default class PointsModel extends Observer {
         city:point.destination.name,
         destinationInfo: Object.assign({}, {
           infoText: point.destination.description,
-          photos: point.destination.pictures.map((pic) => {return pic.src;}),
+          photos: point.destination.pictures,
         }),
         isFavorite: point.is_favorite,
         options: point.offers.map((offer) => {

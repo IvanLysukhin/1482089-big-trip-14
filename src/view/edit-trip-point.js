@@ -188,7 +188,7 @@ export default class EditTripPoint extends Smart {
   _optionsCheckHandler (evt) {
     if (evt.target.tagName === 'INPUT') {
       const checkedOptionIndex = this._data.defaultOptions.findIndex((el) => {
-        return el.text === evt.target.getAttribute('data-option-name');
+        return el.title === evt.target.getAttribute('data-option-name');
       });
       this.updateData({
         defaultOptions: this._data.defaultOptions.map((element, i) => {

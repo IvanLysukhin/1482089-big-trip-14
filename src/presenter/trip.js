@@ -1,5 +1,5 @@
 import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
-import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
+import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '../utils/common.js';
 import {DATA, UserAction, UpdateType, FilterType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
@@ -7,7 +7,6 @@ import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
 import {getFilter} from '../utils/filters.js';
 import NewTripPoint from '../presenter/new-point.js';
-import {generateTripPoint} from '../mock/mocks';
 
 export default class TripPresenter {
   constructor(listContainer, pointsModel, filterModel) {
@@ -155,10 +154,11 @@ export default class TripPresenter {
   }
 
   createNewPoint (evt) {
+    const defaultsRandomPoint = getRandomArrayElement(this._pointsModel.getPoints().slice());
     this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
     this._currentSortType = DATA.SORT_TYPE.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._newPointPresenter.initialize(generateTripPoint());
+    this._newPointPresenter.initialize(defaultsRandomPoint);
   }
 
   showTrip () {
