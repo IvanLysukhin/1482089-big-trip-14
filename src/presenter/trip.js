@@ -1,6 +1,6 @@
 import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
 import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '../utils/common.js';
-import {DATA, UserAction, UpdateType, FilterType} from '../constants.js';
+import {DATA, UserAction, UpdateType, FilterType, State} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
 import SortListView from '../view/sort';
@@ -52,16 +52,20 @@ export default class TripPresenter {
   _handleViewAction (actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_TASK:
+        this._pointPresenter[update.id].setViewState(State.SAVING);
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
         });
         break;
       case UserAction.ADD_TASK:
+        this._newPointPresenter.setSaving();
         this._api.addNewPoint(update).then((response) => {
           this._pointsModel.addPoint(updateType, response);
+          this._newPointPresenter.destroy();
         });
         break;
       case UserAction.DELETE_TASK:
+        this._pointPresenter[update.id].setViewState(State.DELETING);
         this._api.deletePoint(update).then(() => {
           this._pointsModel.deletePoint(updateType, update);
         });

@@ -10,7 +10,19 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
 import he from 'he';
 
-const createEditTripPoint = ({_date, city, destinations, pointType, price, defaultOptions, hasOptions, hasDestinationInfo, infoText, photos}, isNewPoint = false) => {
+const createEditTripPoint = ({_date,
+  city,
+  destinations,
+  pointType,
+  price,
+  defaultOptions,
+  hasOptions,
+  hasDestinationInfo,
+  infoText,
+  photos,
+  isDisabled,
+  isSaving,
+  isDeleting}, isNewPoint = false) => {
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();
@@ -23,7 +35,7 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
                       <span class="visually-hidden">Choose event type</span>
                       <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
                     </label>
-                    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+                    <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
                     <div class="event__type-list">
                       <!--Чекбоксы выбора транспорта-->
@@ -35,7 +47,7 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
                     <label class="event__label  event__type-output" for="event-destination-1">
                       ${pointType}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(city)}" list="destination-list-1">
+                    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(city)}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
                     <datalist id="destination-list-1">
                       ${citiesList}
                     </datalist>
@@ -43,10 +55,10 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${_date.startTime.format('DD/MM/YY HH:mm')}">
+                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${_date.startTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${_date.endTime.format('DD/MM/YY HH:mm')}">
+                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${_date.endTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -54,12 +66,12 @@ const createEditTripPoint = ({_date, city, destinations, pointType, price, defau
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1">
+                    <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}" min="1" ${isDisabled ? 'disabled' : ''}>
                   </div>
 
-                  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-                  <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
-                  <button class="event__rollup-btn" type="button">
+                  <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+                  <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
+                  <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
                     <span class="visually-hidden">Open event</span>
                   </button>
                 </header>
@@ -170,6 +182,9 @@ export default class EditTripPoint extends Smart {
         hasDestinationInfo: destinationInfo.infoText.length > 0,
         infoText: destinationInfo.infoText,
         photos: destinationInfo.photos,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
       },
     );
   }
@@ -184,6 +199,9 @@ export default class EditTripPoint extends Smart {
     delete data.hasOptions;
     delete data.hasDestinationInfo;
     delete data.infoText;
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
 
     return data;
   }

@@ -2,7 +2,7 @@ import AbstractView from './abstract-view.js';
 
 const createPhotosList = (array) => {
   return array.map(({src, description}) => {
-    return `<img class="event__photo" src="${src}" alt="${description}}">`;}).join('');
+    return `<img class="event__photo" src="${src}" alt="${description}">`;}).join('');
 };
 
 export default class PhotosList extends AbstractView{
