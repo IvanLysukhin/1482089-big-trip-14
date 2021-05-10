@@ -57,10 +57,14 @@ export default class TripPresenter {
         });
         break;
       case UserAction.ADD_TASK:
-        this._pointsModel.addPoint(updateType, update);
+        this._api.addNewPoint(update).then((response) => {
+          this._pointsModel.addPoint(updateType, response);
+        });
         break;
       case UserAction.DELETE_TASK:
-        this._pointsModel.deletePoint(updateType, update);
+        this._api.deletePoint(update).then(() => {
+          this._pointsModel.deletePoint(updateType, update);
+        });
         break;
     }
   }
