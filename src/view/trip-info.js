@@ -35,6 +35,10 @@ const routeDates = (array) => {
     return array[i]._date.endTime;
   });
 
+  if (!dayjs.min(startDates) || !dayjs.max(endDates)) {
+    return '';
+  }
+
   const minDate = dayjs.min(startDates).format('MMM DD');
   const maxDate = dayjs.max(endDates).format('MMM DD');
   return `${minDate} — ${maxDate}`;
