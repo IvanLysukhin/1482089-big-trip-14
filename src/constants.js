@@ -55,5 +55,8 @@ export const pointMode = {
 export const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
 };
+
+export const SHAKE_TIMEOUT = 600;
 

@@ -1,4 +1,5 @@
 import {createElementDOM, showHideElement} from '../utils/render-DOM-elements.js';
+import {SHAKE_TIMEOUT} from '../constants.js';
 
 export default class AbstractView {
   constructor() {
@@ -27,5 +28,13 @@ export default class AbstractView {
 
   hide () {
     showHideElement(true, this.getElement());
+  }
+
+  shake (cb) {
+    this.getElement().style.animation = `shake ${SHAKE_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = '';
+      cb();
+    }, SHAKE_TIMEOUT);
   }
 }

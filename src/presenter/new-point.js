@@ -40,6 +40,17 @@ export default class NewPoint {
     });
   }
 
+  setAborting () {
+    const resetState = () => {
+      this._editFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+
+    this._editFormComponent.shake(resetState);
+  }
+
   destroy () {
     if (this._editFormComponent === null) {
       return;
