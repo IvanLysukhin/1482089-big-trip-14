@@ -2,12 +2,7 @@ import TripPointItemView from '../view/trip-list-item.js';
 import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
 import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
-import {UserAction, UpdateType} from '../constants.js';
-
-const pointMode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import {UserAction, UpdateType, pointMode, State} from '../constants.js';
 
 export default class PointPresenter {
   constructor(container, changeData, changeMode, newPoint) {
@@ -54,11 +49,41 @@ export default class PointPresenter {
     }
 
     if (this._mode === pointMode.EDITING) {
-      replaceElements(this._editFormComponent, prevEditForm);
+      replaceElements(this._pointComponent, prevEditForm);
+      this._mode = pointMode.DEFAULT;
     }
 
     removeElement(prevPoint);
     removeElement(prevEditForm);
+  }
+
+  setViewState(state) {
+    const resetState = () => {
+      this._editFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._editFormComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._editFormComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING :
+        this._pointComponent.shake(resetState);
+        this._editFormComponent.shake(resetState);
+        break;
+    }
   }
 
   destroy () {
@@ -108,7 +133,7 @@ export default class PointPresenter {
       UserAction.UPDATE_TASK,
       UpdateType.MAJOR,
       point);
-    this._swapEditToPoint();
+    // this._swapEditToPoint();
     document.removeEventListener('keydown',  this._closeEscape);
   }
 

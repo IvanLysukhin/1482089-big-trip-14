@@ -33,6 +33,24 @@ export default class NewPoint {
     document.addEventListener('keydown', this._closeEscape);
   }
 
+  setSaving () {
+    this._editFormComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting () {
+    const resetState = () => {
+      this._editFormComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+
+    this._editFormComponent.shake(resetState);
+  }
+
   destroy () {
     if (this._editFormComponent === null) {
       return;
@@ -51,8 +69,6 @@ export default class NewPoint {
       UpdateType.MAJOR,
       point,
     );
-
-    this.destroy();
   }
 
   _handleDeleteClick () {

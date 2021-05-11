@@ -153,5 +153,33 @@ const makeRange =  (names, numbers) => {
   };
 };
 
+const showDownloadError = () => {
+  const errorMessage = document.createElement('div');
+  const errorText = document.createElement('div');
+  errorMessage.appendChild(errorText);
+  errorText.innerHTML = 'Download error. <a href="">Please try again</a>';
+  errorText.lastChild.style.color = 'black';
+  errorMessage.style.textAlign = 'center';
+  errorMessage.style.verticalAlign = 'middle';
+  errorMessage.style.fontWeight = 'bold';
+  errorMessage.style.fontFamily = 'Montserrat';
+  errorMessage.style.fontSize = '40px';
+  errorMessage.style.textTransform = 'uppercase';
+  errorMessage.style.background = '#1E90FF';
+  errorMessage.style.width = '100%';
+  errorMessage.style.height = '100%';
+  errorMessage.style.color = 'black';
+  errorMessage.style.top = '0';
+  errorMessage.style.position = 'absolute';
+  errorMessage.style.opacity = '0.7';
+  errorMessage.style.display = 'flex';
+  errorMessage.style.justifyContent = 'center';
+  errorMessage.style.alignItems = 'center';
+  document.querySelector('body').appendChild(errorMessage);
+  // setTimeout(() => {
+  //   errorMessage.remove();
+  // }, 5000);
+};
 
-export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, getRandomArrayElement, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange};
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, getRandomArrayElement, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange, showDownloadError};
