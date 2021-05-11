@@ -1,4 +1,4 @@
-import {render, removeElement} from '../utils/render-DOM-elements';
+import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
 import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
 import {DATA, UserAction, UpdateType, FilterType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
@@ -159,5 +159,13 @@ export default class TripPresenter {
     this._currentSortType = DATA.SORT_TYPE.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._newPointPresenter.initialize(generateTripPoint());
+  }
+
+  showTrip () {
+    showHideElement(false, this._listContainer);
+  }
+
+  hideTrip () {
+    showHideElement(true, this._listContainer);
   }
 }

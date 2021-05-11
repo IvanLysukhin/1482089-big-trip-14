@@ -1,4 +1,4 @@
-import {createElementDOM} from '../utils/render-DOM-elements.js';
+import {createElementDOM, showHideElement} from '../utils/render-DOM-elements.js';
 
 export default class AbstractView {
   constructor() {
@@ -19,5 +19,13 @@ export default class AbstractView {
 
   clearElement() {
     this._element = null;
+  }
+
+  show () {
+    showHideElement(false, this.getElement());
+  }
+
+  hide () {
+    showHideElement(true, this.getElement());
   }
 }

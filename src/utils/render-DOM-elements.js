@@ -1,4 +1,5 @@
 import AbstractView from '../view/abstract-view.js';
+import {VISUALLY_HIDDEN} from '../constants.js';
 
 const render = (parent, element, position) => {
 
@@ -37,7 +38,7 @@ const replaceElements = (newChild, oldChild) => {
 };
 
 const removeElement = (component) => {
-  if (component === null) {
+  if (!component) {
     return;
   }
 
@@ -49,4 +50,16 @@ const removeElement = (component) => {
   component.clearElement();
 };
 
-export {render, createElementDOM, replaceElements, removeElement};
+const showHideElement = (hide , element) => {
+  if (hide) {
+    if (!element.classList.contains(VISUALLY_HIDDEN)) {
+      element.classList.add(VISUALLY_HIDDEN);
+    }
+  } else {
+    if (element.classList.contains(VISUALLY_HIDDEN)) {
+      element.classList.remove(VISUALLY_HIDDEN);
+    }
+  }
+};
+
+export {render, createElementDOM, replaceElements, removeElement, showHideElement};

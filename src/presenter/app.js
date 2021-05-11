@@ -13,8 +13,8 @@ export default class App {
   }
 
   initialize () {
-    this._renderMenu(this._getPoints());
     this._renderTripList(this._getPoints());
+    this._renderMenu(this._getPoints());
   }
 
   _getPoints () {
@@ -22,7 +22,7 @@ export default class App {
   }
 
   _renderMenu (pointsArray) {
-    this._menu = new MenuPresenter(this._pointsModel, this._filterModel);
+    this._menu = new MenuPresenter(this._pointsModel, this._filterModel, this._tripList);
     this._menu.initialize(pointsArray);
   }
 

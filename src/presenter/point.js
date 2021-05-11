@@ -106,7 +106,7 @@ export default class PointPresenter {
   _handlerEditForm(point) {
     this._changeData(
       UserAction.UPDATE_TASK,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       point);
     this._swapEditToPoint();
     document.removeEventListener('keydown',  this._closeEscape);
@@ -127,7 +127,7 @@ export default class PointPresenter {
   _handleDeleteClick (point) {
     this._changeData(
       UserAction.DELETE_TASK,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       point,
     );
   }

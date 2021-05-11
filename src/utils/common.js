@@ -36,7 +36,7 @@ const getRandomArray = (array) => {
 
 const showErrorMassage = (parent) => {
   const errorMessage = document.createElement('div');
-  errorMessage.textContent = 'Дата окончания не может быть установлена раньше точки начала';
+  errorMessage.textContent = 'Invalid date. End date is earlier than start date';
   errorMessage.style.textAlign = 'center';
   errorMessage.style.fontWeight = 'bold';
   errorMessage.style.fontFamily = 'Montserrat';
@@ -56,5 +56,98 @@ const showErrorMassage = (parent) => {
   }, 5000);
 };
 
+const sumTypesPrices = (typesArray, pointsArr) => {
+  const pricesArray = [];
+  typesArray.forEach((type) => {
+    pricesArray.push(pointsArr.reduce((accumulator, point) => {
+      if (type.toLowerCase() === point.pointType.toLowerCase()) {
+        accumulator += point.price;
+        return accumulator;
+      } else {
+        return accumulator;
+      }
+    },0));
+  });
+  return pricesArray;
+};
 
-export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, showErrorMassage};
+const countTypes = (typesArray, pointsArr) => {
+  const pricesArray = [];
+  typesArray.forEach((type) => {
+    pricesArray.push(pointsArr.reduce((accumulator, point) => {
+      if (type.toLowerCase() === point.pointType.toLowerCase()) {
+        accumulator += 1;
+        return accumulator;
+      } else {
+        return accumulator;
+      }
+    },0));
+  });
+  return pricesArray;
+};
+
+const sumTimeSpend = (typesArray, pointsArr) => {
+  const pricesArray = [];
+  typesArray.forEach((type) => {
+    pricesArray.push(pointsArr.reduce((accumulator, point) => {
+      if (type.toLowerCase() === point.pointType.toLowerCase()) {
+        accumulator += point._date.endTime.diff(point._date.startTime, 'minute');
+        return accumulator;
+      } else {
+        return accumulator;
+      }
+    },0));
+  });
+  return pricesArray;
+};
+
+const MINUTES_IN_DAY = 1440;
+const MINUTES_IN_HOUR = 60;
+
+const findDuration = (diff) => {
+  const daysInMinutes = Math.floor(diff / MINUTES_IN_DAY);
+  const hoursInMinutes = Math.floor((diff  % MINUTES_IN_DAY)/MINUTES_IN_HOUR);
+
+  let days = `${daysInMinutes}D`;
+
+  let hour = ` ${hoursInMinutes}H `;
+
+  let minutes =`${(diff  % MINUTES_IN_DAY)%MINUTES_IN_HOUR}M`;
+
+  if (daysInMinutes < 1) {
+    days = '';
+  }
+
+  if (hoursInMinutes < 1) {
+    hour = ' ';
+  }
+
+  if (minutes < 1) {
+    minutes = '';
+  }
+
+  return `${days}${hour}${minutes}`;
+};
+
+const makeObj = (nameTypeArr, numbresArr) => {
+  return nameTypeArr.map((name, index) => {
+    return {
+      name,
+      price: numbresArr[index],
+    };
+  });
+};
+
+const makeRange =  (names, numbers) => {
+  const arr = makeObj(names,numbers).sort((pointA, pointB) => {
+    return pointB.price - pointA.price;
+  });
+
+  return {
+    types:  arr.map((el) => {return el.name;}),
+    numbers:  arr.map((el) => {return el.price;}),
+  };
+};
+
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange};
