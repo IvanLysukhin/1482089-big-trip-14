@@ -3,6 +3,7 @@ import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
 import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
 import {UserAction, UpdateType, pointMode, State} from '../constants.js';
+import {isOnline, toastError} from '../utils/common';
 
 export default class PointPresenter {
   constructor(container, changeData, changeMode, newPoint) {
@@ -124,16 +125,24 @@ export default class PointPresenter {
   }
 
   _handlerPointClick() {
+    if (!isOnline()) {
+      toastError('Editing a point is not available in offline');
+      return;
+    }
+
     this._swapPointToEdit();
     document.addEventListener('keydown',  this._closeEscape);
   }
 
   _handlerEditForm(point) {
+    if (!isOnline()) {
+      toastError('Editing a point is not available in offline');
+      return;
+    }
     this._changeData(
       UserAction.UPDATE_TASK,
       UpdateType.MAJOR,
       point);
-    // this._swapEditToPoint();
     document.removeEventListener('keydown',  this._closeEscape);
   }
 
@@ -150,6 +159,10 @@ export default class PointPresenter {
   }
 
   _handleDeleteClick (point) {
+    if (!isOnline()) {
+      toastError('Delete a point is not available in offline');
+      return;
+    }
     this._changeData(
       UserAction.DELETE_TASK,
       UpdateType.MAJOR,

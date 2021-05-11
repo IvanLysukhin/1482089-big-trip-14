@@ -58,5 +58,7 @@ export const State = {
   ABORTING: 'ABORTING',
 };
 
+export const SHOW_TIME = 5000;
+
 export const SHAKE_TIMEOUT = 600;
 

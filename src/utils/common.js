@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {SHOW_TIME} from '../constants.js';
 
 const getRandomArrayElement = (array) => {
   return array[generateRandomNumber(0, array.length - 1)];
@@ -176,10 +177,29 @@ const showDownloadError = () => {
   errorMessage.style.justifyContent = 'center';
   errorMessage.style.alignItems = 'center';
   document.querySelector('body').appendChild(errorMessage);
-  // setTimeout(() => {
-  //   errorMessage.remove();
-  // }, 5000);
+};
+
+const isOnline = () => {
+  return window.navigator.onLine;
 };
 
 
-export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, getRandomArrayElement, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange, showDownloadError};
+const toastError = (message) => {
+  const toastContainer = document.createElement('div');
+  toastContainer.classList.add('toast-container');
+  document.body.append(toastContainer);
+
+  const toastItem = document.createElement('div');
+  toastItem.textContent = message;
+  toastItem.classList.add('toast-item');
+
+  toastContainer.append(toastItem);
+
+  setTimeout(() => {
+    toastItem.remove();
+    toastContainer.remove();
+  }, SHOW_TIME);
+};
+
+
+export {generateRandomNumber, updateItem, sortTime, sortPrice, sortDate, getRandomArray, getRandomArrayElement, showErrorMassage, sumTypesPrices, countTypes, sumTimeSpend, findDuration, makeRange, showDownloadError, isOnline, toastError};
