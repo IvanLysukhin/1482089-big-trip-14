@@ -1,5 +1,5 @@
 import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
-import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
+import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '../utils/common.js';
 import {DATA, UserAction, UpdateType, FilterType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
@@ -7,12 +7,13 @@ import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
 import {getFilter} from '../utils/filters.js';
 import NewTripPoint from '../presenter/new-point.js';
-import {generateTripPoint} from '../mock/mocks';
+import {nanoid} from 'nanoid';
 
 export default class TripPresenter {
-  constructor(listContainer, pointsModel, filterModel) {
+  constructor(listContainer, pointsModel, filterModel, api) {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._listContainer = listContainer;
     this._eventsList = new TripPointListView();
@@ -51,13 +52,19 @@ export default class TripPresenter {
   _handleViewAction (actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update).then((response) => {
+          this._pointsModel.updatePoint(updateType, response);
+        });
         break;
       case UserAction.ADD_TASK:
-        this._pointsModel.addPoint(updateType, update);
+        this._api.addNewPoint(update).then((response) => {
+          this._pointsModel.addPoint(updateType, response);
+        });
         break;
       case UserAction.DELETE_TASK:
-        this._pointsModel.deletePoint(updateType, update);
+        this._api.deletePoint(update).then(() => {
+          this._pointsModel.deletePoint(updateType, update);
+        });
         break;
     }
   }
@@ -155,10 +162,12 @@ export default class TripPresenter {
   }
 
   createNewPoint (evt) {
+    const defaultsRandomPoint = getRandomArrayElement(this._pointsModel.getPoints().slice());
+    defaultsRandomPoint.id = nanoid(3);
     this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
     this._currentSortType = DATA.SORT_TYPE.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._newPointPresenter.initialize(generateTripPoint());
+    this._newPointPresenter.initialize(defaultsRandomPoint);
   }
 
   showTrip () {

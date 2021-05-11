@@ -2,7 +2,6 @@ import TripPointItemView from '../view/trip-list-item.js';
 import EditTripPointView from '../view/edit-trip-point.js';
 import {removeElement, render} from '../utils/render-DOM-elements.js';
 import {UpdateType, UserAction} from '../constants.js';
-import {nanoid} from 'nanoid';
 
 export default class NewPoint {
   constructor(container, changeData, button) {
@@ -50,7 +49,7 @@ export default class NewPoint {
     this._changeData(
       UserAction.ADD_TASK,
       UpdateType.MAJOR,
-      Object.assign({id: nanoid()}, point),
+      point,
     );
 
     this.destroy();
