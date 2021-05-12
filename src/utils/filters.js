@@ -5,7 +5,7 @@ export const getFilter = {
   [FilterType.EVERYTHING]: (points) => {return points;},
   [FilterType.FUTURE]: (points) => {
     return points.filter((point) => {
-      return point._date.startTime.diff(dayjs()) > 0;
+      return point._date.startTime.diff(dayjs()) > 0 || point._date.endTime.diff(dayjs()) > 0;
     });
   },
   [FilterType.PAST]: (points) => {

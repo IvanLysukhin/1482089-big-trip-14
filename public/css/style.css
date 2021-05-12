@@ -1004,3 +1004,45 @@ main {
 .shake {
   animation: shake 0.6s;
 }
+
+.toast-container {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 90%;
+  height: 0;
+  font-family: "Montserrat", "Arial", sans-serif;
+  font-size: 25px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.toast-item {
+  display: block;
+  border-radius: 3px;
+  background-color: #ffd054;
+  align-self: center;
+  color: black;
+  width: 40%;
+  text-transform: uppercase;
+  margin-top: 8px;
+  box-shadow: 4px 4px 8px 0 rgba(34, 60, 80, 0.2);
+}
+
+.trip-events__msg--empty-filter {
+  color: black;
+  position: absolute;
+  top: 0.5em;
+  margin: 0 auto;
+  left: 0;
+  width: 100%;
+  display: block;
+  text-transform: uppercase;
+  font-size: 29px;
+}
+

@@ -3,6 +3,7 @@ import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '
 import {DATA, UserAction, UpdateType, FilterType, State} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
+import EmptyFilter from '../view/empty-filter.js';
 import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
 import {getFilter} from '../utils/filters.js';
@@ -19,6 +20,7 @@ export default class TripPresenter {
     this._eventsList = new TripPointListView();
     this._sortList =  null;
     this._emptyMessage = null;
+    this._emptyFilter = null;
 
     this._pointPresenter = {};
     this._currentSortType = DATA.SORT_TYPE.DEFAULT;
@@ -105,6 +107,11 @@ export default class TripPresenter {
     const points = this._pointsModel.getPoints().slice();
     const filterPoints = getFilter[filterType](points);
 
+    if (!filterPoints.length) {
+      this._emptyFilter = new EmptyFilter();
+      render(this._listContainer, this._emptyFilter, 'beforeend');
+    }
+
 
     switch (this._currentSortType) {
       case DATA.SORT_TYPE.TIME:
@@ -146,10 +153,9 @@ export default class TripPresenter {
   }
 
   _clearTrip (resetSortType = false) {
-    // this._newPointPresenter.destroy();
     Object.values(this._pointPresenter).forEach((pointPresenter) => {pointPresenter.destroy();});
     this._pointPresenter = {};
-
+    removeElement(this._emptyFilter);
     removeElement(this._sortList);
     removeElement(this._emptyMessage);
     this._sortList = null;

@@ -2,7 +2,7 @@ import {DATA, TimeInputs} from '../constants.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
-import {showErrorMassage} from '../utils/common.js';
+import {isOnline, showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
 import PhotosListView from './photos-list.js';
 import flatpickr from 'flatpickr';
@@ -23,6 +23,12 @@ const createEditTripPoint = ({_date,
   isDisabled,
   isSaving,
   isDeleting}, isNewPoint = false) => {
+
+  if (!isOnline()) {
+    _date.startTime = dayjs(_date.startTime);
+    _date.endTime = dayjs(_date.endTime);
+  }
+
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();
@@ -250,6 +256,17 @@ export default class EditTripPoint extends Smart {
   _cityInputHandler (evt) {
     const city = evt.target.value;
     const cityDescription = this._data.citiesDescriptions[city];
+
+    if (!cityDescription) {
+      this.getElement().querySelector('.btn').disabled = true;
+      this.getElement().querySelector('.event__rollup-btn').disabled = true;
+      showErrorMassage(this.getElement(), 'Select a city from the list');
+      return;
+    } else {
+      this.getElement().querySelector('.btn').disabled = false;
+      this.getElement().querySelector('.event__rollup-btn').disabled = false;
+    }
+
     const photos = this._data.citiesPhotos[city];
     this.updateData({
       city,
@@ -291,7 +308,7 @@ export default class EditTripPoint extends Smart {
     if (diff < 0) {
       this.getElement().querySelector('.btn').disabled = true;
       this.getElement().querySelector('.event__rollup-btn').disabled = true;
-      showErrorMassage(this.getElement());
+      showErrorMassage(this.getElement(), 'Invalid date. End date is earlier than start date');
     } else {
       this.getElement().querySelector('.btn').disabled = false;
       this.getElement().querySelector('.event__rollup-btn').disabled = false;

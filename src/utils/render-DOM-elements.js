@@ -1,7 +1,7 @@
 import AbstractView from '../view/abstract-view.js';
 import {VISUALLY_HIDDEN} from '../constants.js';
 
-const render = (parent, element, position) => {
+export const render = (parent, element, position) => {
 
   if (parent instanceof AbstractView) {
     parent = parent.getElement();
@@ -17,13 +17,13 @@ const render = (parent, element, position) => {
 
 };
 
-const createElementDOM = (template) => {
+export const createElementDOM = (template) => {
   const parent = document.createElement('div');
   parent.innerHTML = template;
   return parent.firstChild;
 };
 
-const replaceElements = (newChild, oldChild) => {
+export const replaceElements = (newChild, oldChild) => {
   if (oldChild instanceof AbstractView) {
     oldChild = oldChild.getElement();
   }
@@ -37,7 +37,7 @@ const replaceElements = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-const removeElement = (component) => {
+export const removeElement = (component) => {
   if (!component) {
     return;
   }
@@ -50,7 +50,7 @@ const removeElement = (component) => {
   component.clearElement();
 };
 
-const showHideElement = (hide , element) => {
+export const showHideElement = (hide , element) => {
   if (hide) {
     if (!element.classList.contains(VISUALLY_HIDDEN)) {
       element.classList.add(VISUALLY_HIDDEN);
@@ -62,4 +62,4 @@ const showHideElement = (hide , element) => {
   }
 };
 
-export {render, createElementDOM, replaceElements, removeElement, showHideElement};
+// export {render, createElementDOM, replaceElements, removeElement, showHideElement};
