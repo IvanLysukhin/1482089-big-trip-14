@@ -30,7 +30,7 @@ apiWithProvider.getPoints().then((points) => {
   });
 
 window.addEventListener('load', () => {
-  navigator.serviceWorker.register('../service-worker.js');
+  navigator.serviceWorker.register('/sw.js');
   if (!isOnline()) {
     document.title += ' [offline]';
     toastError('offline mode');
