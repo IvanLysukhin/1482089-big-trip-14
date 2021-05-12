@@ -1,18 +1,5 @@
 import PointsModel from '../model/points-model.js';
-
-
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  DELETE: 'DELETE',
-  POST: 'POST',
-};
-
-const SuccessHTTPStatusRange = {
-  MIN: 200,
-  MAX: 299,
-};
-
+import {Method, SuccessHTTPStatusRange} from '../constants.js';
 export default class Api {
   constructor (endPoint, authorization) {
     this._endPoint = endPoint;

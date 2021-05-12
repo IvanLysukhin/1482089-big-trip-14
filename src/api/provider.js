@@ -74,6 +74,7 @@ export default class Provider {
   sync() {
     if (isOnline()) {
       const storePoints = Object.values(this._store.getItems()).map((point) => {
+        if (!point._date) {return;}
         point._date.startTime = dayjs(point._date.startTime);
         point._date.endTime = dayjs(point._date.endTime);
         return PointsModel.adaptToServer(point);

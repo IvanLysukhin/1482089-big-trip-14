@@ -62,3 +62,23 @@ export const SHOW_TIME = 5000;
 
 export const SHAKE_TIMEOUT = 600;
 
+export const MINUTES_IN_DAY = 1440;
+export const MINUTES_IN_HOUR = 60;
+
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  DELETE: 'DELETE',
+  POST: 'POST',
+};
+
+export const SuccessHTTPStatusRange = {
+  MIN: 200,
+  MAX: 299,
+};
+
+export const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+export const AUTHORIZATION = 'Basic ivanlysukhin270695';
+export const STORE_PREFIX = 'big-trip-localstorage';
+export const STORE_VER = 'v14';
+

@@ -6,12 +6,9 @@ import Api from './api/api.js';
 import Storage from './api/storage.js';
 import Provider from './api/provider.js';
 import {isOnline, showDownloadError, toastError} from './utils/common.js';
+import {END_POINT, AUTHORIZATION, STORE_PREFIX, STORE_VER} from './constants.js';
 
-const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
-const AUTHORIZATION = 'Basic ivanlysukhin270695';
 const api = new Api(END_POINT, AUTHORIZATION);
-const STORE_PREFIX = 'big-trip-localstorage';
-const STORE_VER = 'v14';
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const store = new Storage(STORE_NAME, window.localStorage);
