@@ -2,7 +2,7 @@ import {DATA, TimeInputs} from '../constants.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
-import {showErrorMassage} from '../utils/common.js';
+import {isOnline, showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
 import PhotosListView from './photos-list.js';
 import flatpickr from 'flatpickr';
@@ -23,6 +23,12 @@ const createEditTripPoint = ({_date,
   isDisabled,
   isSaving,
   isDeleting}, isNewPoint = false) => {
+
+  if (!isOnline()) {
+    _date.startTime = dayjs(_date.startTime);
+    _date.endTime = dayjs(_date.endTime);
+  }
+
   const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();

@@ -5,7 +5,7 @@ import FilterModel from './model/filters-model.js';
 import Api from './api/api.js';
 import Storage from './api/storage.js';
 import Provider from './api/provider.js';
-import {showDownloadError, toastError} from './utils/common.js';
+import {isOnline, showDownloadError, toastError} from './utils/common.js';
 
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic ivanlysukhin270695';
@@ -34,6 +34,10 @@ apiWithProvider.getPoints().then((points) => {
 
 window.addEventListener('load', () => {
   navigator.serviceWorker.register('/service-worker.js');
+  if (!isOnline()) {
+    document.title += ' [offline]';
+    toastError('offline mode');
+  }
 });
 
 window.addEventListener('online', () => {

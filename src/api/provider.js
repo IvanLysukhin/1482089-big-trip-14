@@ -1,5 +1,6 @@
 import PointsModel from '../model/points-model.js';
 import {isOnline} from '../utils/common.js';
+import dayjs from 'dayjs';
 
 const getSyncedPoints = (items) => {
   return items.filter(({success}) => success)
@@ -24,7 +25,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
+          const items = createStoreStructure(points);
           this._store.setItems(items);
           return points;
         });
@@ -32,19 +33,19 @@ export default class Provider {
 
     const storePoints = Object.values(this._store.getItems());
 
-    return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
+    return Promise.resolve(storePoints);
   }
 
   updatePoint(point) {
     if (isOnline()) {
       return this._api.updatePoint(point)
         .then((updatedPoint) => {
-          this._store.setItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
+          this._store.setItem(updatedPoint.id, updatedPoint);
           return updatedPoint;
         });
     }
 
-    this._store.setItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
+    this._store.setItem(point.id, Object.assign({}, point));
 
     return Promise.resolve(point);
   }
@@ -53,7 +54,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.addNewPoint(point)
         .then((newPoint) => {
-          this._store.setItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+          this._store.setItem(newPoint.id, newPoint);
           return newPoint;
         });
     }
@@ -72,8 +73,11 @@ export default class Provider {
 
   sync() {
     if (isOnline()) {
-      const storePoints = Object.values(this._store.getItems());
-
+      const storePoints = Object.values(this._store.getItems()).map((point) => {
+        point._date.startTime = dayjs(point._date.startTime);
+        point._date.endTime = dayjs(point._date.endTime);
+        return PointsModel.adaptToServer(point);
+      });
       return this._api.sync(storePoints)
         .then((response) => {
 
