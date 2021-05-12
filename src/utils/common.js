@@ -33,9 +33,9 @@ export const sortDate = (pointA, pointB) => {
   return dayjs(pointA._date.startTime).unix() - dayjs(pointB._date.startTime).unix();
 };
 
-export const showErrorMassage = (parent) => {
+export const showErrorMassage = (parent, message) => {
   const errorMessage = document.createElement('div');
-  errorMessage.textContent = 'Invalid date. End date is earlier than start date';
+  errorMessage.textContent = message;
   errorMessage.style.textAlign = 'center';
   errorMessage.style.fontWeight = 'bold';
   errorMessage.style.fontFamily = 'Montserrat';

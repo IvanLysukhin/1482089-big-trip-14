@@ -256,6 +256,17 @@ export default class EditTripPoint extends Smart {
   _cityInputHandler (evt) {
     const city = evt.target.value;
     const cityDescription = this._data.citiesDescriptions[city];
+
+    if (!cityDescription) {
+      this.getElement().querySelector('.btn').disabled = true;
+      this.getElement().querySelector('.event__rollup-btn').disabled = true;
+      showErrorMassage(this.getElement(), 'Select a city from the list');
+      return;
+    } else {
+      this.getElement().querySelector('.btn').disabled = false;
+      this.getElement().querySelector('.event__rollup-btn').disabled = false;
+    }
+
     const photos = this._data.citiesPhotos[city];
     this.updateData({
       city,
@@ -297,7 +308,7 @@ export default class EditTripPoint extends Smart {
     if (diff < 0) {
       this.getElement().querySelector('.btn').disabled = true;
       this.getElement().querySelector('.event__rollup-btn').disabled = true;
-      showErrorMassage(this.getElement());
+      showErrorMassage(this.getElement(), 'Invalid date. End date is earlier than start date');
     } else {
       this.getElement().querySelector('.btn').disabled = false;
       this.getElement().querySelector('.event__rollup-btn').disabled = false;
