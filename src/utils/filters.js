@@ -14,3 +14,12 @@ export const getFilter = {
     });
   },
 };
+
+export const disabledEmptyFilter = (filterType) => {
+  document.querySelectorAll('.trip-filters__filter-input')
+    .forEach((filterInput) => {
+      if (filterInput.value === filterType) {
+        filterInput.disabled = true;
+      }
+    });
+};

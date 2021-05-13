@@ -3,7 +3,6 @@ import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '
 import {DATA, UserAction, UpdateType, FilterType, State} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
-import EmptyFilter from '../view/empty-filter.js';
 import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
 import {getFilter} from '../utils/filters.js';
@@ -20,7 +19,6 @@ export default class TripPresenter {
     this._eventsList = new TripPointListView();
     this._sortList =  null;
     this._emptyMessage = null;
-    this._emptyFilter = null;
 
     this._pointPresenter = {};
     this._currentSortType = DATA.SORT_TYPE.DEFAULT;
@@ -108,8 +106,7 @@ export default class TripPresenter {
     const filterPoints = getFilter[filterType](points);
 
     if (!filterPoints.length) {
-      this._emptyFilter = new EmptyFilter();
-      render(this._listContainer, this._emptyFilter, 'beforeend');
+      this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     }
 
 
@@ -143,7 +140,7 @@ export default class TripPresenter {
   }
 
   _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleViewAction, this._handleChangeMode, this._newPointPresenter);
+    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleViewAction, this._handleChangeMode);
     pointPresenter.initialize(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
@@ -155,7 +152,6 @@ export default class TripPresenter {
   _clearTrip (resetSortType = false) {
     Object.values(this._pointPresenter).forEach((pointPresenter) => {pointPresenter.destroy();});
     this._pointPresenter = {};
-    removeElement(this._emptyFilter);
     removeElement(this._sortList);
     removeElement(this._emptyMessage);
     this._sortList = null;

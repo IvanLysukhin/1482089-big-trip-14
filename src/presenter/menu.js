@@ -4,7 +4,7 @@ import TripPriceView from '../view/trip-price.js';
 import {render, removeElement} from '../utils/render-DOM-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
 import {PAGE_CONDITION, UpdateType, FilterType, VISUALLY_HIDDEN} from '../constants.js';
-import {getFilter} from '../utils/filters.js';
+import {getFilter, disabledEmptyFilter} from '../utils/filters.js';
 import StatsView from '../view/stats-view';
 
 export default class Menu {
@@ -55,20 +55,32 @@ export default class Menu {
   }
 
   _clearMenu () {
-    // removeElement(this._navigation);
     removeElement(this._mainInfo);
     removeElement(this._price);
   }
 
   _renderMenu () {
-    // this._renderNav();
     this._renderFilters();
     this._renderMainInfo();
     this._renderPrice();
   }
 
   _getPoints () {
+    const points = this._pointsModel.getPoints();
+    this._disabledFilter(points);
     return getFilter[this._filterModel.getFilter()](this._pointsModel.getPoints().slice());
+  }
+
+  _disabledFilter (points) {
+    if (getFilter[FilterType.EVERYTHING](points).length === 0) {
+      disabledEmptyFilter(FilterType.EVERYTHING);
+    }
+    if (getFilter[FilterType.FUTURE](points).length === 0) {
+      disabledEmptyFilter(FilterType.FUTURE);
+    }
+    if (getFilter[FilterType.PAST](points).length === 0) {
+      disabledEmptyFilter(FilterType.PAST);
+    }
   }
 
   _renderNav () {
