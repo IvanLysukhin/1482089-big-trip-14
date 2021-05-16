@@ -19,6 +19,7 @@ export default class TripPresenter {
     this._eventsList = new TripPointListView();
     this._sortList =  null;
     this._emptyMessage = null;
+    this._newPointPresenter = null;
 
     this._pointPresenter = {};
     this._currentSortType = SortType.DEFAULT;
@@ -143,7 +144,7 @@ export default class TripPresenter {
   }
 
   _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleViewAction, this._handleChangeMode);
+    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleViewAction, this._handleChangeMode, this._newPointPresenter);
     pointPresenter.initialize(point);
     this._pointPresenter[point.id] = pointPresenter;
   }

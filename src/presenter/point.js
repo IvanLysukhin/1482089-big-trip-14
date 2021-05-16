@@ -6,10 +6,11 @@ import {UserAction, UpdateType, pointMode, State} from '../constants.js';
 import {isOnline, toastError} from '../utils/common';
 
 export default class PointPresenter {
-  constructor(container, changeData, changeMode) {
+  constructor(container, changeData, changeMode, newPointPresenter) {
     this._container = container;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._newPointPresenter = newPointPresenter;
 
     this._parentContainer = new TripPointItemView();
 
@@ -101,6 +102,9 @@ export default class PointPresenter {
   }
 
   _swapPointToEdit () {
+    if (this._newPointPresenter !== null) {
+      this._newPointPresenter.destroy();
+    }
     replaceElements(this._editFormComponent, this._pointComponent);
     this._changeMode();
     this._mode = pointMode.EDITING;
