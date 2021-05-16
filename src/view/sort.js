@@ -1,4 +1,5 @@
 import AbstractView from './abstract-view.js';
+import {SortType} from '../constants.js';
 
 const createSort = (currentSortType) => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -41,7 +42,8 @@ export default class SortList extends AbstractView {
   }
 
   _sortHandler (evt) {
-    if (evt.target.classList.contains('trip-sort__btn')) {
+    const sortType = evt.target.getAttribute('for');
+    if (evt.target.classList.contains('trip-sort__btn') && sortType !== SortType.EVENT && sortType !== SortType.OFFER) {
       this._callback.sortFunction(evt);
     }
   }

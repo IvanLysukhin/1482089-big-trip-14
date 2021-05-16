@@ -1,17 +1,21 @@
 export const DATA = {
   TRANSPORT_TYPES: ['Taxi', 'Bus', 'Train', 'Ship', 'Transport', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'],
   FILTER_TYPES: ['Everything',  'Future',  'Past'],
-  SORT_TYPE: {
-    TIME: 'sort-time',
-    PRICE: 'sort-price',
-    DEFAULT: 'sort-day',
-  },
+};
+
+export const SortType =  {
+  TIME: 'sort-time',
+  PRICE: 'sort-price',
+  DEFAULT: 'sort-day',
+  EVENT: 'sort-event',
+  OFFER: 'sort-offer',
 };
 
 export const UserAction = {
   UPDATE_TASK: 'UPDATE_TASK',
   ADD_TASK: 'ADD_TASK',
   DELETE_TASK: 'DELETE_TASK',
+  RESET_TASK: 'RESET_TASK',
 };
 
 export const UpdateType = {
