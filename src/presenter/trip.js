@@ -1,6 +1,6 @@
 import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
 import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '../utils/common.js';
-import {DATA, UserAction, UpdateType, FilterType, State} from '../constants.js';
+import {UserAction, UpdateType, FilterType, State, SortType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
 import SortListView from '../view/sort';
@@ -21,7 +21,7 @@ export default class TripPresenter {
     this._emptyMessage = null;
 
     this._pointPresenter = {};
-    this._currentSortType = DATA.SORT_TYPE.DEFAULT;
+    this._currentSortType = SortType.DEFAULT;
 
     this._handleTripPointChange = this._handleTripPointChange.bind(this);
     this._handleChangeMode = this._handleChangeMode.bind(this);
@@ -114,9 +114,9 @@ export default class TripPresenter {
 
 
     switch (this._currentSortType) {
-      case DATA.SORT_TYPE.TIME:
+      case SortType.TIME:
         return filterPoints.sort(sortTime);
-      case DATA.SORT_TYPE.PRICE:
+      case SortType.PRICE:
         return filterPoints.sort(sortPrice);
     }
     return filterPoints.sort(sortDate);
@@ -160,7 +160,7 @@ export default class TripPresenter {
     this._sortList = null;
     this._emptyMessage = null;
     if (resetSortType) {
-      this._currentSortType = DATA.SORT_TYPE.DEFAULT;
+      this._currentSortType = SortType.DEFAULT;
     }
   }
 
@@ -185,7 +185,7 @@ export default class TripPresenter {
     const defaultsRandomPoint = getRandomArrayElement(this._pointsModel.getPoints().slice());
     defaultsRandomPoint.id = nanoid(3);
     this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
-    this._currentSortType = DATA.SORT_TYPE.DEFAULT;
+    this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._newPointPresenter.initialize(defaultsRandomPoint);
   }
