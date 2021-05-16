@@ -14,6 +14,7 @@ export default class NewPoint {
     this._handlerEditForm = this._handlerEditForm.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._closeEscape = this._closeEscape.bind(this);
+    this._handleArrowClick = this._handleArrowClick.bind(this);
   }
 
   initialize (point) {
@@ -25,6 +26,7 @@ export default class NewPoint {
     this._editFormComponent = new EditTripPointView(this._point, true);
     this._editFormComponent.setHandlerForm(this._handlerEditForm);
     this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
+    this._editFormComponent.setArrowButton(this._handleArrowClick);
 
     this._parentContainer = new TripPointItemView();
     render(this._container, this._parentContainer, 'afterbegin');
@@ -72,7 +74,10 @@ export default class NewPoint {
   }
 
   _handleDeleteClick () {
+    this.destroy();
+  }
 
+  _handleArrowClick () {
     this.destroy();
   }
 

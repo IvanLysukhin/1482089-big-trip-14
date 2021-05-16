@@ -81,6 +81,9 @@ export default class TripPresenter {
             this._pointPresenter[update.id].setViewState(State.ABORTING);
           });
         break;
+      case UserAction.RESET_TASK:
+        this._pointPresenter[update.id].initialize(update);
+        break;
     }
   }
 

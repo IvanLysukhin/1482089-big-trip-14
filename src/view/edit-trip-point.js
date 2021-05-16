@@ -118,6 +118,7 @@ export default class EditTripPoint extends Smart {
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._priceChange = this._priceChange.bind(this);
     this._deletePointByClick = this._deletePointByClick.bind(this);
+    this._wrapForm = this._wrapForm.bind(this);
 
     this._checkTimeValidity = this._checkTimeValidity.bind(this);
     this._setPicker = this._setPicker.bind(this);
@@ -145,6 +146,7 @@ export default class EditTripPoint extends Smart {
   restoreHandlers () {
     this._setInnerHandlers();
     this.setHandlerForm(this._callback.closeFunction);
+    this.setArrowButton(this._callback.closeArrowButton);
     this._setPriceHandler();
 
     this._setValidity();
@@ -161,7 +163,15 @@ export default class EditTripPoint extends Smart {
   setHandlerForm(cb) {
     this._callback.closeFunction = cb;
     this.getElement().addEventListener('submit', this._closeForm);
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeForm);
+  }
+
+  setArrowButton (cb) {
+    this._callback.closeArrowButton = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._wrapForm);
+  }
+  _wrapForm(evt) {
+    evt.preventDefault();
+    this._callback.closeArrowButton();
   }
 
   static parsePointToData (obj) {
