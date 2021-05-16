@@ -10,7 +10,7 @@ self.addEventListener('install', (evt) => {
       .then((cache) => {
         return cache.addAll([
           'index.html',
-          'js/bundle.js',
+          'bundle.js',
           'css/style.css',
           'fonts/Montserrat-Bold.woff2',
           'fonts/Montserrat-ExtraBold.woff2',
