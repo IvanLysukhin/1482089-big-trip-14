@@ -61,10 +61,10 @@ const createEditTripPoint = ({_date,
 
                   <div class="event__field-group  event__field-group--time">
                     <label class="visually-hidden" for="event-start-time-1">From</label>
-                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${_date.startTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
+                    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" data-time="${_date.startTime.toISOString()}" value="${_date.startTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
                     &mdash;
                     <label class="visually-hidden" for="event-end-time-1">To</label>
-                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${_date.endTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
+                    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" data-time="${_date.endTime.toISOString()}" value="${_date.endTime.format('DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
                   </div>
 
                   <div class="event__field-group  event__field-group--price">
@@ -113,17 +113,17 @@ export default class EditTripPoint extends Smart {
     this._closeForm = this._closeForm.bind(this);
     this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
-    this._optionsCheckHandler = this._optionsCheckHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
-    this._priceChange = this._priceChange.bind(this);
+    this._destroyStartDatePicker = this._destroyStartDatePicker.bind(this);
+    this._destroyEndDatePicker = this._destroyEndDatePicker.bind(this);
     this._deletePointByClick = this._deletePointByClick.bind(this);
+    this._wrapForm = this._wrapForm.bind(this);
 
     this._checkTimeValidity = this._checkTimeValidity.bind(this);
     this._setPicker = this._setPicker.bind(this);
 
     this._setInnerHandlers();
-    this._setPriceHandler();
     this._setValidity();
 
     this._setTimeInputDatePicker();
@@ -136,16 +136,12 @@ export default class EditTripPoint extends Smart {
   _setInnerHandlers () {
     this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
     this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
-
-    if (this.getElement().querySelector('.event__available-offers') !== null) {
-      this.getElement().querySelector('.event__available-offers').addEventListener('click', this._optionsCheckHandler);
-    }
   }
 
   restoreHandlers () {
     this._setInnerHandlers();
     this.setHandlerForm(this._callback.closeFunction);
-    this._setPriceHandler();
+    this.setArrowButton(this._callback.closeArrowButton);
 
     this._setValidity();
 
@@ -155,13 +151,84 @@ export default class EditTripPoint extends Smart {
 
   _closeForm(evt) {
     evt.preventDefault();
+
+    this._handleCheckedOptions();
+
+    this.updateData({
+      price: Number(this.getElement().querySelector('#event-price-1').value),
+      _date: this._handleDate(),
+    });
+
     this._callback.closeFunction(EditTripPoint.parseDataToPoint(this._data));
+  }
+
+  _handleCheckedOptions () {
+    const checkedInputs = Array.from(this.getElement().querySelectorAll('.event__offer-checkbox'))
+      .map((input) => {
+        if (input.checked) {
+          return input.getAttribute('data-option-name');
+        }
+      })
+      .filter((item) => {
+        return item;
+      });
+
+    this._data.defaultOptions.slice().map((option) => {
+      const checkOption = checkedInputs.some((checked) => {
+        return checked.toLowerCase() === option.title.toLowerCase();
+      });
+
+      checkOption ? option.isChecked = true : option.isChecked = false;
+      return option;
+    });
+  }
+
+  _handleDate () {
+    const newStartTime = this.getElement().querySelector('#event-start-time-1').getAttribute('data-time');
+    const newEndTime = this.getElement().querySelector('#event-end-time-1').getAttribute('data-time');
+
+    if (newStartTime === null && newEndTime === null) {
+      return this._data._date;
+    }
+
+    if (newStartTime === null) {
+      return Object.assign({},
+        this._data._date,
+        {
+          endTime: dayjs(newEndTime),
+        },
+      );
+    }
+
+    if (newEndTime === null) {
+      return Object.assign({},
+        this._data._date,
+        {
+          startTime: dayjs(newStartTime),
+        },
+      );
+    }
+    return Object.assign({},
+      this._data._date,
+      {
+        startTime: dayjs(newStartTime),
+        endTime: dayjs(newEndTime),
+      },
+    );
   }
 
   setHandlerForm(cb) {
     this._callback.closeFunction = cb;
     this.getElement().addEventListener('submit', this._closeForm);
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeForm);
+  }
+
+  setArrowButton (cb) {
+    this._callback.closeArrowButton = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._wrapForm);
+  }
+  _wrapForm(evt) {
+    evt.preventDefault();
+    this._callback.closeArrowButton();
   }
 
   static parsePointToData (obj) {
@@ -212,32 +279,6 @@ export default class EditTripPoint extends Smart {
     return data;
   }
 
-  _setPriceHandler () {
-    this.getElement().querySelector('#event-price-1').addEventListener('change', this._priceChange);
-  }
-
-  _priceChange (evt) {
-    this.updateData({
-      price: Number(evt.target.value),
-    });
-  }
-
-  _optionsCheckHandler (evt) {
-    if (evt.target.tagName === 'INPUT') {
-      const checkedOptionIndex = this._data.defaultOptions.findIndex((el) => {
-        return el.title === evt.target.getAttribute('data-option-name');
-      });
-      this.updateData({
-        defaultOptions: this._data.defaultOptions.map((element, i) => {
-          if (i === checkedOptionIndex) {
-            element.isChecked = !this._data.defaultOptions[i].isChecked;
-          }
-          return element;
-        }),
-      });
-    }
-  }
-
   _checkboxTypeHandler (evt) {
     if (evt.target.classList.contains('event__type-label')) {
       evt.preventDefault();
@@ -277,34 +318,37 @@ export default class EditTripPoint extends Smart {
   }
 
   _startDateChangeHandler (date) {
-    this.updateData({
-      _date: Object.assign({},
-        this._data._date,
-        {startTime: dayjs(date)}),
-    });
+    const startTimeInput = this.getElement().querySelector('#event-start-time-1');
+    startTimeInput.setAttribute('data-time', dayjs(date).toISOString());
+    startTimeInput.value = dayjs(date).format('DD/MM/YY HH:mm');
+  }
 
+  _endDateChangeHandler (date) {
+    const endTimeInput = this.getElement().querySelector('#event-end-time-1');
+    endTimeInput.setAttribute('data-time', dayjs(date).toISOString());
+    endTimeInput.value = dayjs(date).format('DD/MM/YY HH:mm');
+  }
+
+  _destroyStartDatePicker (date) {
+    this._startDateChangeHandler(date);
     if (this._datepickerStart !== null) {
       this._datepickerStart.destroy();
       this._datepickerStart = null;
     }
   }
 
-  _endDateChangeHandler (date) {
-    this.updateData({
-      _date: Object.assign({},
-        this._data._date,
-        {endTime: dayjs(date)}),
-    });
-
+  _destroyEndDatePicker (date) {
+    this._endDateChangeHandler(date);
     if (this._datepickerEnd !== null) {
       this._datepickerEnd.destroy();
       this._datepickerEnd = null;
     }
-
   }
 
   _checkTimeValidity () {
-    const diff = this._data._date.endTime.diff(this._data._date.startTime);
+    const newStartTime = dayjs(this.getElement().querySelector('#event-start-time-1').getAttribute('data-time'));
+    const newEndTime = dayjs(this.getElement().querySelector('#event-end-time-1').getAttribute('data-time'));
+    const diff = newEndTime.diff(newStartTime);
     if (diff < 0) {
       this.getElement().querySelector('.btn').disabled = true;
       this.getElement().querySelector('.event__rollup-btn').disabled = true;
@@ -357,8 +401,9 @@ export default class EditTripPoint extends Smart {
                 dateFormat: 'd/m/y H:i',
                 enableTime: true,
                 time_24hr: true,
-                defaultDate: this._data._date.startTime.format('DD-MM-YY HH:mm'),
-                onClose: this._startDateChangeHandler,
+                defaultDate: this.getElement().querySelector('#event-start-time-1').value,
+                onChange: this._startDateChangeHandler,
+                onClose: this._destroyStartDatePicker,
               },
             );
           }
@@ -372,8 +417,9 @@ export default class EditTripPoint extends Smart {
                 dateFormat: 'd/m/y H:i',
                 enableTime: true,
                 time_24hr: true,
-                defaultDate: this._data._date.endTime.format('DD-MM-YY HH:mm'),
-                onClose: this._endDateChangeHandler,
+                defaultDate: this.getElement().querySelector('#event-end-time-1').value,
+                onChange: this._endDateChangeHandler,
+                onClose: this._destroyEndDatePicker,
               },
             );
           }

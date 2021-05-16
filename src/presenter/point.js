@@ -6,10 +6,11 @@ import {UserAction, UpdateType, pointMode, State} from '../constants.js';
 import {isOnline, toastError} from '../utils/common';
 
 export default class PointPresenter {
-  constructor(container, changeData, changeMode) {
+  constructor(container, changeData, changeMode, newPointPresenter) {
     this._container = container;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._newPointPresenter = newPointPresenter;
 
     this._parentContainer = new TripPointItemView();
 
@@ -23,6 +24,7 @@ export default class PointPresenter {
     this._closeEscape = this._closeEscape.bind(this);
     this._handlerEditForm = this._handlerEditForm.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._wrapForm = this._wrapForm.bind(this);
   }
 
   initialize (point) {
@@ -35,6 +37,7 @@ export default class PointPresenter {
 
     this._pointComponent.setClickHandler(this._handlerPointClick);
     this._editFormComponent.setHandlerForm(this._handlerEditForm);
+    this._editFormComponent.setArrowButton(this._wrapForm);
 
     this._pointComponent.setFavoriteHandler(this._handleFavoriteClick);
     this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
@@ -99,6 +102,9 @@ export default class PointPresenter {
   }
 
   _swapPointToEdit () {
+    if (this._newPointPresenter !== null) {
+      this._newPointPresenter.destroy();
+    }
     replaceElements(this._editFormComponent, this._pointComponent);
     this._changeMode();
     this._mode = pointMode.EDITING;
@@ -146,9 +152,22 @@ export default class PointPresenter {
     document.removeEventListener('keydown',  this._closeEscape);
   }
 
+  _wrapForm () {
+    this._swapEditToPoint();
+    this._changeData(
+      UserAction.RESET_TASK,
+      UpdateType.PATCH,
+      this._point);
+    document.removeEventListener('keydown', this._closeEscape);
+  }
+
   _closeEscape (evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this._swapEditToPoint();
+      this._changeData(
+        UserAction.RESET_TASK,
+        UpdateType.PATCH,
+        this._point);
       document.removeEventListener('keydown', this._closeEscape);
     }
   }
