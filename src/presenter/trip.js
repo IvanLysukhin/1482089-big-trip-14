@@ -1,5 +1,5 @@
 import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
-import {updateItem, sortTime, sortPrice, sortDate, getRandomArrayElement} from '../utils/common.js';
+import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
 import {UserAction, UpdateType, FilterType, State, SortType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
 import EmptyListMessageView from '../view/empty-list-message.js';
@@ -7,7 +7,7 @@ import SortListView from '../view/sort';
 import TripPointPresenter from '../presenter/point.js';
 import {getFilter} from '../utils/filters.js';
 import NewTripPoint from '../presenter/new-point.js';
-import {nanoid} from 'nanoid';
+import dayjs from 'dayjs';
 
 export default class TripPresenter {
   constructor(listContainer, pointsModel, filterModel, api) {
@@ -184,10 +184,24 @@ export default class TripPresenter {
 
   createNewPoint (evt) {
     const defaultsRandomPoint = Object.assign({},
-      getRandomArrayElement(this._pointsModel.getPoints().slice()),
+      this._pointsModel.getPoints()[0],
       {
-        id: nanoid(3),
+        id: 0,
+        price: 0,
         isFavorite: false,
+        city: '',
+        pointType: 'Taxi',
+        options: [],
+        destinationInfo:
+          {
+            infoText: '',
+            photos: [],
+          },
+        _date: {
+          startTime: dayjs(),
+          endTime: dayjs(),
+        },
+        photos: [],
       });
 
     this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);

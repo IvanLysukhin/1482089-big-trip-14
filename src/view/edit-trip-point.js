@@ -94,11 +94,12 @@ const createEditTripPoint = ({_date,
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${infoText}</p>
                   </section>` : ''}
-
+                ${photos.length ? `
                 ${isNewPoint ? `<div class="event__photos-container">
                       <div class="event__photos-tape">
                         ${photosList}
                       </div>` : ''}
+                      ` : ''}
                 </section>
               </form>`;
 };
