@@ -1,9 +1,9 @@
 import TripPointItemView from '../view/trip-list-item.js';
 import TripPointView from '../view/trip-point.js';
 import EditTripPointView from '../view/edit-trip-point.js';
-import {render, replaceElements, removeElement} from '../utils/render-DOM-elements.js';
-import {UserAction, UpdateType, pointMode, State} from '../constants.js';
-import {isOnline, toastError} from '../utils/common';
+import {render, replaceElements, removeElement} from '../utils/render-elements.js';
+import {UserAction, UpdateType, PointMode, State} from '../constants.js';
+import {isOnline, showErrorToast} from '../utils/common';
 
 export default class PointPresenter {
   constructor(container, changeData, changeMode, newPointPresenter) {
@@ -16,7 +16,7 @@ export default class PointPresenter {
 
     this._pointComponent = null;
     this._editFormComponent = null;
-    this._mode = pointMode.DEFAULT;
+    this._mode = PointMode.DEFAULT;
 
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
@@ -47,13 +47,13 @@ export default class PointPresenter {
       return;
     }
 
-    if (this._mode === pointMode.DEFAULT) {
+    if (this._mode === PointMode.DEFAULT) {
       replaceElements(this._pointComponent, prevPoint);
     }
 
-    if (this._mode === pointMode.EDITING) {
+    if (this._mode === PointMode.EDITING) {
       replaceElements(this._pointComponent, prevEditForm);
-      this._mode = pointMode.DEFAULT;
+      this._mode = PointMode.DEFAULT;
     }
 
     removeElement(prevPoint);
@@ -96,7 +96,7 @@ export default class PointPresenter {
   }
 
   resetView () {
-    if (this._mode !== pointMode.DEFAULT) {
+    if (this._mode !== PointMode.DEFAULT) {
       this._swapEditToPoint();
     }
   }
@@ -107,12 +107,12 @@ export default class PointPresenter {
     }
     replaceElements(this._editFormComponent, this._pointComponent);
     this._changeMode();
-    this._mode = pointMode.EDITING;
+    this._mode = PointMode.EDITING;
   }
 
   _swapEditToPoint () {
     replaceElements(this._pointComponent, this._editFormComponent);
-    this._mode = pointMode.DEFAULT;
+    this._mode = PointMode.DEFAULT;
   }
 
   _handleFavoriteClick() {
@@ -131,7 +131,7 @@ export default class PointPresenter {
 
   _handlerPointClick() {
     if (!isOnline()) {
-      toastError('Editing a point is not available in offline');
+      showErrorToast('Editing a point is not available in offline');
       return;
     }
 
@@ -141,7 +141,7 @@ export default class PointPresenter {
 
   _handlerEditForm(point) {
     if (!isOnline()) {
-      toastError('Editing a point is not available in offline');
+      showErrorToast('Editing a point is not available in offline');
       this.setViewState(State.ABORTING);
       return;
     }
@@ -180,7 +180,7 @@ export default class PointPresenter {
   _handleDeleteClick (point) {
     if (!isOnline()) {
       this.setViewState(State.ABORTING);
-      toastError('Delete a point is not available in offline');
+      showErrorToast('Delete a point is not available in offline');
       return;
     }
     this._changeData(

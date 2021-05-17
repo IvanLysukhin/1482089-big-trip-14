@@ -15,7 +15,7 @@ export const getFilter = {
   },
 };
 
-export const disabledEmptyFilter = (filterType) => {
+export const disableEmptyFilter = (filterType) => {
   document.querySelectorAll('.trip-filters__filter-input')
     .forEach((filterInput) => {
       if (filterInput.value === filterType) {

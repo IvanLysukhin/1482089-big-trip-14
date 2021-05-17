@@ -1,4 +1,4 @@
-import {render, removeElement, showHideElement} from '../utils/render-DOM-elements';
+import {render, removeElement, showHideElement} from '../utils/render-elements';
 import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
 import {UserAction, UpdateType, FilterType, State, SortType} from '../constants.js';
 import TripPointListView from '../view/content-list.js';
@@ -190,7 +190,7 @@ export default class TripPresenter {
         price: 0,
         isFavorite: false,
         city: '',
-        pointType: 'Taxi',
+        pointType: 'taxi',
         options: [],
         destinationInfo:
           {

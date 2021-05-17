@@ -1,9 +1,9 @@
 import MenuPresenter from './menu.js';
 import TripPresenter from './trip.js';
 import LoadingView from '../view/loading-view.js';
-import {removeElement, render} from '../utils/render-DOM-elements.js';
+import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType} from '../constants.js';
-import {isOnline, toastError} from '../utils/common.js';
+import {isOnline, showErrorToast} from '../utils/common.js';
 
 export default class App {
   constructor (pointsModel, filterModel, api) {
@@ -63,7 +63,7 @@ export default class App {
 
   _creatNewPoint (evt) {
     if (!isOnline()) {
-      toastError('Creating a new point is not available in offline');
+      showErrorToast('Creating a new point is not available in offline');
       return;
     }
     evt.preventDefault();

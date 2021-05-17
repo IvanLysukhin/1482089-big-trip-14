@@ -1,4 +1,4 @@
-import {DATA, TimeInputs} from '../constants.js';
+import {TRANSPORT_TYPES, TimeInput} from '../constants.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
 import OfferSelectorsView from './offer-selector.js';
@@ -29,7 +29,7 @@ const createEditTripPoint = ({_date,
     _date.endTime = dayjs(_date.endTime);
   }
 
-  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
+  const checkboxTypes = new CheckboxTypeListView(TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();
   const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();
@@ -394,14 +394,13 @@ export default class EditTripPoint extends Smart {
   _setPicker (evt) {
     if (evt.target.tagName === 'INPUT') {
       switch (evt.target.getAttribute('name')) {
-        case TimeInputs.START:
+        case TimeInput.START:
           if (this._datepickerStart === null) {
             this._datepickerStart = flatpickr(
               evt.target,
               {
                 dateFormat: 'd/m/y H:i',
                 enableTime: true,
-                time_24hr: true,
                 defaultDate: this.getElement().querySelector('#event-start-time-1').value,
                 onChange: this._startDateChangeHandler,
                 onClose: this._destroyStartDatePicker,
@@ -410,14 +409,13 @@ export default class EditTripPoint extends Smart {
           }
           this._datepickerStart.open();
           break;
-        case TimeInputs.END:
+        case TimeInput.END:
           if (this._datepickerEnd === null) {
             this._datepickerEnd = flatpickr(
               evt.target,
               {
                 dateFormat: 'd/m/y H:i',
                 enableTime: true,
-                time_24hr: true,
                 defaultDate: this.getElement().querySelector('#event-end-time-1').value,
                 onChange: this._endDateChangeHandler,
                 onClose: this._destroyEndDatePicker,

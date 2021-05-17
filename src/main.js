@@ -5,7 +5,7 @@ import FilterModel from './model/filters-model.js';
 import Api from './api/api.js';
 import Storage from './api/storage.js';
 import Provider from './api/provider.js';
-import {isOnline, showDownloadError, toastError} from './utils/common.js';
+import {isOnline, showDownloadError, showErrorToast} from './utils/common.js';
 import {END_POINT, AUTHORIZATION, STORE_PREFIX, STORE_VER} from './constants.js';
 
 const api = new Api(END_POINT, AUTHORIZATION);
@@ -33,17 +33,17 @@ window.addEventListener('load', () => {
   navigator.serviceWorker.register('sw.js');
   if (!isOnline()) {
     document.title += ' [offline]';
-    toastError('offline mode');
+    showErrorToast('offline mode');
   }
 });
 
 window.addEventListener('online', () => {
-  toastError('online. all ok');
+  showErrorToast('online. all ok');
   document.title = document.title.replace(' [offline]', '');
   apiWithProvider.sync();
 });
 
 window.addEventListener('offline', () => {
-  toastError('the network connection was lost. offline mode');
+  showErrorToast('the network connection was lost. offline mode');
   document.title += ' [offline]';
 });

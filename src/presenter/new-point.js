@@ -1,6 +1,6 @@
 import TripPointItemView from '../view/trip-list-item.js';
 import EditTripPointView from '../view/edit-trip-point.js';
-import {removeElement, render} from '../utils/render-DOM-elements.js';
+import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType, UserAction} from '../constants.js';
 
 export default class NewPoint {

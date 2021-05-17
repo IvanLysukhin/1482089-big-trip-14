@@ -1,10 +1,10 @@
 import SiteMenuView from '../view/menu.js';
 import TripInfoView from '../view/trip-info.js';
 import TripPriceView from '../view/trip-price.js';
-import {render, removeElement} from '../utils/render-DOM-elements.js';
+import {render, removeElement} from '../utils/render-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
-import {PAGE_CONDITION, UpdateType, FilterType, VISUALLY_HIDDEN} from '../constants.js';
-import {getFilter, disabledEmptyFilter} from '../utils/filters.js';
+import {PageState, UpdateType, FilterType, VISUALLY_HIDDEN} from '../constants.js';
+import {getFilter, disableEmptyFilter} from '../utils/filters.js';
 import StatsView from '../view/stats-view';
 
 export default class Menu {
@@ -20,7 +20,7 @@ export default class Menu {
     this._mainInfo = null;
     this._price = null;
     this._stats = null;
-    this.filtersPresenter = new FiltersPresenter(this._filtersContainer, this._filterModel, this._pointsModel);
+    this._filtersPresenter = new FiltersPresenter(this._filtersContainer, this._filterModel, this._pointsModel);
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
@@ -73,13 +73,13 @@ export default class Menu {
 
   _disabledFilter (points) {
     if (getFilter[FilterType.EVERYTHING](points).length === 0) {
-      disabledEmptyFilter(FilterType.EVERYTHING);
+      disableEmptyFilter(FilterType.EVERYTHING);
     }
     if (getFilter[FilterType.FUTURE](points).length === 0) {
-      disabledEmptyFilter(FilterType.FUTURE);
+      disableEmptyFilter(FilterType.FUTURE);
     }
     if (getFilter[FilterType.PAST](points).length === 0) {
-      disabledEmptyFilter(FilterType.PAST);
+      disableEmptyFilter(FilterType.PAST);
     }
   }
 
@@ -100,14 +100,14 @@ export default class Menu {
       }
     });
     switch (evt.target.textContent) {
-      case PAGE_CONDITION.TABLE:
+      case PageState.TABLE:
         this._stats.hide();
         this._trip.showTrip();
         newEventBtn.disabled = false;
         filterContainer.classList.remove(VISUALLY_HIDDEN);
         this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
         break;
-      case PAGE_CONDITION.STATS:
+      case PageState.STATS:
         this._stats.show();
         this._trip.hideTrip();
         newEventBtn.disabled = true;
@@ -129,7 +129,7 @@ export default class Menu {
   }
 
   _renderFilters () {
-    this.filtersPresenter.initialize();
+    this._filtersPresenter.initialize();
   }
 
   _renderStats () {

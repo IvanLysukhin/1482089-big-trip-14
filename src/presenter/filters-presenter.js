@@ -1,6 +1,6 @@
 import FiltersView from '../view/filters.js';
-import {removeElement, render, replaceElements} from '../utils/render-DOM-elements';
-import {DATA, UpdateType} from '../constants.js';
+import {removeElement, render, replaceElements} from '../utils/render-elements';
+import {FILTER_TYPES, UpdateType} from '../constants.js';
 
 export default class FiltersPresenter {
   constructor (filterContainer, filterModel, pointsModel) {
@@ -19,7 +19,7 @@ export default class FiltersPresenter {
   initialize () {
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FiltersView(DATA.FILTER_TYPES, this._filterModel.getFilter());
+    this._filterComponent = new FiltersView(FILTER_TYPES, this._filterModel.getFilter());
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (!prevFilterComponent) {

@@ -65,5 +65,3 @@ export const showHideElement = (hide , element) => {
     }
   }
 };
-
-// export {render, createElementDOM, replaceElements, removeElement, showHideElement};

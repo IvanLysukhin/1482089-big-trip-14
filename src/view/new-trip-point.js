@@ -1,4 +1,4 @@
-import {DATA} from '../constants';
+import {TRANSPORT_TYPES} from '../constants';
 import AbstractView from './abstract-view.js';
 import DestinationsListView from './destinations-list.js';
 import CheckboxTypeListView from './checkbox-list.js';
@@ -7,7 +7,7 @@ import PhotosListView from './photos-list.js';
 
 
 const createNewTripPoint = ({date, destination, pointType, price, options, destinationInfo}) => {
-  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
+  const checkboxTypes = new CheckboxTypeListView(TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destination.cities).getTemplate();
   let hidden = '';
