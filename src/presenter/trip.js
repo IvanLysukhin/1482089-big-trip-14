@@ -183,8 +183,13 @@ export default class TripPresenter {
   }
 
   createNewPoint (evt) {
-    const defaultsRandomPoint = getRandomArrayElement(this._pointsModel.getPoints().slice());
-    defaultsRandomPoint.id = nanoid(3);
+    const defaultsRandomPoint = Object.assign({},
+      getRandomArrayElement(this._pointsModel.getPoints().slice()),
+      {
+        id: nanoid(3),
+        isFavorite: false,
+      });
+
     this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
