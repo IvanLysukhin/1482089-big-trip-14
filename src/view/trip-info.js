@@ -1,7 +1,6 @@
 import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
-//eslint-disable-next-line
-const minMax = require('dayjs/plugin/minMax');
+import minMax from 'dayjs/plugin/minMax';
 dayjs.extend(minMax);
 
 const createRoute =  (array) => {
