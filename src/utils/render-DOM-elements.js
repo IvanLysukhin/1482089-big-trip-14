@@ -34,6 +34,10 @@ export const replaceElements = (newChild, oldChild) => {
 
   const parent = oldChild.parentElement;
 
+  if (!parent) {
+    return;
+  }
+
   parent.replaceChild(newChild, oldChild);
 };
 
