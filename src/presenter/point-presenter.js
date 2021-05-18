@@ -18,13 +18,13 @@ export default class PointPresenter {
     this._editFormComponent = null;
     this._mode = PointMode.DEFAULT;
 
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._favoriteButtonClickHandler = this._favoriteButtonClickHandler.bind(this);
 
-    this._handlerPointClick = this._handlerPointClick.bind(this);
-    this._closeEscape = this._closeEscape.bind(this);
-    this._handlerEditForm = this._handlerEditForm.bind(this);
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._wrapForm = this._wrapForm.bind(this);
+    this._pointClickHandler = this._pointClickHandler.bind(this);
+    this._escClickHandler = this._escClickHandler.bind(this);
+    this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
+    this._deleteButtonClickHandler = this._deleteButtonClickHandler.bind(this);
+    this._arrowButtonClickHandler = this._arrowButtonClickHandler.bind(this);
   }
 
   initialize (point) {
@@ -35,12 +35,12 @@ export default class PointPresenter {
     this._pointComponent = new TripPointView(this._point);
     this._editFormComponent = new EditTripPointView(this._point);
 
-    this._pointComponent.setClickHandler(this._handlerPointClick);
-    this._editFormComponent.setHandlerForm(this._handlerEditForm);
-    this._editFormComponent.setArrowButton(this._wrapForm);
+    this._pointComponent.setPointClickHandler(this._pointClickHandler);
+    this._editFormComponent.setFormSubmitHandler(this._editFormSubmitHandler);
+    this._editFormComponent.setArrowButtonClickHandler(this._arrowButtonClickHandler);
 
-    this._pointComponent.setFavoriteHandler(this._handleFavoriteClick);
-    this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
+    this._pointComponent.setFavoriteButtonHandler(this._favoriteButtonClickHandler);
+    this._editFormComponent.setDeleteBtnHandler(this._deleteButtonClickHandler);
 
     if (prevPoint === null || prevEditForm === null) {
       this._renderPoint();
@@ -115,7 +115,7 @@ export default class PointPresenter {
     this._mode = PointMode.DEFAULT;
   }
 
-  _handleFavoriteClick() {
+  _favoriteButtonClickHandler() {
     this._changeData(
       UserAction.UPDATE_TASK,
       UpdateType.PATCH,
@@ -129,17 +129,17 @@ export default class PointPresenter {
     );
   }
 
-  _handlerPointClick() {
+  _pointClickHandler() {
     if (!isOnline()) {
       showErrorToast('Editing a point is not available in offline');
       return;
     }
 
     this._swapPointToEdit();
-    document.addEventListener('keydown',  this._closeEscape);
+    document.addEventListener('keydown',  this._escClickHandler);
   }
 
-  _handlerEditForm(point) {
+  _editFormSubmitHandler(point) {
     if (!isOnline()) {
       showErrorToast('Editing a point is not available in offline');
       this.setViewState(State.ABORTING);
@@ -149,26 +149,26 @@ export default class PointPresenter {
       UserAction.UPDATE_TASK,
       UpdateType.MAJOR,
       point);
-    document.removeEventListener('keydown',  this._closeEscape);
+    document.removeEventListener('keydown',  this._escClickHandler);
   }
 
-  _wrapForm () {
+  _arrowButtonClickHandler () {
     this._swapEditToPoint();
     this._changeData(
       UserAction.RESET_TASK,
       UpdateType.PATCH,
       this._point);
-    document.removeEventListener('keydown', this._closeEscape);
+    document.removeEventListener('keydown', this._escClickHandler);
   }
 
-  _closeEscape (evt) {
+  _escClickHandler (evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this._swapEditToPoint();
       this._changeData(
         UserAction.RESET_TASK,
         UpdateType.PATCH,
         this._point);
-      document.removeEventListener('keydown', this._closeEscape);
+      document.removeEventListener('keydown', this._escClickHandler);
     }
   }
 
@@ -177,7 +177,7 @@ export default class PointPresenter {
     render(this._parentContainer, this._pointComponent, 'beforeend');
   }
 
-  _handleDeleteClick (point) {
+  _deleteButtonClickHandler (point) {
     if (!isOnline()) {
       this.setViewState(State.ABORTING);
       showErrorToast('Delete a point is not available in offline');
@@ -188,7 +188,7 @@ export default class PointPresenter {
       UpdateType.MAJOR,
       point,
     );
-    document.removeEventListener('keydown', this._closeEscape);
+    document.removeEventListener('keydown', this._escClickHandler);
   }
 }
 

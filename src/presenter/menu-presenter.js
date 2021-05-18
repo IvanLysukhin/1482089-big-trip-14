@@ -28,7 +28,7 @@ export default class MenuPresenter {
     this._filterModel.addObserver(this._handleModelEvent);
 
     this._trip = trip;
-    this._toggleMenu = this._toggleMenu.bind(this);
+    this._toggleMenuClickHandler = this._toggleMenuClickHandler.bind(this);
     this._statsContainer = document.querySelector('.page-main').querySelector('.page-body__container');
   }
 
@@ -86,10 +86,10 @@ export default class MenuPresenter {
   _renderNav () {
     this._navigation = new MenuView();
     render(this._navContainer, this._navigation, 'beforeend');
-    this._navigation.setToggleMenuClick(this._toggleMenu);
+    this._navigation.setToggleMenuClickHandler(this._toggleMenuClickHandler);
   }
 
-  _toggleMenu (evt) {
+  _toggleMenuClickHandler (evt) {
     const newEventBtn = document.querySelector('.trip-main__event-add-btn');
     const filterContainer = document.querySelector('.trip-controls__filters');
     document.querySelectorAll('.trip-tabs__btn').forEach((btn) => {

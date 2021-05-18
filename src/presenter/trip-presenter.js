@@ -26,7 +26,7 @@ export default class TripPresenter {
 
     this._handleTripPointChange = this._handleTripPointChange.bind(this);
     this._handleChangeMode = this._handleChangeMode.bind(this);
-    this._handleSort = this._handleSort.bind(this);
+    this._sortChangeHandler = this._sortChangeHandler.bind(this);
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -133,9 +133,9 @@ export default class TripPresenter {
     }
     this._sortList =  new SortView(this._currentSortType);
     render(this._listContainer, this._sortList, 'afterbegin');
-    this._sortList.setSortClick(this._handleSort);
+    this._sortList.setSortChangeHandler(this._sortChangeHandler);
   }
-  _handleSort (sortType) {
+  _sortChangeHandler (sortType) {
     if (this._currentSortType !== sortType.target.getAttribute('for')) {
       this._currentSortType = sortType.target.getAttribute('for');
       this._clearTrip();

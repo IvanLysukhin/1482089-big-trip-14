@@ -111,23 +111,23 @@ export default class EditTripPointView extends Smart {
     this._datepickerStart = null;
     this._datepickerEnd = null;
     this._data = EditTripPointView.parsePointToData(obj);
-    this._closeForm = this._closeForm.bind(this);
-    this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._checkboxChangeTypeHandler = this._checkboxChangeTypeHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._destroyStartDatePicker = this._destroyStartDatePicker.bind(this);
     this._destroyEndDatePicker = this._destroyEndDatePicker.bind(this);
-    this._deletePointByClick = this._deletePointByClick.bind(this);
-    this._wrapForm = this._wrapForm.bind(this);
+    this._deleteButtonClickHandler = this._deleteButtonClickHandler.bind(this);
+    this._arrowButtonClickHandler = this._arrowButtonClickHandler.bind(this);
 
-    this._checkTimeValidity = this._checkTimeValidity.bind(this);
-    this._setPicker = this._setPicker.bind(this);
+    this._timeInputChangeHandler = this._timeInputChangeHandler.bind(this);
+    this._timeInputClickHandler = this._timeInputClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setValidity();
 
-    this._setTimeInputDatePicker();
+    this._setTimeInputHandler();
   }
 
   getTemplate() {
@@ -135,22 +135,22 @@ export default class EditTripPointView extends Smart {
   }
 
   _setInnerHandlers () {
-    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
+    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxChangeTypeHandler);
     this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
   }
 
   restoreHandlers () {
     this._setInnerHandlers();
-    this.setHandlerForm(this._callback.closeFunction);
-    this.setArrowButton(this._callback.closeArrowButton);
+    this.setFormSubmitHandler(this._callback.formSubmitHandler);
+    this.setArrowButtonClickHandler(this._callback.arrowButtonClickHandler);
 
     this._setValidity();
 
-    this.setDeleteBtnHandler(this._callback.deleteClick);
-    this._setTimeInputDatePicker();
+    this.setDeleteBtnHandler(this._callback.deleteButtonClickHandler);
+    this._setTimeInputHandler();
   }
 
-  _closeForm(evt) {
+  _formSubmitHandler(evt) {
     evt.preventDefault();
 
     this._handleCheckedOptions();
@@ -160,7 +160,7 @@ export default class EditTripPointView extends Smart {
       _date: this._handleDate(),
     });
 
-    this._callback.closeFunction(EditTripPointView.parseDataToPoint(this._data));
+    this._callback.formSubmitHandler(EditTripPointView.parseDataToPoint(this._data));
   }
 
   _handleCheckedOptions () {
@@ -218,18 +218,19 @@ export default class EditTripPointView extends Smart {
     );
   }
 
-  setHandlerForm(cb) {
-    this._callback.closeFunction = cb;
-    this.getElement().addEventListener('submit', this._closeForm);
+  setFormSubmitHandler(cb) {
+    this._callback.formSubmitHandler = cb;
+    this.getElement().addEventListener('submit', this._formSubmitHandler);
   }
 
-  setArrowButton (cb) {
-    this._callback.closeArrowButton = cb;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._wrapForm);
+  setArrowButtonClickHandler (cb) {
+    this._callback.arrowButtonClickHandler = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._arrowButtonClickHandler);
   }
-  _wrapForm(evt) {
+
+  _arrowButtonClickHandler(evt) {
     evt.preventDefault();
-    this._callback.closeArrowButton();
+    this._callback.arrowButtonClickHandler();
   }
 
   static parsePointToData (obj) {
@@ -280,7 +281,7 @@ export default class EditTripPointView extends Smart {
     return data;
   }
 
-  _checkboxTypeHandler (evt) {
+  _checkboxChangeTypeHandler (evt) {
     if (evt.target.classList.contains('event__type-label')) {
       evt.preventDefault();
       const type = evt.target.getAttribute('data-point-type');
@@ -346,7 +347,7 @@ export default class EditTripPointView extends Smart {
     }
   }
 
-  _checkTimeValidity () {
+  _timeInputChangeHandler () {
     const newStartTime = dayjs(this.getElement().querySelector('#event-start-time-1').getAttribute('data-time'));
     const newEndTime = dayjs(this.getElement().querySelector('#event-end-time-1').getAttribute('data-time'));
     const diff = newEndTime.diff(newStartTime);
@@ -361,18 +362,18 @@ export default class EditTripPointView extends Smart {
   }
 
   _setValidity () {
-    this.getElement().querySelector('#event-end-time-1').addEventListener('change', this._checkTimeValidity);
-    this.getElement().querySelector('#event-start-time-1').addEventListener('change', this._checkTimeValidity);
+    this.getElement().querySelector('#event-end-time-1').addEventListener('change', this._timeInputChangeHandler);
+    this.getElement().querySelector('#event-start-time-1').addEventListener('change', this._timeInputChangeHandler);
   }
 
   setDeleteBtnHandler (cb) {
-    this._callback.deleteClick = cb;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deletePointByClick);
+    this._callback.deleteButtonClickHandler = cb;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteButtonClickHandler);
   }
 
-  _deletePointByClick (evt) {
+  _deleteButtonClickHandler (evt) {
     evt.preventDefault();
-    this._callback.deleteClick(EditTripPointView.parseDataToPoint(this._data));
+    this._callback.deleteButtonClickHandler(EditTripPointView.parseDataToPoint(this._data));
   }
 
   clearElement () {
@@ -387,11 +388,11 @@ export default class EditTripPointView extends Smart {
     }
   }
 
-  _setTimeInputDatePicker () {
-    this.getElement().querySelector('.event__field-group--time').addEventListener('click', this._setPicker);
+  _setTimeInputHandler () {
+    this.getElement().querySelector('.event__field-group--time').addEventListener('click', this._timeInputClickHandler);
   }
 
-  _setPicker (evt) {
+  _timeInputClickHandler (evt) {
     const startDatepickerParams = {
       dateFormat: 'd/m/y H:i',
       enableTime: true,

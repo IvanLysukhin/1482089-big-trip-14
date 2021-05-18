@@ -13,7 +13,7 @@ export default class AppPresenter {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._api = api;
-    this._creatNewPoint = this._creatNewPoint.bind(this);
+    this._newEventButtonHandler = this._newEventButtonHandler.bind(this);
     this._renderApp = this._renderApp.bind(this);
 
     this._isLoading = true;
@@ -58,10 +58,10 @@ export default class AppPresenter {
     this._tripList = new TripPresenter(eventsContainer, this._pointsModel, this._filterModel, this._api);
     this._tripList.initialize();
     const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
-    addNewPointButton.addEventListener('click', this._creatNewPoint);
+    addNewPointButton.addEventListener('click', this._newEventButtonHandler);
   }
 
-  _creatNewPoint (evt) {
+  _newEventButtonHandler (evt) {
     if (!isOnline()) {
       showErrorToast('Creating a new point is not available in offline');
       return;

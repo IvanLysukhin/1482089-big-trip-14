@@ -61,31 +61,31 @@ export default class TripPointView extends AbstractView {
   constructor(obj) {
     super();
     this._obj = obj;
-    this._clickHandler = this._clickHandler.bind(this);
-    this._favoriteClick = this._favoriteClick.bind(this);
+    this._arrowUpClickHandler = this._arrowUpClickHandler.bind(this);
+    this._favoriteButtonClickHandler = this._favoriteButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     return createTripPoint(this._obj);
   }
 
-  _clickHandler(evt) {
+  _arrowUpClickHandler(evt) {
     evt.preventDefault();
-    this._callback.closeFunction();
+    this._callback._arrowUpClickHandler();
   }
 
-  setClickHandler(cb) {
-    this._callback.closeFunction = cb;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._clickHandler);
+  setPointClickHandler(cb) {
+    this._callback._arrowUpClickHandler = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._arrowUpClickHandler);
   }
 
-  _favoriteClick (evt) {
+  _favoriteButtonClickHandler (evt) {
     evt.preventDefault();
-    this._callback.faboriteBtnClick();
+    this._callback.favoriteButtonClickHandler();
   }
 
-  setFavoriteHandler (cb) {
-    this._callback.faboriteBtnClick = cb;
-    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClick);
+  setFavoriteButtonHandler (cb) {
+    this._callback.favoriteButtonClickHandler = cb;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteButtonClickHandler);
   }
 }

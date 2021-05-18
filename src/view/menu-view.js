@@ -11,22 +11,22 @@ export default class MenuView extends AbstractView {
   constructor() {
     super();
 
-    this._togglePage = this._togglePage.bind(this);
+    this._togglePageClickHandler = this._togglePageClickHandler.bind(this);
   }
 
   getTemplate () {
     return createMenu();
   }
 
-  setToggleMenuClick (cb) {
-    this._callback.togglePage = cb;
-    this.getElement().addEventListener('click', this._togglePage);
+  setToggleMenuClickHandler (cb) {
+    this._callback.togglePageClickHandler = cb;
+    this.getElement().addEventListener('click', this._togglePageClickHandler);
   }
 
-  _togglePage (evt) {
+  _togglePageClickHandler (evt) {
     if (evt.target.tagName === 'A') {
       evt.preventDefault();
-      this._callback.togglePage(evt);
+      this._callback.togglePageClickHandler(evt);
     }
   }
 }
