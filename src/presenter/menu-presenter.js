@@ -68,7 +68,7 @@ export default class MenuPresenter {
   _getPoints () {
     const points = this._pointsModel.get();
     this._disabledFilter(points);
-    return getFilter[this._filterModel.getFilter()](this._pointsModel.get().slice());
+    return getFilter[this._filterModel.get()](this._pointsModel.get().slice());
   }
 
   _disabledFilter (points) {
@@ -105,14 +105,14 @@ export default class MenuPresenter {
         this._trip.showTrip();
         newEventBtn.disabled = false;
         filterContainer.classList.remove(VISUALLY_HIDDEN);
-        this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+        this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
         break;
       case PageState.STATS:
         this._stats.show();
         this._trip.hideTrip();
         newEventBtn.disabled = true;
         filterContainer.classList.add(VISUALLY_HIDDEN);
-        this._filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
+        this._filterModel.set(UpdateType.MINOR, FilterType.EVERYTHING);
         break;
     }
   }

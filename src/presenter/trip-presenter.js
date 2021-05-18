@@ -105,12 +105,12 @@ export default class TripPresenter {
   }
 
   _getPoints () {
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.get();
     const points = this._pointsModel.get().slice();
     const filterPoints = getFilter[filterType](points);
 
     if (!filterPoints.length) {
-      this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+      this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
     }
 
 
@@ -206,7 +206,7 @@ export default class TripPresenter {
 
     this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
     this._currentSortType = SortType.DEFAULT;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._newPointPresenter.initialize(defaultsRandomPoint);
   }
 
