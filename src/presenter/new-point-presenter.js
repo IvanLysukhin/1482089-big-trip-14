@@ -1,4 +1,4 @@
-import TripPointItemView from '../view/trip-list-item-view.js';
+import TripListItemView from '../view/trip-list-item-view.js';
 import EditTripPointView from '../view/edit-trip-point-view.js';
 import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType, UserAction} from '../constants.js';
@@ -28,7 +28,7 @@ export default class NewPointPresenter {
     this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
     this._editFormComponent.setArrowButton(this._handleArrowClick);
 
-    this._parentContainer = new TripPointItemView();
+    this._parentContainer = new TripListItemView();
     render(this._container, this._parentContainer, 'afterbegin');
     render(this._parentContainer, this._editFormComponent, 'afterbegin');
 

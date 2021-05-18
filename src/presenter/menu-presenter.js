@@ -1,4 +1,4 @@
-import SiteMenuView from '../view/menu-view.js';
+import MenuView from '../view/menu-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import TripPriceView from '../view/trip-price-view.js';
 import {render, removeElement} from '../utils/render-elements.js';
@@ -84,7 +84,7 @@ export default class MenuPresenter {
   }
 
   _renderNav () {
-    this._navigation = new SiteMenuView();
+    this._navigation = new MenuView();
     render(this._navContainer, this._navigation, 'beforeend');
     this._navigation.setToggleMenuClick(this._toggleMenu);
   }

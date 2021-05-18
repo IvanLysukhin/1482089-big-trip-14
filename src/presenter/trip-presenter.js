@@ -1,9 +1,9 @@
 import {render, removeElement, showHideElement} from '../utils/render-elements';
 import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
 import {UserAction, UpdateType, FilterType, State, SortType} from '../constants.js';
-import TripPointListView from '../view/content-list-view.js';
+import ContentListView from '../view/content-list-view.js';
 import EmptyListMessageView from '../view/empty-list-message-view.js';
-import SortListView from '../view/sort-view';
+import SortView from '../view/sort-view';
 import TripPointPresenter from './point-presenter.js';
 import {getFilter} from '../utils/filters.js';
 import NewTripPoint from './new-point-presenter.js';
@@ -16,7 +16,7 @@ export default class TripPresenter {
     this._api = api;
 
     this._listContainer = listContainer;
-    this._eventsList = new TripPointListView();
+    this._eventsList = new ContentListView();
     this._sortList =  null;
     this._emptyMessage = null;
     this._newPointPresenter = null;
@@ -131,7 +131,7 @@ export default class TripPresenter {
     if (this._sortList !== null) {
       this._sortList =  null;
     }
-    this._sortList =  new SortListView(this._currentSortType);
+    this._sortList =  new SortView(this._currentSortType);
     render(this._listContainer, this._sortList, 'afterbegin');
     this._sortList.setSortClick(this._handleSort);
   }

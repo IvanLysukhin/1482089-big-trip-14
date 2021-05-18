@@ -4,7 +4,7 @@ const createContentItem = () => {
   return '<li class="trip-events__item"></li>';
 };
 
-export default class TripPointItemView extends AbstractView {
+export default class TripListItemView extends AbstractView {
   getTemplate () {
     return createContentItem();
   }

@@ -1,7 +1,7 @@
 import {TRANSPORT_TYPES, TimeInput} from '../constants.js';
 import DestinationsListView from './destinations-list-view.js';
-import CheckboxTypeListView from './checkbox-list-view.js';
-import OfferSelectorsView from './offer-selector-view.js';
+import CheckboxListView from './checkbox-list-view.js';
+import OfferSelectorsView from './offer-selectors-view.js';
 import {isOnline, showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
 import PhotosListView from './photos-list-view.js';
@@ -29,7 +29,7 @@ const createEditTripPoint = ({_date,
     _date.endTime = dayjs(_date.endTime);
   }
 
-  const checkboxTypes = new CheckboxTypeListView(TRANSPORT_TYPES).getTemplate();
+  const checkboxTypes = new CheckboxListView(TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();
   const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();

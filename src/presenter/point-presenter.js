@@ -1,4 +1,4 @@
-import TripPointItemView from '../view/trip-list-item-view.js';
+import TripListItemView from '../view/trip-list-item-view.js';
 import TripPointView from '../view/trip-point-view.js';
 import EditTripPointView from '../view/edit-trip-point-view.js';
 import {render, replaceElements, removeElement} from '../utils/render-elements.js';
@@ -12,7 +12,7 @@ export default class PointPresenter {
     this._changeMode = changeMode;
     this._newPointPresenter = newPointPresenter;
 
-    this._parentContainer = new TripPointItemView();
+    this._parentContainer = new TripListItemView();
 
     this._pointComponent = null;
     this._editFormComponent = null;
