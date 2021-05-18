@@ -392,19 +392,31 @@ export default class EditTripPointView extends Smart {
   }
 
   _setPicker (evt) {
+    const startDatepickerParams = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      defaultDate: this.getElement().querySelector('#event-start-time-1').value,
+      onChange: this._startDateChangeHandler,
+      onClose: this._destroyStartDatePicker,
+    };
+    startDatepickerParams['time_24hr'] = true;
+
+    const endDatepickerParams = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      defaultDate: this.getElement().querySelector('#event-end-time-1').value,
+      onChange: this._endDateChangeHandler,
+      onClose: this._destroyEndDatePicker,
+    };
+    endDatepickerParams['time_24hr'] = true;
+
     if (evt.target.tagName === 'INPUT') {
       switch (evt.target.getAttribute('name')) {
         case TimeInput.START:
           if (this._datepickerStart === null) {
             this._datepickerStart = flatpickr(
               evt.target,
-              {
-                dateFormat: 'd/m/y H:i',
-                enableTime: true,
-                defaultDate: this.getElement().querySelector('#event-start-time-1').value,
-                onChange: this._startDateChangeHandler,
-                onClose: this._destroyStartDatePicker,
-              },
+              startDatepickerParams,
             );
           }
           this._datepickerStart.open();
@@ -413,13 +425,7 @@ export default class EditTripPointView extends Smart {
           if (this._datepickerEnd === null) {
             this._datepickerEnd = flatpickr(
               evt.target,
-              {
-                dateFormat: 'd/m/y H:i',
-                enableTime: true,
-                defaultDate: this.getElement().querySelector('#event-end-time-1').value,
-                onChange: this._endDateChangeHandler,
-                onClose: this._destroyEndDatePicker,
-              },
+              endDatepickerParams,
             );
           }
           this._datepickerEnd.open();
