@@ -21,11 +21,11 @@ const app = new AppPresenter(pointsModel, filterModel, apiWithProvider);
 app.initialize();
 
 apiWithProvider.getPoints().then((points) => {
-  pointsModel.setPoints(UpdateType.INIT, points);
+  pointsModel.set(UpdateType.INIT, points);
 })
   .catch(() => {
     document.querySelector('.trip-main__event-add-btn ').disabled = true;
-    pointsModel.setPoints(UpdateType.INIT, []);
+    pointsModel.set(UpdateType.INIT, []);
     showDownloadError();
   });
 

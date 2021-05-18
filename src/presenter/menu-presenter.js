@@ -66,9 +66,9 @@ export default class MenuPresenter {
   }
 
   _getPoints () {
-    const points = this._pointsModel.getPoints();
+    const points = this._pointsModel.get();
     this._disabledFilter(points);
-    return getFilter[this._filterModel.getFilter()](this._pointsModel.getPoints().slice());
+    return getFilter[this._filterModel.getFilter()](this._pointsModel.get().slice());
   }
 
   _disabledFilter (points) {

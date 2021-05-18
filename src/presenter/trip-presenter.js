@@ -56,7 +56,7 @@ export default class TripPresenter {
         this._pointPresenter[update.id].setViewState(State.SAVING);
         this._api.updatePoint(update)
           .then((response) => {
-            this._pointsModel.updatePoint(updateType, response);
+            this._pointsModel.update(updateType, response);
           })
           .catch(() => {
             this._pointPresenter[update.id].setViewState(State.ABORTING);
@@ -66,7 +66,7 @@ export default class TripPresenter {
         this._newPointPresenter.setSaving();
         this._api.addNewPoint(update)
           .then((response) => {
-            this._pointsModel.addPoint(updateType, response);
+            this._pointsModel.add(updateType, response);
             this._newPointPresenter.destroy();
           })
           .catch(() => {
@@ -76,7 +76,7 @@ export default class TripPresenter {
       case UserAction.DELETE_TASK:
         this._pointPresenter[update.id].setViewState(State.DELETING);
         this._api.deletePoint(update).then(() => {
-          this._pointsModel.deletePoint(updateType, update);
+          this._pointsModel.delete(updateType, update);
         })
           .catch(() => {
             this._pointPresenter[update.id].setViewState(State.ABORTING);
@@ -106,7 +106,7 @@ export default class TripPresenter {
 
   _getPoints () {
     const filterType = this._filterModel.getFilter();
-    const points = this._pointsModel.getPoints().slice();
+    const points = this._pointsModel.get().slice();
     const filterPoints = getFilter[filterType](points);
 
     if (!filterPoints.length) {
@@ -184,7 +184,7 @@ export default class TripPresenter {
 
   createNewPoint (evt) {
     const defaultsRandomPoint = Object.assign({},
-      this._pointsModel.getPoints()[0],
+      this._pointsModel.get()[0],
       {
         id: 0,
         price: 0,

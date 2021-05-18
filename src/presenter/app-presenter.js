@@ -45,7 +45,7 @@ export default class AppPresenter {
   }
 
   _getPoints () {
-    return this._pointsModel.getPoints();
+    return this._pointsModel.get();
   }
 
   _renderMenu (pointsArray) {

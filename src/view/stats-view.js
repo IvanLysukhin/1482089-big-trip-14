@@ -240,7 +240,7 @@ export default class StatsView extends AbstractView {
   }
 
   _getPoints() {
-    return this._pointModel.getPoints();
+    return this._pointModel.get();
   }
 
   _setCharts() {
