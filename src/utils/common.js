@@ -53,42 +53,39 @@ export const sumTypesPrices = (typesArray, pointsArr) => {
       if (type.toLowerCase() === point.pointType.toLowerCase()) {
         accumulator += point.price;
         return accumulator;
-      } else {
-        return accumulator;
       }
+      return accumulator;
     },0));
   });
   return prices;
 };
 
 export const countTypes = (typesArray, pointsArr) => {
-  const prices = [];
+  const types = [];
   typesArray.forEach((type) => {
-    prices.push(pointsArr.reduce((accumulator, point) => {
+    types.push(pointsArr.reduce((accumulator, point) => {
       if (type.toLowerCase() === point.pointType.toLowerCase()) {
         accumulator += 1;
         return accumulator;
-      } else {
-        return accumulator;
       }
+      return accumulator;
     },0));
   });
-  return prices;
+  return types;
 };
 
 export const sumTimeSpend = (typesArray, pointsArr) => {
-  const prices = [];
+  const times = [];
   typesArray.forEach((type) => {
-    prices.push(pointsArr.reduce((accumulator, point) => {
+    times.push(pointsArr.reduce((accumulator, point) => {
       if (type.toLowerCase() === point.pointType.toLowerCase()) {
         accumulator += point._date.endTime.diff(point._date.startTime, 'minute');
         return accumulator;
-      } else {
-        return accumulator;
       }
+      return accumulator;
     },0));
   });
-  return prices;
+  return times;
 };
 
 export const findDuration = (diff) => {
