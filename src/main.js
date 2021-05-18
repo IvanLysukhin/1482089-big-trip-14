@@ -1,5 +1,5 @@
 import {UpdateType} from './constants.js';
-import App from './presenter/app.js';
+import AppPresenter from './presenter/app-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filters-model.js';
 import Api from './api/api.js';
@@ -16,7 +16,7 @@ const apiWithProvider = new Provider(api, store);
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
-const app = new App(pointsModel, filterModel, apiWithProvider);
+const app = new AppPresenter(pointsModel, filterModel, apiWithProvider);
 
 app.initialize();
 

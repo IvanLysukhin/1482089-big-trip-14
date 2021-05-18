@@ -1,10 +1,10 @@
 import {TRANSPORT_TYPES, TimeInput} from '../constants.js';
-import DestinationsListView from './destinations-list.js';
-import CheckboxTypeListView from './checkbox-list.js';
-import OfferSelectorsView from './offer-selector.js';
+import DestinationsListView from './destinations-list-view.js';
+import CheckboxTypeListView from './checkbox-list-view.js';
+import OfferSelectorsView from './offer-selector-view.js';
 import {isOnline, showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
-import PhotosListView from './photos-list.js';
+import PhotosListView from './photos-list-view.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
@@ -104,13 +104,13 @@ const createEditTripPoint = ({_date,
               </form>`;
 };
 
-export default class EditTripPoint extends Smart {
+export default class EditTripPointView extends Smart {
   constructor(obj, isNewPoint) {
     super();
     this._isNewPoint = isNewPoint;
     this._datepickerStart = null;
     this._datepickerEnd = null;
-    this._data = EditTripPoint.parsePointToData(obj);
+    this._data = EditTripPointView.parsePointToData(obj);
     this._closeForm = this._closeForm.bind(this);
     this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
@@ -160,7 +160,7 @@ export default class EditTripPoint extends Smart {
       _date: this._handleDate(),
     });
 
-    this._callback.closeFunction(EditTripPoint.parseDataToPoint(this._data));
+    this._callback.closeFunction(EditTripPointView.parseDataToPoint(this._data));
   }
 
   _handleCheckedOptions () {
@@ -372,7 +372,7 @@ export default class EditTripPoint extends Smart {
 
   _deletePointByClick (evt) {
     evt.preventDefault();
-    this._callback.deleteClick(EditTripPoint.parseDataToPoint(this._data));
+    this._callback.deleteClick(EditTripPointView.parseDataToPoint(this._data));
   }
 
   clearElement () {

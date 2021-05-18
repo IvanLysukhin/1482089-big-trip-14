@@ -30,7 +30,7 @@ const createSort = (currentSortType) => {
           </form>`;
 };
 
-export default class SortList extends AbstractView {
+export default class SortListView extends AbstractView {
   constructor(currentSortType) {
     super();
     this._currentSortType = currentSortType;

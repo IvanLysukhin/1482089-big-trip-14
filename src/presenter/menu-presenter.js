@@ -1,13 +1,13 @@
-import SiteMenuView from '../view/menu.js';
-import TripInfoView from '../view/trip-info.js';
-import TripPriceView from '../view/trip-price.js';
+import SiteMenuView from '../view/menu-view.js';
+import TripInfoView from '../view/trip-info-view.js';
+import TripPriceView from '../view/trip-price-view.js';
 import {render, removeElement} from '../utils/render-elements.js';
 import FiltersPresenter from '../presenter/filters-presenter.js';
 import {PageState, UpdateType, FilterType, VISUALLY_HIDDEN} from '../constants.js';
 import {getFilter, disableEmptyFilter} from '../utils/filters.js';
 import StatsView from '../view/stats-view';
 
-export default class Menu {
+export default class MenuPresenter {
   constructor(pointsModel, filterModel, trip) {
     this._navContainer = document.querySelector('.trip-controls__navigation');
     this._mainInfoContainer = document.querySelector('.trip-main');

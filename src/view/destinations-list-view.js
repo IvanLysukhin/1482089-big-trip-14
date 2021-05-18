@@ -4,7 +4,7 @@ const createDestinationsList = (array) => {
   return array.map((destination) => {return `<option value="${destination}"></option>`;}).join('');
 };
 
-export default class DestinationsList extends AbstractView {
+export default class DestinationsListView extends AbstractView {
   constructor(array) {
     super();
     this._array = array;

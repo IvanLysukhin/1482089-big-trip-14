@@ -1,12 +1,12 @@
 import {render, removeElement, showHideElement} from '../utils/render-elements';
 import {updateItem, sortTime, sortPrice, sortDate} from '../utils/common.js';
 import {UserAction, UpdateType, FilterType, State, SortType} from '../constants.js';
-import TripPointListView from '../view/content-list.js';
-import EmptyListMessageView from '../view/empty-list-message.js';
-import SortListView from '../view/sort';
-import TripPointPresenter from '../presenter/point.js';
+import TripPointListView from '../view/content-list-view.js';
+import EmptyListMessageView from '../view/empty-list-message-view.js';
+import SortListView from '../view/sort-view';
+import TripPointPresenter from './point-presenter.js';
 import {getFilter} from '../utils/filters.js';
-import NewTripPoint from '../presenter/new-point.js';
+import NewTripPoint from './new-point-presenter.js';
 import dayjs from 'dayjs';
 
 export default class TripPresenter {

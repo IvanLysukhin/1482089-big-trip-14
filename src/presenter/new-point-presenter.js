@@ -1,9 +1,9 @@
-import TripPointItemView from '../view/trip-list-item.js';
-import EditTripPointView from '../view/edit-trip-point.js';
+import TripPointItemView from '../view/trip-list-item-view.js';
+import EditTripPointView from '../view/edit-trip-point-view.js';
 import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType, UserAction} from '../constants.js';
 
-export default class NewPoint {
+export default class NewPointPresenter {
   constructor(container, changeData, button) {
     this._container = container;
     this._changeData = changeData;

@@ -6,7 +6,7 @@ const creatEmptyListMessage = () => {
 };
 
 
-export default class EmptyListMessage extends AbstractView {
+export default class EmptyListMessageView extends AbstractView {
   getTemplate() {
     return creatEmptyListMessage();
   }

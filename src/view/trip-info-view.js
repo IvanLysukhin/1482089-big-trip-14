@@ -52,7 +52,7 @@ const createTripInfo = (array) => {
           </section>`;
 };
 
-export default class TripInfo extends AbstractView {
+export default class TripInfoView extends AbstractView {
   constructor(array) {
     super();
     this._array = array;

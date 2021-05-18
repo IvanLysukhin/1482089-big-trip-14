@@ -1,6 +1,6 @@
-import TripPointItemView from '../view/trip-list-item.js';
-import TripPointView from '../view/trip-point.js';
-import EditTripPointView from '../view/edit-trip-point.js';
+import TripPointItemView from '../view/trip-list-item-view.js';
+import TripPointView from '../view/trip-point-view.js';
+import EditTripPointView from '../view/edit-trip-point-view.js';
 import {render, replaceElements, removeElement} from '../utils/render-elements.js';
 import {UserAction, UpdateType, PointMode, State} from '../constants.js';
 import {isOnline, showErrorToast} from '../utils/common';

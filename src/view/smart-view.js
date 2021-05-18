@@ -1,6 +1,6 @@
 import Abstract from './abstract-view.js';
 
-export default class Smart extends Abstract {
+export default class SmartView extends Abstract {
   constructor () {
     super();
     this._data = {};

@@ -57,7 +57,7 @@ const createTripPoint = ({city, pointType, price, isFavorite, options, _date}) =
 };
 
 
-export default class TripPoint extends AbstractView {
+export default class TripPointView extends AbstractView {
   constructor(obj) {
     super();
     this._obj = obj;

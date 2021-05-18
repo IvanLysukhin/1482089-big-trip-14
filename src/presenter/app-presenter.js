@@ -1,11 +1,11 @@
-import MenuPresenter from './menu.js';
-import TripPresenter from './trip.js';
+import MenuPresenter from './menu-presenter.js';
+import TripPresenter from './trip-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType} from '../constants.js';
 import {isOnline, showErrorToast} from '../utils/common.js';
 
-export default class App {
+export default class AppPresenter {
   constructor (pointsModel, filterModel, api) {
     this._menu = null;
     this._tripList = null;

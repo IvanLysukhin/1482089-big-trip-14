@@ -18,7 +18,7 @@ const createFilterForm = (array, currentFilterType) => {
           </form>`;
 };
 
-export default class FilterForm extends AbstractView {
+export default class FilterFormView extends AbstractView {
   constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
