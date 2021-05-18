@@ -188,6 +188,7 @@ export default class PointPresenter {
       UpdateType.MAJOR,
       point,
     );
+    document.removeEventListener('keydown', this._closeEscape);
   }
 }
 
