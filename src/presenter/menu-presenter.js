@@ -38,25 +38,10 @@ export default class MenuPresenter {
     this._renderNav();
   }
 
-  _handleModelEvent (changedMode) {
-    switch (changedMode) {
-      case UpdateType.MAJOR:
-        this._clearMenu();
-        removeElement(this._stats);
-        this._renderMenu();
-        this._renderStats();
-        break;
-
-      case UpdateType.MINOR:
-        this._clearMenu();
-        this._renderMenu();
-        break;
-    }
-  }
-
-  _clearMenu () {
-    removeElement(this._mainInfo);
-    removeElement(this._price);
+  _getPoints () {
+    const points = this._pointsModel.get();
+    this._disableFilter(points);
+    return getFilter[this._filterModel.get()](this._pointsModel.get().slice());
   }
 
   _renderMenu () {
@@ -65,13 +50,12 @@ export default class MenuPresenter {
     this._renderPrice();
   }
 
-  _getPoints () {
-    const points = this._pointsModel.get();
-    this._disabledFilter(points);
-    return getFilter[this._filterModel.get()](this._pointsModel.get().slice());
+  _clearMenu () {
+    removeElement(this._mainInfo);
+    removeElement(this._price);
   }
 
-  _disabledFilter (points) {
+  _disableFilter (points) {
     if (getFilter[FilterType.EVERYTHING](points).length === 0) {
       disableEmptyFilter(FilterType.EVERYTHING);
     }
@@ -87,6 +71,42 @@ export default class MenuPresenter {
     this._navigation = new MenuView();
     render(this._navContainer, this._navigation, 'beforeend');
     this._navigation.setToggleMenuClickHandler(this._toggleMenuClickHandler);
+  }
+
+  _renderMainInfo () {
+    this._mainInfo = new TripInfoView(this._getPoints());
+    render(this._mainInfoContainer , this._mainInfo, 'afterbegin');
+  }
+
+  _renderPrice () {
+    this._price = new TripPriceView(this._getPoints());
+    this._priceContainer = document.querySelector('.trip-info');
+    render(this._priceContainer, this._price, 'beforeend');
+  }
+
+  _renderFilters () {
+    this._filtersPresenter.initialize();
+  }
+
+  _renderStats () {
+    this._stats = new StatsView(this._pointsModel);
+    render(this._statsContainer, this._stats, 'beforeend');
+  }
+
+  _handleModelEvent (changedMode) {
+    switch (changedMode) {
+      case UpdateType.MAJOR:
+        this._clearMenu();
+        removeElement(this._stats);
+        this._renderMenu();
+        this._renderStats();
+        break;
+
+      case UpdateType.MINOR:
+        this._clearMenu();
+        this._renderMenu();
+        break;
+    }
   }
 
   _toggleMenuClickHandler (evt) {
@@ -115,25 +135,5 @@ export default class MenuPresenter {
         this._filterModel.set(UpdateType.MINOR, FilterType.EVERYTHING);
         break;
     }
-  }
-
-  _renderMainInfo () {
-    this._mainInfo = new TripInfoView(this._getPoints());
-    render(this._mainInfoContainer , this._mainInfo, 'afterbegin');
-  }
-
-  _renderPrice () {
-    this._price = new TripPriceView(this._getPoints());
-    this._priceContainer = document.querySelector('.trip-info');
-    render(this._priceContainer, this._price, 'beforeend');
-  }
-
-  _renderFilters () {
-    this._filtersPresenter.initialize();
-  }
-
-  _renderStats () {
-    this._stats = new StatsView(this._pointsModel);
-    render(this._statsContainer, this._stats, 'beforeend');
   }
 }

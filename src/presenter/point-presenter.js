@@ -101,6 +101,11 @@ export default class PointPresenter {
     }
   }
 
+  _renderPoint () {
+    render(this._container, this._parentContainer, 'beforeend');
+    render(this._parentContainer, this._pointComponent, 'beforeend');
+  }
+
   _swapPointToEdit () {
     if (this._newPointPresenter !== null) {
       this._newPointPresenter.destroy();
@@ -113,6 +118,20 @@ export default class PointPresenter {
   _swapEditToPoint () {
     replaceElements(this._pointComponent, this._editFormComponent);
     this._mode = PointMode.DEFAULT;
+  }
+
+  _deleteButtonClickHandler (point) {
+    if (!isOnline()) {
+      this.setViewState(State.ABORTING);
+      showErrorToast('Delete a point is not available in offline');
+      return;
+    }
+    this._changeData(
+      UserAction.DELETE_TASK,
+      UpdateType.MAJOR,
+      point,
+    );
+    document.removeEventListener('keydown', this._escClickHandler);
   }
 
   _favoriteButtonClickHandler() {
@@ -171,24 +190,4 @@ export default class PointPresenter {
       document.removeEventListener('keydown', this._escClickHandler);
     }
   }
-
-  _renderPoint () {
-    render(this._container, this._parentContainer, 'beforeend');
-    render(this._parentContainer, this._pointComponent, 'beforeend');
-  }
-
-  _deleteButtonClickHandler (point) {
-    if (!isOnline()) {
-      this.setViewState(State.ABORTING);
-      showErrorToast('Delete a point is not available in offline');
-      return;
-    }
-    this._changeData(
-      UserAction.DELETE_TASK,
-      UpdateType.MAJOR,
-      point,
-    );
-    document.removeEventListener('keydown', this._escClickHandler);
-  }
 }
-

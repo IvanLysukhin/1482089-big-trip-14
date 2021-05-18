@@ -39,6 +39,61 @@ export default class TripPresenter {
     this._renderTrip();
   }
 
+  createNewPoint (evt) {
+    const defaultsRandomPoint = Object.assign({},
+      this._pointsModel.get()[0],
+      {
+        id: 0,
+        price: 0,
+        isFavorite: false,
+        city: '',
+        pointType: 'taxi',
+        options: [],
+        destinationInfo:
+          {
+            infoText: '',
+            photos: [],
+          },
+        _date: {
+          startTime: dayjs(),
+          endTime: dayjs(),
+        },
+        photos: [],
+      });
+
+    this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._newPointPresenter.initialize(defaultsRandomPoint);
+  }
+
+  showTrip () {
+    showHideElement(false, this._listContainer);
+  }
+
+  hideTrip () {
+    showHideElement(true, this._listContainer);
+  }
+
+  _getPoints () {
+    const filterType = this._filterModel.get();
+    const points = this._pointsModel.get().slice();
+    const filterPoints = getFilter[filterType](points);
+
+    if (!filterPoints.length) {
+      this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
+    }
+
+
+    switch (this._currentSortType) {
+      case SortType.TIME:
+        return filterPoints.sort(sortTime);
+      case SortType.PRICE:
+        return filterPoints.sort(sortPrice);
+    }
+    return filterPoints.sort(sortDate);
+  }
+
   _renderTrip () {
     const points = this._getPoints().slice();
     if (points.length <= 0) {
@@ -48,6 +103,41 @@ export default class TripPresenter {
     this._renderEventsList();
     this._renderSortList();
     this._renderTripPoints(points);
+  }
+
+  _renderEventsList () {
+    render(this._listContainer, this._eventsList, 'beforeend');
+  }
+
+  _renderSortList () {
+    if (this._sortList !== null) {
+      this._sortList =  null;
+    }
+    this._sortList =  new SortView(this._currentSortType);
+    render(this._listContainer, this._sortList, 'afterbegin');
+    this._sortList.setSortChangeHandler(this._sortChangeHandler);
+  }
+
+  _renderPoint (point) {
+    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleViewAction, this._handleChangeMode, this._newPointPresenter);
+    pointPresenter.initialize(point);
+    this._pointPresenter[point.id] = pointPresenter;
+  }
+
+  _renderTripPoints (pointsArray) {
+    pointsArray.forEach((point) => {this._renderPoint(point);});
+  }
+
+  _clearTrip (resetSortType = false) {
+    Object.values(this._pointPresenter).forEach((pointPresenter) => {pointPresenter.destroy();});
+    this._pointPresenter = {};
+    removeElement(this._sortList);
+    removeElement(this._emptyMessage);
+    this._sortList = null;
+    this._emptyMessage = null;
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 
   _handleViewAction (actionType, updateType, update) {
@@ -104,64 +194,11 @@ export default class TripPresenter {
     }
   }
 
-  _getPoints () {
-    const filterType = this._filterModel.get();
-    const points = this._pointsModel.get().slice();
-    const filterPoints = getFilter[filterType](points);
-
-    if (!filterPoints.length) {
-      this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
-    }
-
-
-    switch (this._currentSortType) {
-      case SortType.TIME:
-        return filterPoints.sort(sortTime);
-      case SortType.PRICE:
-        return filterPoints.sort(sortPrice);
-    }
-    return filterPoints.sort(sortDate);
-  }
-
-  _renderEventsList () {
-    render(this._listContainer, this._eventsList, 'beforeend');
-  }
-
-  _renderSortList () {
-    if (this._sortList !== null) {
-      this._sortList =  null;
-    }
-    this._sortList =  new SortView(this._currentSortType);
-    render(this._listContainer, this._sortList, 'afterbegin');
-    this._sortList.setSortChangeHandler(this._sortChangeHandler);
-  }
   _sortChangeHandler (sortType) {
     if (this._currentSortType !== sortType.target.getAttribute('for')) {
       this._currentSortType = sortType.target.getAttribute('for');
       this._clearTrip();
       this._renderTrip();
-    }
-  }
-
-  _renderPoint (point) {
-    const pointPresenter = new TripPointPresenter(this._eventsList, this._handleViewAction, this._handleChangeMode, this._newPointPresenter);
-    pointPresenter.initialize(point);
-    this._pointPresenter[point.id] = pointPresenter;
-  }
-
-  _renderTripPoints (pointsArray) {
-    pointsArray.forEach((point) => {this._renderPoint(point);});
-  }
-
-  _clearTrip (resetSortType = false) {
-    Object.values(this._pointPresenter).forEach((pointPresenter) => {pointPresenter.destroy();});
-    this._pointPresenter = {};
-    removeElement(this._sortList);
-    removeElement(this._emptyMessage);
-    this._sortList = null;
-    this._emptyMessage = null;
-    if (resetSortType) {
-      this._currentSortType = SortType.DEFAULT;
     }
   }
 
@@ -180,41 +217,5 @@ export default class TripPresenter {
     Object
       .values(this._pointPresenter)
       .forEach((pointPresenter) =>{pointPresenter.resetView();});
-  }
-
-  createNewPoint (evt) {
-    const defaultsRandomPoint = Object.assign({},
-      this._pointsModel.get()[0],
-      {
-        id: 0,
-        price: 0,
-        isFavorite: false,
-        city: '',
-        pointType: 'taxi',
-        options: [],
-        destinationInfo:
-          {
-            infoText: '',
-            photos: [],
-          },
-        _date: {
-          startTime: dayjs(),
-          endTime: dayjs(),
-        },
-        photos: [],
-      });
-
-    this._newPointPresenter =  new NewTripPoint(this._eventsList, this._handleViewAction, evt);
-    this._currentSortType = SortType.DEFAULT;
-    this._filterModel.set(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._newPointPresenter.initialize(defaultsRandomPoint);
-  }
-
-  showTrip () {
-    showHideElement(false, this._listContainer);
-  }
-
-  hideTrip () {
-    showHideElement(true, this._listContainer);
   }
 }

@@ -69,23 +69,23 @@ export default class TripPointView extends AbstractView {
     return createTripPoint(this._obj);
   }
 
-  _arrowUpClickHandler(evt) {
-    evt.preventDefault();
-    this._callback._arrowUpClickHandler();
-  }
-
   setPointClickHandler(cb) {
     this._callback._arrowUpClickHandler = cb;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._arrowUpClickHandler);
   }
 
-  _favoriteButtonClickHandler (evt) {
-    evt.preventDefault();
-    this._callback.favoriteButtonClickHandler();
-  }
-
   setFavoriteButtonHandler (cb) {
     this._callback.favoriteButtonClickHandler = cb;
     this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteButtonClickHandler);
+  }
+
+  _arrowUpClickHandler(evt) {
+    evt.preventDefault();
+    this._callback._arrowUpClickHandler();
+  }
+
+  _favoriteButtonClickHandler (evt) {
+    evt.preventDefault();
+    this._callback.favoriteButtonClickHandler();
   }
 }

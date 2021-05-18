@@ -26,6 +26,10 @@ export default class AppPresenter {
     this._renderApp();
   }
 
+  _getPoints () {
+    return this._pointsModel.get();
+  }
+
   _renderApp (updateType) {
     if (updateType === UpdateType.INIT) {
       this._isLoading = false;
@@ -39,15 +43,6 @@ export default class AppPresenter {
     }
   }
 
-  _renderLoading() {
-    const container = document.querySelector('.trip-events');
-    render(container, this._loadingComponent, 'afterbegin');
-  }
-
-  _getPoints () {
-    return this._pointsModel.get();
-  }
-
   _renderMenu (pointsArray) {
     this._menu = new MenuPresenter(this._pointsModel, this._filterModel, this._tripList);
     this._menu.initialize(pointsArray);
@@ -59,6 +54,11 @@ export default class AppPresenter {
     this._tripList.initialize();
     const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
     addNewPointButton.addEventListener('click', this._newEventButtonHandler);
+  }
+
+  _renderLoading() {
+    const container = document.querySelector('.trip-events');
+    render(container, this._loadingComponent, 'afterbegin');
   }
 
   _newEventButtonHandler (evt) {

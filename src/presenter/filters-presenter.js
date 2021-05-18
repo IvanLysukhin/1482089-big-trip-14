@@ -31,15 +31,15 @@ export default class FiltersPresenter {
     removeElement(prevFilterComponent);
   }
 
+  _handleModelEvent() {
+    this.initialize();
+  }
+
   _filterChangeHandler(filterType) {
     if (this._filterModel.get() === filterType) {
       return;
     }
 
     this._filterModel.set(UpdateType.MAJOR, filterType);
-  }
-
-  _handleModelEvent() {
-    this.initialize();
   }
 }
