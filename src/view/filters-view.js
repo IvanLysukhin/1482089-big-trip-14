@@ -18,7 +18,7 @@ const createFilterForm = (array, currentFilterType) => {
           </form>`;
 };
 
-export default class FilterForm extends AbstractView {
+export default class FiltersView extends AbstractView {
   constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
@@ -30,13 +30,13 @@ export default class FilterForm extends AbstractView {
     return createFilterForm(this._filters, this._currentFilterType);
   }
 
-  _filterTypeChangeHandler(evt) {
-    evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.value);
+  setFilterTypeChangeHandler(callback) {
+    this._callback.onFilterTypeChange = callback;
+    this.getElement().addEventListener('change', this._filterTypeChangeHandler);
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('change', this._filterTypeChangeHandler);
+  _filterTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this._callback.onFilterTypeChange(evt.target.value);
   }
 }

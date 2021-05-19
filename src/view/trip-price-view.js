@@ -21,7 +21,7 @@ const createTripPrice = (array) => {
            </p>`;
 };
 
-export default class TripPrice extends AbstractView {
+export default class TripPriceView extends AbstractView {
   constructor(array) {
     super();
     this._array = array;

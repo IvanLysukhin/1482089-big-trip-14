@@ -1,7 +1,5 @@
-export const DATA = {
-  TRANSPORT_TYPES: ['Taxi', 'Bus', 'Train', 'Ship', 'Transport', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'],
-  FILTER_TYPES: ['Everything',  'Future',  'Past'],
-};
+export const TRANSPORT_TYPES =  ['Taxi', 'Bus', 'Train', 'Ship', 'Transport', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+export const FILTER_TYPES = ['Everything',  'Future',  'Past'];
 
 export const SortType =  {
   TIME: 'sort-time',
@@ -33,7 +31,7 @@ export const FilterType = {
 
 export const VISUALLY_HIDDEN = 'visually-hidden';
 
-export const PAGE_CONDITION = {
+export const PageState = {
   TABLE: 'Table',
   STATS: 'Stats',
 };
@@ -47,11 +45,11 @@ export const MIN_BAR_LENGTH_TIMES = 100;
 export const PADDING = 5;
 export const HEIGHT_MULTIPLIER = 7;
 
-export const TimeInputs = {
+export const TimeInput = {
   START: 'event-start-time',
   END: 'event-end-time',
 };
-export const pointMode = {
+export const PointMode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };

@@ -34,6 +34,10 @@ export const replaceElements = (newChild, oldChild) => {
 
   const parent = oldChild.parentElement;
 
+  if (!parent) {
+    return;
+  }
+
   parent.replaceChild(newChild, oldChild);
 };
 
@@ -61,5 +65,3 @@ export const showHideElement = (hide , element) => {
     }
   }
 };
-
-// export {render, createElementDOM, replaceElements, removeElement, showHideElement};

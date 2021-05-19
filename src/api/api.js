@@ -96,14 +96,6 @@ export default class Api {
       });
   }
 
-  _makeOneObj (destinations) {
-    let newObj = {};
-    destinations.forEach((destination) => {
-      newObj = {...newObj, ...destination};
-    });
-    return newObj;
-  }
-
   updatePoint (point) {
     return this._load({
       url: `points/${point.id}`,
@@ -165,6 +157,14 @@ export default class Api {
     )
       .then(Api.checkStatus)
       .catch(Api.catchError);
+  }
+
+  _makeOneObj (destinations) {
+    let newObj = {};
+    destinations.forEach((destination) => {
+      newObj = {...newObj, ...destination};
+    });
+    return newObj;
   }
 
   static checkStatus (response) {

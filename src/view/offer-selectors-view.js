@@ -13,7 +13,7 @@ const createOfferSelector = (array, type) => {
   }).join('');
 };
 
-export default class OfferSelectors extends AbstractView {
+export default class OfferSelectorsView extends AbstractView {
   constructor(type, arr) {
     super();
     this._array = arr;

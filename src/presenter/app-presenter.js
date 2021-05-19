@@ -1,11 +1,11 @@
-import MenuPresenter from './menu.js';
-import TripPresenter from './trip.js';
+import MenuPresenter from './menu-presenter.js';
+import TripPresenter from './trip-presenter.js';
 import LoadingView from '../view/loading-view.js';
-import {removeElement, render} from '../utils/render-DOM-elements.js';
+import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType} from '../constants.js';
-import {isOnline, toastError} from '../utils/common.js';
+import {isOnline, showErrorToast} from '../utils/common.js';
 
-export default class App {
+export default class AppPresenter {
   constructor (pointsModel, filterModel, api) {
     this._menu = null;
     this._tripList = null;
@@ -13,7 +13,7 @@ export default class App {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._api = api;
-    this._creatNewPoint = this._creatNewPoint.bind(this);
+    this._newEventButtonHandler = this._newEventButtonHandler.bind(this);
     this._renderApp = this._renderApp.bind(this);
 
     this._isLoading = true;
@@ -24,6 +24,10 @@ export default class App {
 
   initialize () {
     this._renderApp();
+  }
+
+  _getPoints () {
+    return this._pointsModel.get();
   }
 
   _renderApp (updateType) {
@@ -39,15 +43,6 @@ export default class App {
     }
   }
 
-  _renderLoading() {
-    const container = document.querySelector('.trip-events');
-    render(container, this._loadingComponent, 'afterbegin');
-  }
-
-  _getPoints () {
-    return this._pointsModel.getPoints();
-  }
-
   _renderMenu (pointsArray) {
     this._menu = new MenuPresenter(this._pointsModel, this._filterModel, this._tripList);
     this._menu.initialize(pointsArray);
@@ -58,12 +53,17 @@ export default class App {
     this._tripList = new TripPresenter(eventsContainer, this._pointsModel, this._filterModel, this._api);
     this._tripList.initialize();
     const addNewPointButton = document.querySelector('.trip-main__event-add-btn');
-    addNewPointButton.addEventListener('click', this._creatNewPoint);
+    addNewPointButton.addEventListener('click', this._newEventButtonHandler);
   }
 
-  _creatNewPoint (evt) {
+  _renderLoading() {
+    const container = document.querySelector('.trip-events');
+    render(container, this._loadingComponent, 'afterbegin');
+  }
+
+  _newEventButtonHandler (evt) {
     if (!isOnline()) {
-      toastError('Creating a new point is not available in offline');
+      showErrorToast('Creating a new point is not available in offline');
       return;
     }
     evt.preventDefault();

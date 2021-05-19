@@ -5,7 +5,7 @@ const createPhotosList = (array) => {
     return `<img class="event__photo" src="${src}" alt="${description}">`;}).join('');
 };
 
-export default class PhotosList extends AbstractView{
+export default class PhotosListView extends AbstractView{
   constructor(array) {
     super();
     this._array = array;

@@ -1,9 +1,9 @@
-import TripPointItemView from '../view/trip-list-item.js';
-import EditTripPointView from '../view/edit-trip-point.js';
-import {removeElement, render} from '../utils/render-DOM-elements.js';
+import TripListItemView from '../view/trip-list-item-view.js';
+import EditTripPointView from '../view/edit-trip-point-view.js';
+import {removeElement, render} from '../utils/render-elements.js';
 import {UpdateType, UserAction} from '../constants.js';
 
-export default class NewPoint {
+export default class NewPointPresenter {
   constructor(container, changeData, button) {
     this._container = container;
     this._changeData = changeData;
@@ -11,10 +11,10 @@ export default class NewPoint {
     this._editFormComponent = null;
     this._clickedBtn = button;
 
-    this._handlerEditForm = this._handlerEditForm.bind(this);
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
-    this._closeEscape = this._closeEscape.bind(this);
-    this._handleArrowClick = this._handleArrowClick.bind(this);
+    this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
+    this._deleteButtonClickHandler = this._deleteButtonClickHandler.bind(this);
+    this._escClickHandler = this._escClickHandler.bind(this);
+    this._arrowButtonClickHandler = this._arrowButtonClickHandler.bind(this);
   }
 
   initialize (point) {
@@ -24,15 +24,15 @@ export default class NewPoint {
     this._point = point;
 
     this._editFormComponent = new EditTripPointView(this._point, true);
-    this._editFormComponent.setHandlerForm(this._handlerEditForm);
-    this._editFormComponent.setDeleteBtnHandler(this._handleDeleteClick);
-    this._editFormComponent.setArrowButton(this._handleArrowClick);
+    this._editFormComponent.setFormSubmitHandler(this._editFormSubmitHandler);
+    this._editFormComponent.setDeleteBtnHandler(this._deleteButtonClickHandler);
+    this._editFormComponent.setArrowButtonClickHandler(this._arrowButtonClickHandler);
 
-    this._parentContainer = new TripPointItemView();
+    this._parentContainer = new TripListItemView();
     render(this._container, this._parentContainer, 'afterbegin');
     render(this._parentContainer, this._editFormComponent, 'afterbegin');
 
-    document.addEventListener('keydown', this._closeEscape);
+    document.addEventListener('keydown', this._escClickHandler);
   }
 
   setSaving () {
@@ -62,10 +62,10 @@ export default class NewPoint {
     this._editFormComponent = null;
     this._parentContainer = null;
     this._clickedBtn.disabled = !this._clickedBtn.disabled;
-    document.removeEventListener('keydown', this._closeEscape);
+    document.removeEventListener('keydown', this._escClickHandler);
   }
 
-  _handlerEditForm(point) {
+  _editFormSubmitHandler(point) {
     this._changeData(
       UserAction.ADD_TASK,
       UpdateType.MAJOR,
@@ -73,15 +73,15 @@ export default class NewPoint {
     );
   }
 
-  _handleDeleteClick () {
+  _deleteButtonClickHandler () {
     this.destroy();
   }
 
-  _handleArrowClick () {
+  _arrowButtonClickHandler () {
     this.destroy();
   }
 
-  _closeEscape (evt) {
+  _escClickHandler (evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();

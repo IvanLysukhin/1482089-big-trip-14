@@ -1,6 +1,6 @@
-import FiltersView from '../view/filters.js';
-import {removeElement, render, replaceElements} from '../utils/render-DOM-elements';
-import {DATA, UpdateType} from '../constants.js';
+import FiltersView from '../view/filters-view.js';
+import {removeElement, render, replaceElements} from '../utils/render-elements';
+import {FILTER_TYPES, UpdateType} from '../constants.js';
 
 export default class FiltersPresenter {
   constructor (filterContainer, filterModel, pointsModel) {
@@ -10,7 +10,7 @@ export default class FiltersPresenter {
 
     this._filterComponent = null;
 
-    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._filterChangeHandler = this._filterChangeHandler.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -19,8 +19,8 @@ export default class FiltersPresenter {
   initialize () {
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FiltersView(DATA.FILTER_TYPES, this._filterModel.getFilter());
-    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._filterComponent = new FiltersView(FILTER_TYPES, this._filterModel.get());
+    this._filterComponent.setFilterTypeChangeHandler(this._filterChangeHandler);
 
     if (!prevFilterComponent) {
       render(this._filterContainer,this._filterComponent, 'beforeend');
@@ -31,15 +31,15 @@ export default class FiltersPresenter {
     removeElement(prevFilterComponent);
   }
 
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
+  _handleModelEvent() {
+    this.initialize();
+  }
+
+  _filterChangeHandler(filterType) {
+    if (this._filterModel.get() === filterType) {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
-  _handleModelEvent() {
-    this.initialize();
+    this._filterModel.set(UpdateType.MAJOR, filterType);
   }
 }

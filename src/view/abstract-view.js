@@ -1,4 +1,4 @@
-import {createElementDOM, showHideElement} from '../utils/render-DOM-elements.js';
+import {createElementDOM, showHideElement} from '../utils/render-elements.js';
 import {SHAKE_TIMEOUT} from '../constants.js';
 
 export default class AbstractView {

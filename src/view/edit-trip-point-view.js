@@ -1,10 +1,10 @@
-import {DATA, TimeInputs} from '../constants.js';
-import DestinationsListView from './destinations-list.js';
-import CheckboxTypeListView from './checkbox-list.js';
-import OfferSelectorsView from './offer-selector.js';
+import {TRANSPORT_TYPES, TimeInput} from '../constants.js';
+import DestinationsListView from './destinations-list-view.js';
+import CheckboxListView from './checkbox-list-view.js';
+import OfferSelectorsView from './offer-selectors-view.js';
 import {isOnline, showErrorMassage} from '../utils/common.js';
 import Smart from './smart-view.js';
-import PhotosListView from './photos-list.js';
+import PhotosListView from './photos-list-view.js';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
@@ -29,7 +29,7 @@ const createEditTripPoint = ({_date,
     _date.endTime = dayjs(_date.endTime);
   }
 
-  const checkboxTypes = new CheckboxTypeListView(DATA.TRANSPORT_TYPES).getTemplate();
+  const checkboxTypes = new CheckboxListView(TRANSPORT_TYPES).getTemplate();
 
   const citiesList = new DestinationsListView(destinations).getTemplate();
   const offerList = new OfferSelectorsView(pointType, defaultOptions).getTemplate();
@@ -94,72 +94,82 @@ const createEditTripPoint = ({_date,
                     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                     <p class="event__destination-description">${infoText}</p>
                   </section>` : ''}
-
+                ${photos.length ? `
                 ${isNewPoint ? `<div class="event__photos-container">
                       <div class="event__photos-tape">
                         ${photosList}
                       </div>` : ''}
+                      ` : ''}
                 </section>
               </form>`;
 };
 
-export default class EditTripPoint extends Smart {
+export default class EditTripPointView extends Smart {
   constructor(obj, isNewPoint) {
     super();
     this._isNewPoint = isNewPoint;
     this._datepickerStart = null;
     this._datepickerEnd = null;
-    this._data = EditTripPoint.parsePointToData(obj);
-    this._closeForm = this._closeForm.bind(this);
-    this._checkboxTypeHandler = this._checkboxTypeHandler.bind(this);
+    this._data = EditTripPointView.parsePointToData(obj);
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._checkboxChangeTypeHandler = this._checkboxChangeTypeHandler.bind(this);
     this._cityInputHandler = this._cityInputHandler.bind(this);
     this._startDateChangeHandler = this._startDateChangeHandler.bind(this);
     this._endDateChangeHandler = this._endDateChangeHandler.bind(this);
     this._destroyStartDatePicker = this._destroyStartDatePicker.bind(this);
     this._destroyEndDatePicker = this._destroyEndDatePicker.bind(this);
-    this._deletePointByClick = this._deletePointByClick.bind(this);
-    this._wrapForm = this._wrapForm.bind(this);
+    this._deleteButtonClickHandler = this._deleteButtonClickHandler.bind(this);
+    this._arrowButtonClickHandler = this._arrowButtonClickHandler.bind(this);
 
-    this._checkTimeValidity = this._checkTimeValidity.bind(this);
-    this._setPicker = this._setPicker.bind(this);
+    this._timeInputChangeHandler = this._timeInputChangeHandler.bind(this);
+    this._timeInputClickHandler = this._timeInputClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setValidity();
 
-    this._setTimeInputDatePicker();
+    this._setTimeInputHandler();
   }
 
   getTemplate() {
     return createEditTripPoint(this._data, this._isNewPoint);
   }
 
-  _setInnerHandlers () {
-    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxTypeHandler);
-    this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
+  setFormSubmitHandler(cb) {
+    this._callback.formSubmitHandler = cb;
+    this.getElement().addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setArrowButtonClickHandler (cb) {
+    this._callback.arrowButtonClickHandler = cb;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._arrowButtonClickHandler);
   }
 
   restoreHandlers () {
     this._setInnerHandlers();
-    this.setHandlerForm(this._callback.closeFunction);
-    this.setArrowButton(this._callback.closeArrowButton);
+    this.setFormSubmitHandler(this._callback.formSubmitHandler);
+    this.setArrowButtonClickHandler(this._callback.arrowButtonClickHandler);
 
     this._setValidity();
 
-    this.setDeleteBtnHandler(this._callback.deleteClick);
-    this._setTimeInputDatePicker();
+    this.setDeleteBtnHandler(this._callback.deleteButtonClickHandler);
+    this._setTimeInputHandler();
   }
 
-  _closeForm(evt) {
-    evt.preventDefault();
+  setDeleteBtnHandler (cb) {
+    this._callback.deleteButtonClickHandler = cb;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteButtonClickHandler);
+  }
 
-    this._handleCheckedOptions();
+  clearElement () {
+    super.clearElement();
 
-    this.updateData({
-      price: Number(this.getElement().querySelector('#event-price-1').value),
-      _date: this._handleDate(),
-    });
+    if (this._datepickerStart && this._datepickerEnd) {
+      this._datepickerStart.destroy();
+      this._datepickerEnd.destroy();
 
-    this._callback.closeFunction(EditTripPoint.parseDataToPoint(this._data));
+      this._datepickerStart = null;
+      this._datepickerEnd = null;
+    }
   }
 
   _handleCheckedOptions () {
@@ -217,69 +227,51 @@ export default class EditTripPoint extends Smart {
     );
   }
 
-  setHandlerForm(cb) {
-    this._callback.closeFunction = cb;
-    this.getElement().addEventListener('submit', this._closeForm);
+  _destroyStartDatePicker (date) {
+    this._startDateChangeHandler(date);
+    if (this._datepickerStart !== null) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
+    }
   }
 
-  setArrowButton (cb) {
-    this._callback.closeArrowButton = cb;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._wrapForm);
+  _destroyEndDatePicker (date) {
+    this._endDateChangeHandler(date);
+    if (this._datepickerEnd !== null) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
+    }
   }
-  _wrapForm(evt) {
+
+  _setValidity () {
+    this.getElement().querySelector('#event-end-time-1').addEventListener('change', this._timeInputChangeHandler);
+    this.getElement().querySelector('#event-start-time-1').addEventListener('change', this._timeInputChangeHandler);
+  }
+
+  _setInnerHandlers () {
+    this.getElement().querySelector('.event__type-group').addEventListener('click', this._checkboxChangeTypeHandler);
+    this.getElement().querySelector('#event-destination-1').addEventListener('change', this. _cityInputHandler);
+  }
+
+  _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.closeArrowButton();
-  }
 
-  static parsePointToData (obj) {
-    const {options, destinationInfo, pointType, baseOptions} = obj;
+    this._handleCheckedOptions();
 
-    const index = baseOptions.findIndex((option) => {
-      return option.type.toLowerCase() === pointType.toLowerCase();
+    this.updateData({
+      price: Number(this.getElement().querySelector('#event-price-1').value),
+      _date: this._handleDate(),
     });
 
-
-    const newArrOptions = baseOptions[index].offers.slice().map((offer) => {
-      if (options.findIndex(({title}) => {return title === offer.title;}) > -1) {
-        return Object.assign({}, offer, {isChecked: true});
-      }
-      return Object.assign({}, offer, {isChecked: false});
-    });
-
-    return Object.assign(
-      {},
-      obj,
-      {
-        defaultOptions: newArrOptions,
-        hasOptions: newArrOptions.length > 0,
-        hasDestinationInfo: destinationInfo.infoText.length > 0,
-        infoText: destinationInfo.infoText,
-        photos: destinationInfo.photos,
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false,
-      },
-    );
+    this._callback.formSubmitHandler(EditTripPointView.parseDataToPoint(this._data));
   }
 
-  static parseDataToPoint (data) {
-    data = Object.assign({}, data);
-
-    data.destinationInfo.infoText = data.infoText;
-    data.options = data.defaultOptions;
-
-    delete data.defaultOptions;
-    delete data.hasOptions;
-    delete data.hasDestinationInfo;
-    delete data.infoText;
-    delete data.isDisabled;
-    delete data.isSaving;
-    delete data.isDeleting;
-
-    return data;
+  _arrowButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.arrowButtonClickHandler();
   }
 
-  _checkboxTypeHandler (evt) {
+  _checkboxChangeTypeHandler (evt) {
     if (evt.target.classList.contains('event__type-label')) {
       evt.preventDefault();
       const type = evt.target.getAttribute('data-point-type');
@@ -329,23 +321,7 @@ export default class EditTripPoint extends Smart {
     endTimeInput.value = dayjs(date).format('DD/MM/YY HH:mm');
   }
 
-  _destroyStartDatePicker (date) {
-    this._startDateChangeHandler(date);
-    if (this._datepickerStart !== null) {
-      this._datepickerStart.destroy();
-      this._datepickerStart = null;
-    }
-  }
-
-  _destroyEndDatePicker (date) {
-    this._endDateChangeHandler(date);
-    if (this._datepickerEnd !== null) {
-      this._datepickerEnd.destroy();
-      this._datepickerEnd = null;
-    }
-  }
-
-  _checkTimeValidity () {
+  _timeInputChangeHandler () {
     const newStartTime = dayjs(this.getElement().querySelector('#event-start-time-1').getAttribute('data-time'));
     const newEndTime = dayjs(this.getElement().querySelector('#event-end-time-1').getAttribute('data-time'));
     const diff = newEndTime.diff(newStartTime);
@@ -359,73 +335,103 @@ export default class EditTripPoint extends Smart {
     }
   }
 
-  _setValidity () {
-    this.getElement().querySelector('#event-end-time-1').addEventListener('change', this._checkTimeValidity);
-    this.getElement().querySelector('#event-start-time-1').addEventListener('change', this._checkTimeValidity);
-  }
-
-  setDeleteBtnHandler (cb) {
-    this._callback.deleteClick = cb;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deletePointByClick);
-  }
-
-  _deletePointByClick (evt) {
+  _deleteButtonClickHandler (evt) {
     evt.preventDefault();
-    this._callback.deleteClick(EditTripPoint.parseDataToPoint(this._data));
+    this._callback.deleteButtonClickHandler(EditTripPointView.parseDataToPoint(this._data));
   }
 
-  clearElement () {
-    super.clearElement();
-
-    if (this._datepickerStart && this._datepickerEnd) {
-      this._datepickerStart.destroy();
-      this._datepickerEnd.destroy();
-
-      this._datepickerStart = null;
-      this._datepickerEnd = null;
-    }
+  _setTimeInputHandler () {
+    this.getElement().querySelector('.event__field-group--time').addEventListener('click', this._timeInputClickHandler);
   }
 
-  _setTimeInputDatePicker () {
-    this.getElement().querySelector('.event__field-group--time').addEventListener('click', this._setPicker);
-  }
+  _timeInputClickHandler (evt) {
+    const startDatepickerParams = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      defaultDate: this.getElement().querySelector('#event-start-time-1').value,
+      onChange: this._startDateChangeHandler,
+      onClose: this._destroyStartDatePicker,
+    };
+    startDatepickerParams['time_24hr'] = true;
 
-  _setPicker (evt) {
+    const endDatepickerParams = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      defaultDate: this.getElement().querySelector('#event-end-time-1').value,
+      onChange: this._endDateChangeHandler,
+      onClose: this._destroyEndDatePicker,
+    };
+    endDatepickerParams['time_24hr'] = true;
+
     if (evt.target.tagName === 'INPUT') {
       switch (evt.target.getAttribute('name')) {
-        case TimeInputs.START:
+        case TimeInput.START:
           if (this._datepickerStart === null) {
             this._datepickerStart = flatpickr(
               evt.target,
-              {
-                dateFormat: 'd/m/y H:i',
-                enableTime: true,
-                time_24hr: true,
-                defaultDate: this.getElement().querySelector('#event-start-time-1').value,
-                onChange: this._startDateChangeHandler,
-                onClose: this._destroyStartDatePicker,
-              },
+              startDatepickerParams,
             );
           }
           this._datepickerStart.open();
           break;
-        case TimeInputs.END:
+        case TimeInput.END:
           if (this._datepickerEnd === null) {
             this._datepickerEnd = flatpickr(
               evt.target,
-              {
-                dateFormat: 'd/m/y H:i',
-                enableTime: true,
-                time_24hr: true,
-                defaultDate: this.getElement().querySelector('#event-end-time-1').value,
-                onChange: this._endDateChangeHandler,
-                onClose: this._destroyEndDatePicker,
-              },
+              endDatepickerParams,
             );
           }
           this._datepickerEnd.open();
           break;
       }
     }
+  }
+
+  static parsePointToData (obj) {
+    const {options, destinationInfo, pointType, baseOptions} = obj;
+
+    const index = baseOptions.findIndex((option) => {
+      return option.type.toLowerCase() === pointType.toLowerCase();
+    });
+
+
+    const newArrOptions = baseOptions[index].offers.slice().map((offer) => {
+      if (options.findIndex(({title}) => {return title === offer.title;}) > -1) {
+        return Object.assign({}, offer, {isChecked: true});
+      }
+      return Object.assign({}, offer, {isChecked: false});
+    });
+
+    return Object.assign(
+      {},
+      obj,
+      {
+        defaultOptions: newArrOptions,
+        hasOptions: newArrOptions.length > 0,
+        hasDestinationInfo: destinationInfo.infoText.length > 0,
+        infoText: destinationInfo.infoText,
+        photos: destinationInfo.photos,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      },
+    );
+  }
+
+  static parseDataToPoint (data) {
+    data = Object.assign({}, data);
+
+    data.destinationInfo.infoText = data.infoText;
+    data.options = data.defaultOptions;
+
+    delete data.defaultOptions;
+    delete data.hasOptions;
+    delete data.hasDestinationInfo;
+    delete data.infoText;
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
+    return data;
   }
 }

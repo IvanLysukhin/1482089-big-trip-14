@@ -30,26 +30,26 @@ const createSort = (currentSortType) => {
           </form>`;
 };
 
-export default class SortList extends AbstractView {
+export default class SortView extends AbstractView {
   constructor(currentSortType) {
     super();
     this._currentSortType = currentSortType;
-    this._sortHandler = this._sortHandler.bind(this);
+    this._sortChangeHandler = this._sortChangeHandler.bind(this);
   }
 
   getTemplate () {
     return createSort(this._currentSortType);
   }
 
-  _sortHandler (evt) {
+  setSortChangeHandler (cb) {
+    this._callback.sortFunction = cb;
+    this.getElement().addEventListener('click', this._sortChangeHandler);
+  }
+
+  _sortChangeHandler (evt) {
     const sortType = evt.target.getAttribute('for');
     if (evt.target.classList.contains('trip-sort__btn') && sortType !== SortType.EVENT && sortType !== SortType.OFFER) {
       this._callback.sortFunction(evt);
     }
-  }
-
-  setSortClick (cb) {
-    this._callback.sortFunction = cb;
-    this.getElement().addEventListener('click', this._sortHandler);
   }
 }

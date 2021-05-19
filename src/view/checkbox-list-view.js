@@ -16,7 +16,7 @@ const createCheckboxTypeList = (array) => {
 };
 
 
-export default class CheckboxTypeList extends AbstractView {
+export default class CheckboxListView extends AbstractView {
   constructor(array) {
     super();
     this._array = array;
